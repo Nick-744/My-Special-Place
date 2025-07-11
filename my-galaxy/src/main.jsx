@@ -7,7 +7,9 @@ createRoot(
   document.getElementById('root')
 ).render(
   <div>
-    <Canvas>
+    <Canvas
+    camera = { {position: [0, 0, 0]} }
+    >
 
       <App />
       
