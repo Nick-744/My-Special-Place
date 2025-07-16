@@ -2,6 +2,9 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { easing } from 'maath'
 
+const minZPosition = Math.ceil(150 / 3) // Minimum Z position limit
+const maxZPosition = Math.ceil(150 / 2) // Maximum Z position limit
+
 const CustomScrollZoom = () => {
 	const { camera, gl }    = useThree()
 	// useRef is used to keep the camera position reference stable across renders
@@ -10,12 +13,12 @@ const CustomScrollZoom = () => {
 	useEffect(() => {
 		const handleWheel = (e) => {
 			e.preventDefault()
-			const zoomSpeed = 0.5
+			const zoomSpeed = 0.3
 			const pos       = cameraPositionRef.current
 			const zDelta    = e.deltaY * 0.01 * zoomSpeed
 
 			const temp = pos.z + zDelta
-			if (Math.ceil(150/3) < temp && temp < Math.ceil(150/2)) // Εδώ θα πρέπει να μπούνε τα όρια του Config!!!
+			if (minZPosition < temp && temp < maxZPosition) // Εδώ θα πρέπει να μπούνε τα όρια του Config!!!
 				pos.z += zDelta
 		}
 

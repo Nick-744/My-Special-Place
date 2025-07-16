@@ -1,6 +1,9 @@
-import CustomScrollZoom from './Camera_Control'
-import GridScenePackage from './Animated_Grid'
+import Timestamps from './GridAssets/Timestamps'
+import CustomScrollZoom from './CameraControl'
+import GridScenePackage from './AnimatedGrid'
 import { Canvas } from '@react-three/fiber'
+
+import { OrbitControls } from '@react-three/drei'
 
 const Scene_3D = () => {
 	return (
@@ -9,15 +12,18 @@ const Scene_3D = () => {
 		className = 'w3-animate-opacity'
 		>
 			<Canvas
-			camera = {{ fov: 60, position: [0, 0.5, Math.ceil(150/2)] }}
+			camera = {{ fov: 60, position: [0, 0.8, Math.ceil(150/2)] }}
 			>
 
 				<ambientLight intensity = {0.5} />
 				<pointLight position = {[10, 10, 10]} />
 
 				<CustomScrollZoom />
+				{/* <OrbitControls /> */}
 
 				<GridScenePackage />
+
+				<Timestamps />
 				
 			</Canvas>
 		</div>

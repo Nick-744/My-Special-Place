@@ -9,10 +9,16 @@ const scaleEffect = 0.2;          // Wave amplitude multiplier
 const cameraPos   = [0, -100, 4]; // Initial camera position [x, y, z]
 const nodeDensity = 2;            // Node spacing
 
-const particlesVolume = 8;     // Particle spread multiplier
-const particlesSize   = 0.1;   // Particle size
-const particlesSpeed  = 0.02;  // Particle movement speed
-const particleCount   = 10000; // Number of particles in the system
+const particlesSize   = 0.1;  // Particle size
+const particlesSpeed  = 0.03; // Particle movement speed
+const particleCount   = 8000; // Number of particles in the system
+
+// Size-based bounds for particle system
+const bounds = {
+  x: size / 2,
+  y: 30, // Keep vertical spread tight for visual clarity
+  z: size / 2
+};
 
 /**
  * Calculate wave displacement for a given position and time
@@ -131,11 +137,6 @@ function AnimatedGrid() {
 				// Scale nodes based on height and add pulsing animation
 				const scale = 1 + Math.abs(newZ) * 0.3 + 0.5 * Math.sin(time * 2 + index * 0.1);
 				node.scale.setScalar(scale);
-				
-				// Color nodes based on height (hue shift and brightness)
-				const hue        = 0.6 + (newZ + 2) * 0.05;    // Cyan to blue transition
-				const brightness = 0.6 + Math.abs(newZ) * 0.1; // Brighter at peaks
-				node.material.color.setHSL(hue, 0.8, brightness);
 			});
 		}
 	});
@@ -177,9 +178,9 @@ function Particles() {
 		
 		for (let i = 0; i < particleCount; i++) {
 			// Random positions within volume
-			positions[i * 3    ] = particlesVolume * (Math.random() - 0.5) * 20; // X
-			positions[i * 3 + 1] = particlesVolume * (Math.random() - 0.5) * 10; // Y
-			positions[i * 3 + 2] = particlesVolume * (Math.random() - 0.5) * 20; // Z
+			positions[i * 3    ] = (Math.random() - 0.5) * bounds.x * 2; // X
+			positions[i * 3 + 1] = (Math.random() - 0.5) * bounds.y * 2; // Y
+			positions[i * 3 + 2] = (Math.random() - 0.5) * bounds.z * 2; // Z
 			
 			// Random velocities for movement
 			velocities.push({
@@ -204,9 +205,9 @@ function Particles() {
 				positions[i * 3 + 2] += particles.velocities[i].z;
 				
 				// Bounce particles off boundaries
-				if (Math.abs(positions[i * 3    ]) > 10 * particlesVolume) particles.velocities[i].x *= -1;
-				if (Math.abs(positions[i * 3 + 1]) > 5  * particlesVolume) particles.velocities[i].y *= -1;
-				if (Math.abs(positions[i * 3 + 2]) > 5  * particlesVolume) particles.velocities[i].z *= -1;
+				if (Math.abs(positions[i * 3    ]) > bounds.x) particles.velocities[i].x *= -1;
+				if (Math.abs(positions[i * 3 + 1]) > bounds.y) particles.velocities[i].y *= -1;
+				if (Math.abs(positions[i * 3 + 2]) > bounds.z) particles.velocities[i].z *= -1;
 			}
 			
 			// Mark geometry as needing update
@@ -250,7 +251,7 @@ function GridScenePackage({ packPosition = [0, 0, 0] }) {
 			</mesh>
 			
 			{/* Particle system positioned below grid */}
-			<mesh position = {packPosition}>
+			<mesh position = {[packPosition[0], packPosition[1] - bounds.y + 10, packPosition[2]]}>
 				<Particles />
 			</mesh>
 		</>
