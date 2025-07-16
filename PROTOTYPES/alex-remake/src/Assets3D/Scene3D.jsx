@@ -3,7 +3,8 @@ import CustomScrollZoom from './CameraControl'
 import GridScenePackage from './AnimatedGrid'
 import { Canvas } from '@react-three/fiber'
 
-import PerformanceStats from '../PerformanceStats'
+// Performance stats overlay [click to toggle]
+import { Stats } from '@react-three/drei'
 
 const Scene_3D = () => {
 	return (
@@ -11,7 +12,7 @@ const Scene_3D = () => {
 		id        = 'canvas-container'
 		className = 'w3-animate-opacity'
 		>
-			<PerformanceStats />
+			<Stats />
 			<Canvas
 			camera = {{ fov: 60, position: [0, 0.8, Math.ceil(150/2)] }}
 			>
