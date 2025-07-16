@@ -9,9 +9,9 @@ const scaleEffect = 0.2;          // Wave amplitude multiplier
 const cameraPos   = [0, -100, 4]; // Initial camera position [x, y, z]
 const nodeDensity = 2;            // Node spacing
 
-const particlesSize   = 0.1;  // Particle size
+const particlesSize   = 0.08; // Particle size
 const particlesSpeed  = 0.03; // Particle movement speed
-const particleCount   = 8000; // Number of particles in the system
+const particleCount   = 5000; // Number of particles in the system
 
 // Size-based bounds for particle system
 const bounds = {
@@ -92,7 +92,7 @@ function AnimatedGrid() {
 
 		return positions;
 	}, []);
-  
+
 	// Animation loop - runs every frame
 	useFrame((state) => {
 		const time = state.clock.elapsedTime;
