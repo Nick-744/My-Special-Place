@@ -13,7 +13,11 @@ const CustomScrollZoom = () => {
 			e.preventDefault()
 			const zoomSpeed = 0.5
 			const pos       = cameraPositionRef.current
-			pos.z          += e.deltaY * 0.01 * zoomSpeed
+			const zDelta    = e.deltaY * 0.01 * zoomSpeed
+
+			const temp = pos.z + zDelta
+			if (Math.ceil(150/3) < temp && temp < Math.ceil(150/2)) // Εδώ θα πρέπει να μπούνε τα όρια του Config!!!
+				pos.z += zDelta
 		}
 
 		gl.domElement.addEventListener('wheel', handleWheel)
@@ -35,8 +39,13 @@ const CustomScrollZoom = () => {
 
 const Scene_3D = () => {
 	return (
-		<div id = 'main-3d-drawing'>
-			<Canvas camera = {{ fov: 60, position: [0, 0.5, Math.ceil(150/2)] }}>
+		<div
+		id        = 'canvas-container'
+		className = 'w3-animate-opacity'
+		>
+			<Canvas
+			camera = {{ fov: 60, position: [0, 0.5, Math.ceil(150/2)] }}
+			>
 
 				{/* Lighting setup */}
 				<ambientLight intensity = {0.5} />

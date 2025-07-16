@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 // Configuration constants
 const size        = 150;          // Grid size (units)
-const divisions   = 150;          // Number of grid divisions
+const divisions   = 180;          // Number of grid divisions
 const scaleEffect = 0.2;          // Wave amplitude multiplier
 const cameraPos   = [0, -100, 4]; // Initial camera position [x, y, z]
 const nodeDensity = 2;            // Node spacing
