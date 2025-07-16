@@ -1,4 +1,4 @@
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
 
@@ -9,10 +9,10 @@ const scaleEffect = 0.2;          // Wave amplitude multiplier
 const cameraPos   = [0, -100, 4]; // Initial camera position [x, y, z]
 const nodeDensity = 2;            // Node spacing
 
-const particlesVolume = 5;    // Particle spread multiplier
-const particlesSize   = 0.01; // Particle size
-const particlesSpeed  = 0.02; // Particle movement speed
-const particleCount   = 8000; // Number of particles in the system
+const particlesVolume = 8;     // Particle spread multiplier
+const particlesSize   = 0.1;   // Particle size
+const particlesSpeed  = 0.02;  // Particle movement speed
+const particleCount   = 10000; // Number of particles in the system
 
 /**
  * Calculate wave displacement for a given position and time
@@ -178,7 +178,7 @@ function Particles() {
 		for (let i = 0; i < particleCount; i++) {
 			// Random positions within volume
 			positions[i * 3    ] = particlesVolume * (Math.random() - 0.5) * 20; // X
-			positions[i * 3 + 1] = particlesVolume * (Math.random() - 0.5) * 20; // Y
+			positions[i * 3 + 1] = particlesVolume * (Math.random() - 0.5) * 10; // Y
 			positions[i * 3 + 2] = particlesVolume * (Math.random() - 0.5) * 20; // Z
 			
 			// Random velocities for movement
@@ -204,9 +204,9 @@ function Particles() {
 				positions[i * 3 + 2] += particles.velocities[i].z;
 				
 				// Bounce particles off boundaries
-				if (Math.abs(positions[i * 3    ]) > 10) particles.velocities[i].x *= -1;
-				if (Math.abs(positions[i * 3 + 1]) > 10) particles.velocities[i].y *= -1;
-				if (Math.abs(positions[i * 3 + 2]) > 5 ) particles.velocities[i].z *= -1;
+				if (Math.abs(positions[i * 3    ]) > 10 * particlesVolume) particles.velocities[i].x *= -1;
+				if (Math.abs(positions[i * 3 + 1]) > 5  * particlesVolume) particles.velocities[i].y *= -1;
+				if (Math.abs(positions[i * 3 + 2]) > 5  * particlesVolume) particles.velocities[i].z *= -1;
 			}
 			
 			// Mark geometry as needing update
@@ -239,9 +239,6 @@ function Particles() {
  * Main grid scene setup
  */
 function GridScenePackage({ packPosition = [0, 0, 0] }) {
-	const { camera } = useThree();
-	console.log(camera.position)
-
 	return (
 		<>
 			{/* Main grid component */}
@@ -253,7 +250,7 @@ function GridScenePackage({ packPosition = [0, 0, 0] }) {
 			</mesh>
 			
 			{/* Particle system positioned below grid */}
-			<mesh position = {camera.position}>
+			<mesh position = {packPosition}>
 				<Particles />
 			</mesh>
 		</>
