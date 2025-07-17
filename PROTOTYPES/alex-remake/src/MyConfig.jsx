@@ -3,7 +3,7 @@ export const size        = 150;              // Grid size (units)
 export const divisions   = 180;              // Number of grid divisions
 export const step        = size / divisions; // Step size for grid nodes
 export const scaleEffect = 0.2;              // Wave amplitude multiplier - [Utils.jsx] **
-export const cameraPos   = [0, -100, 4];     // Initial camera position [x, y, z]
+export const cameraPos   = [0, 100, 0];      // Fake initial camera position for grid effect!!!
 export const nodeDensity = 2;                // Node spacing
 export const wireframeColor = '#00aaff';   // Wireframe color
 
@@ -19,10 +19,13 @@ export const bounds = {
 };
 
 // ==================== Camera Control Configuration ====================
-export const minZPosition = Math.ceil(150 / 2.8) // Minimum Z position limit
-export const maxZPosition = Math.ceil(150 / 2) // Maximum Z position limit
+// Προσοχή! Ο αριθμητής πρέπει να είναι μεταξύ του 0 και του divisions
+export const minZPosition = Math.ceil(step * 120 / 2) // Minimum visible Z position limit
+export const maxZPosition = Math.ceil(step * 172 / 2) // Maximum visible Z position limit
+
+export const cameraInitialZ = Math.ceil(step * divisions / 2) // Initial Z position for the camera
+export const cameraFOV      = 60; // Camera field of view
 
 // ==================== Timestamps Configuration ====================
-export const timestamps          = [0, 5, 10, 12, 20, 30, 50]
+export const timestamps          = [5, 10, 12, 20, 30, 50]
 export const timestampsXPosition = 2 // Integer value!
-

@@ -1,3 +1,5 @@
+import { cameraFOV, cameraInitialZ } from '../MyConfig'
+
 import Timestamps from './GridAssets/Timestamps'
 import CustomScrollZoom from './CameraControl'
 import GridScenePackage from './AnimatedGrid'
@@ -14,7 +16,7 @@ const Scene_3D = () => {
 		>
 			<Stats />
 			<Canvas
-			camera = {{ fov: 60, position: [0, 0.8, Math.ceil(150/2)] }}
+			camera = {{ fov: cameraFOV, position: [0, 0.8, cameraInitialZ] }}
 			>
 
 				<ambientLight intensity = {0.5} />

@@ -22,7 +22,7 @@ const Timestamps = () => {
 		timestampRefs.current.forEach((ref, _) => {
 			if (ref.current) {
 				const distanceFromCamera = calculateDistanceFromCamera(
-					ref.current.position.x, ref.current.position.y
+					ref.current.position.x, ref.current.position.z
 				)
 				const waveHeight = getWaveHeight(
 					ref.current.position.x,
@@ -30,7 +30,7 @@ const Timestamps = () => {
 					time,
 					distanceFromCamera
 				)
-				ref.current.position.y = waveHeight * 0.1;
+				ref.current.position.y = waveHeight
 			}
 		})
 	})
@@ -46,11 +46,10 @@ const Timestamps = () => {
 		// Position based on the actual timestamp value
 		const normalizedPosition = (timestamp - minTimestamp) / timestampRange
 		const z = maxZPosition - normalizedPosition * (maxZPosition - minZPosition)
+		const x = step * timestampsXPosition + 0.1
+		const y = 0.1
 		
-		const x = step * timestampsXPosition
-		const y = 0
-		
-		// Rotate to face the camera (accounting for grid rotation)
+		// Rotate to face the camera
 		const rotation = new THREE.Euler(0, 0, 0, 'XYZ')
 
 		return (

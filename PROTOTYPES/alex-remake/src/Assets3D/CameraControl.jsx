@@ -1,4 +1,4 @@
-import { minZPosition, maxZPosition } from '../MyConfig'
+import { minZPosition, cameraInitialZ } from '../MyConfig'
 
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
@@ -17,7 +17,7 @@ const CustomScrollZoom = () => {
 			const zDelta    = e.deltaY * 0.01 * zoomSpeed
 
 			const temp = pos.z + zDelta
-			if (minZPosition < temp && temp < maxZPosition)
+			if (minZPosition < temp && temp < cameraInitialZ)
 				pos.z += zDelta
 		}
 

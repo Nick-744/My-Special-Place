@@ -207,10 +207,7 @@ function GridScenePackage({ packPosition = [0, 0, 0] }) {
 	return (
 		<>
 			{/* Main grid component */}
-			<mesh
-			position = {packPosition}
-			rotation = {[0, -Math.PI, 0]} // Rotate to face up
-			>
+			<mesh position = {packPosition}>
 				<AnimatedGrid />
 			</mesh>
 			
