@@ -20,8 +20,8 @@ export const bounds = {
 
 // ==================== Camera Control Configuration ====================
 // Προσοχή! Ο αριθμητής πρέπει να είναι μεταξύ του 0 και του divisions
-export const minZPosition = Math.ceil(step * 120 / 2) // Minimum visible Z position limit
-export const maxZPosition = Math.ceil(step * 172 / 2) // Maximum visible Z position limit
+export const minZPosition = Math.ceil(step * 120 / 2)               // Minimum visible Z position limit
+export const maxZPosition = Math.ceil(step * ((divisions - 8) / 2)) // Maximum visible Z position limit
 
 export const cameraInitialZ = Math.ceil(step * divisions / 2) // Initial Z position for the camera
 export const cameraFOV      = 60; // Camera field of view
@@ -29,3 +29,6 @@ export const cameraFOV      = 60; // Camera field of view
 // ==================== Timestamps Configuration ====================
 export const timestamps          = [5, 10, 12, 20, 30, 50]
 export const timestampsXPosition = 2 // Integer value!
+
+// ==================== Event Configuration ====================
+export const eventsXPosition = -0.5

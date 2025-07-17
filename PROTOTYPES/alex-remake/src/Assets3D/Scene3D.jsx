@@ -1,5 +1,6 @@
 import { cameraFOV, cameraInitialZ } from '../MyConfig'
 
+import EventManager from './GridAssets/EventManager'
 import Timestamps from './GridAssets/Timestamps'
 import CustomScrollZoom from './CameraControl'
 import GridScenePackage from './AnimatedGrid'
@@ -26,7 +27,8 @@ const Scene_3D = () => {
 				{/* <OrbitControls /> */}
 
 				<GridScenePackage />
-				<Timestamps />
+					<Timestamps />
+					<EventManager />
 				
 			</Canvas>
 		</div>
