@@ -5,6 +5,7 @@ import {
 import { getWaveHeight, calculateDistanceFromCamera } from '../../Utils'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
+import React, { useRef } from 'react'
 import * as THREE from 'three'
 
 const Timestamps = () => {
@@ -13,19 +14,23 @@ const Timestamps = () => {
 	const maxTimestamp   = Math.max(...timestamps)
 	const timestampRange = maxTimestamp - minTimestamp
 
+	// Create an array of refs, 1 for each timestamp
+	const timestampRefs = useRef(timestamps.map(() => React.createRef()))
+
 	useFrame((state) => {
 		const time = state.clock.elapsedTime
-
-		// Update text positions based on wave height
-		state.scene.traverse((child) => {
-			if (child.isMesh && child.userData.isTimestampLabel) {
-				const x = child.position.x
-				const z = child.position.z
-
-				const distanceFromCamera = calculateDistanceFromCamera(x, y);
-				const y = 0.1 + getWaveHeight(x, z, time, distanceFromCamera)
-
-				child.position.set(x, y, z)
+		timestampRefs.current.forEach((ref, _) => {
+			if (ref.current) {
+				const distanceFromCamera = calculateDistanceFromCamera(
+					ref.current.position.x, ref.current.position.y
+				)
+				const waveHeight = getWaveHeight(
+					ref.current.position.x,
+					ref.current.position.z,
+					time,
+					distanceFromCamera
+				)
+				ref.current.position.y = waveHeight * 0.1;
 			}
 		})
 	})
@@ -43,13 +48,14 @@ const Timestamps = () => {
 		const z = maxZPosition - normalizedPosition * (maxZPosition - minZPosition)
 		
 		const x = step * timestampsXPosition
-		const y = 0.1
+		const y = 0
 		
 		// Rotate to face the camera (accounting for grid rotation)
 		const rotation = new THREE.Euler(0, 0, 0, 'XYZ')
 
 		return (
 			<Text
+			ref      = {timestampRefs.current[index]}
 			key      = {index}
 			position = {[x, y, z]}
 			fontSize = {step * 0.2}
