@@ -24,7 +24,7 @@ function AnimatedGrid() {
 		// Create vertices for each grid intersection
 		for (let i = 0; i <= divisions; i++)
 			for (let j = 0; j <= divisions; j++)
-				positions.push(-size/2 + i * step, -size/2 + j * step, 0);
+				positions.push(-size/2 + i * step, 0, -size/2 + j * step); // X, Y = 0, Z
 			
 		// Create line indices for wireframe connections
 		for (let i = 0; i < divisions; i++) {
@@ -52,7 +52,7 @@ function AnimatedGrid() {
 		const positions = [];
 		for (let i = 0; i <= divisions; i += nodeDensity)
 			for (let j = 0; j <= divisions; j += nodeDensity)
-				positions.push([-size/2 + i * step, -size/2 + j * step, 0]);
+				positions.push([-size/2 + i * step, 0, -size/2 + j * step]); // X, Y = 0, Z
 
 		return positions;
 	}, []);
@@ -67,15 +67,15 @@ function AnimatedGrid() {
 		
 			for (let i = 0; i <= divisions; i++) {
 				for (let j = 0; j <= divisions; j++) {
-					const index = (i * (divisions + 1) + j) * 3; // Z-coordinate index
+					const index = (i * (divisions + 1) + j) * 3; // Y-coordinate index
 					const x     = -size/2 + i * step;
-					const y     = -size/2 + j * step;
+					const z     = -size/2 + j * step;
 					
 					// Calculate distance from camera for intensity scaling
-					const distanceFromCamera = calculateDistanceFromCamera(x, y);
+					const distanceFromCamera = calculateDistanceFromCamera(x, z);
 					
-					// Apply wave displacement to Z-coordinate
-					positions[index + 2] = getWaveHeight(x, y, time, distanceFromCamera);
+					// Apply wave displacement to Y-coordinate
+					positions[index + 1] = getWaveHeight(x, z, time, distanceFromCamera);
 				}
 			}
 		
@@ -89,17 +89,17 @@ function AnimatedGrid() {
 		// Update node positions and properties
 		if (nodesRef.current) {
 			nodesRef.current.children.forEach((node, index) => {
-				const [x, y] = nodePositions[index];
+				const [x, _, z] = nodePositions[index];
 				
 				// Calculate distance from camera for intensity scaling
-				const distanceFromCamera = calculateDistanceFromCamera(x, y);
+				const distanceFromCamera = calculateDistanceFromCamera(x, z);
 				
 				// Apply same wave displacement as grid
-				const newZ = getWaveHeight(x, y, time, distanceFromCamera);
-				node.position.set(x, y, newZ);
+				const newY = getWaveHeight(x, z, time, distanceFromCamera);
+				node.position.set(x, newY, z);
 				
 				// Scale nodes based on height and add pulsing animation
-				const scale = 1 + Math.abs(newZ) * 0.3 + 0.5 * Math.sin(time * 2 + index * 0.1);
+				const scale = 1 + Math.abs(newY) * 0.3 + 0.5 * Math.sin(time * 2 + index * 0.1);
 				node.scale.setScalar(scale);
 			});
 		}
@@ -209,7 +209,7 @@ function GridScenePackage({ packPosition = [0, 0, 0] }) {
 			{/* Main grid component */}
 			<mesh
 			position = {packPosition}
-			rotation = {[-Math.PI / 2, 0, 0]}
+			rotation = {[0, -Math.PI, 0]} // Rotate to face up
 			>
 				<AnimatedGrid />
 			</mesh>

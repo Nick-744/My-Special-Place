@@ -4,7 +4,7 @@ import GridScenePackage from './AnimatedGrid'
 import { Canvas } from '@react-three/fiber'
 
 // Performance stats overlay [click to toggle]
-import { Stats } from '@react-three/drei'
+import { OrbitControls, Stats } from '@react-three/drei'
 
 const Scene_3D = () => {
 	return (
@@ -21,6 +21,7 @@ const Scene_3D = () => {
 				<pointLight position = {[10, 10, 10]} />
 
 				<CustomScrollZoom />
+				{/* <OrbitControls /> */}
 
 				<GridScenePackage />
 				<Timestamps />
