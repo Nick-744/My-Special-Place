@@ -1,15 +1,14 @@
-import {
-	step
-} from '../../MyConfig'
-
-import React, { forwardRef, useState } from 'react'
+import { forwardRef, useRef, useState } from 'react'
+import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
-import * as THREE from 'three'
+import { step } from '../../MyConfig'
+import { easing } from 'maath'
 
 // Event component using forwardRef for compatibility with refs
-const Event = forwardRef(({ index, event, position }, ref) => {
+const Event = forwardRef(({ _, event, position }, ref) => {
 	const [isHovered, setIsHovered] = useState(false)
 	const [isClicked, setIsClicked] = useState(false)
+	const boxRef = useRef()
 
 	// Event handlers
 	const handlePointerOver = () => {
@@ -22,69 +21,86 @@ const Event = forwardRef(({ index, event, position }, ref) => {
 		document.body.style.cursor = 'default'
 	}
 
-	const handleClick = () => {
-		setIsClicked(!isClicked)
-		console.log(`Event clicked: ${event.title}`)
-	}
+	const handleClick = () => { setIsClicked(!isClicked) }
 
 	// Visual styling based on state
 	const getColor = () => {
-		if (isClicked) return '#ff6b6b'
-		if (isHovered) return '#4ecdc4'
-		return '#45b7d1'
+		if (isClicked) return '#800080';
+		if (isHovered) return '#009c41';
+		return '#ff0000';
 	}
 
 	const getScale = () => {
-		if (isClicked) return 1.5
-		if (isHovered) return 1.2
-		return 1.0
+		if (isClicked) return 1.5;
+		if (isHovered) return 1.2;
+		return 1.0;
 	}
+
+	useFrame((_, dt) => {
+		if (isHovered) {
+			// Rotate the box when hovered
+			boxRef.current.rotation.y += 2 * dt
+			if (boxRef.current.rotation.y >= Math.PI * 2)
+				boxRef.current.rotation.y = 0
+		}
+		else
+			easing.damp3(
+				boxRef.current.rotation,
+				{ x: 0, y: 0, z: 0 },
+				0.4,
+				dt
+			)
+		
+		easing.damp3(
+			boxRef.current.scale,
+			{ x: getScale(), y: getScale(), z: getScale() },
+			0.2,
+			dt
+		)
+	})
 
 	return (
 		<group 
-			ref={ref}
-			position={position}
-			scale={[getScale(), getScale(), getScale()]}
+		ref      = {ref}
+		position = {position}
+		scale    = {[getScale(), getScale(), getScale()]}
 		>
-			{/* Event marker sphere */}
 			<mesh
-				onPointerOver={handlePointerOver}
-				onPointerOut={handlePointerOut}
-				onClick={handleClick}
+			ref           = {boxRef}
+			onPointerOver = {handlePointerOver}
+			onPointerOut  = {handlePointerOut}
+			onClick       = {handleClick}
 			>
-				<sphereGeometry args={[step * 0.1, 16, 16]} />
-				<meshBasicMaterial color={getColor()} />
+				<boxGeometry args = {[step * 0.2, step * 0.2, step * 0.2]} />
+				<meshBasicMaterial color = {getColor()} />
 			</mesh>
 
 			{/* Event title text */}
 			<Text
-				position={[0, step * 0.2, 0]}
-				fontSize={step * 0.08}
-				color={getColor()}
-				anchorX="center"
-				anchorY="bottom"
-				maxWidth={step * 2}
+			position = {[0, step * 0.2, 0]}
+			fontSize = {step * 0.1}
+			color    = {getColor()}
+			anchorX  = 'center'
+			anchorY  = 'bottom'
+			maxWidth = {step * 2}
 			>
 				{event.title}
 			</Text>
 
 			{/* Event timestamp text */}
 			<Text
-				position={[0, -step * 0.15, 0]}
-				fontSize={step * 0.06}
-				color="#888888"
-				anchorX="center"
-				anchorY="top"
+			position = {[0, -step * 0.15, 0]}
+			fontSize = {step * 0.06}
+			color    = '#888888'
+			anchorX  = 'center'
+			anchorY  = 'top'
 			>
 				{event.timestamp < 0 
 					? `${Math.abs(event.timestamp)} BC`
 					: `${event.timestamp} AD`}
 			</Text>
 		</group>
-	)
+	);
 })
 
-// Set display name for debugging
-Event.displayName = 'Event'
-
-export default Event
+export default Event;

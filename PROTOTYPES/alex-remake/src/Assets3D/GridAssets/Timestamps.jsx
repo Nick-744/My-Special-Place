@@ -17,6 +17,7 @@ const Timestamps = () => {
 	// Create an array of refs, 1 for each timestamp
 	const timestampRefs = useRef(timestamps.map(() => React.createRef()))
 
+	// Animation loop - Update positions with wave effect
 	useFrame((state) => {
 		const time = state.clock.elapsedTime
 		timestampRefs.current.forEach((ref, _) => {
@@ -58,7 +59,7 @@ const Timestamps = () => {
 			key      = {index}
 			position = {[x, y, z]}
 			fontSize = {step * 0.2}
-			// font="/OpenSans.ttf"
+			// font     = '/OpenSans.ttf'
 			rotation = {rotation}
 			anchorX  = 'left'
 			anchorY  = 'bottom'

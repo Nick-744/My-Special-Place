@@ -121,7 +121,7 @@ function AnimatedGrid() {
 				{nodePositions.map((pos, index) => (
 					<mesh key = {index} position = {pos}>
 						<sphereGeometry args = {[0.04, 16, 16]} />
-						<meshBasicMaterial color = "#ffffff" />
+						<meshBasicMaterial color = '#ffffff' />
 					</mesh>
 				))}
 			</group>
@@ -183,7 +183,7 @@ function Particles() {
 		<points ref = {particlesRef}>
 			<bufferGeometry>
 				<bufferAttribute
-				attach   = "attributes-position"
+				attach   = 'attributes-position'
 				count    = {particleCount}
 				array    = {particles.positions}
 				itemSize = {3}
@@ -191,7 +191,7 @@ function Particles() {
 			</bufferGeometry>
 
 			<pointsMaterial
-			color   = "#ffffff"
+			color   = '#ffffff'
 			size    = {particlesSize}
 			transparent
 			opacity = {0.6}

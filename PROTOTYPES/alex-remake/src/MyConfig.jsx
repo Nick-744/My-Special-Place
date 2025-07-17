@@ -31,4 +31,5 @@ export const timestamps          = [5, 10, 12, 20, 30, 50]
 export const timestampsXPosition = 2 // Integer value!
 
 // ==================== Event Configuration ====================
+export const eventYFloat     = 0.4 // Float value y [offset above wave]
 export const eventsXPosition = -0.5
