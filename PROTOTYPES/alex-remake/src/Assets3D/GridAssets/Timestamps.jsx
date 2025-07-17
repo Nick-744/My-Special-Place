@@ -1,6 +1,9 @@
 import {
 	timestamps, step, minZPosition, maxZPosition, timestampsXPosition
 } from '../../MyConfig'
+
+import { getWaveHeight, calculateDistanceFromCamera } from '../../Utils'
+import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import * as THREE from 'three'
 
@@ -9,6 +12,23 @@ const Timestamps = () => {
 	const minTimestamp   = Math.min(...timestamps)
 	const maxTimestamp   = Math.max(...timestamps)
 	const timestampRange = maxTimestamp - minTimestamp
+
+	useFrame((state) => {
+		const time = state.clock.elapsedTime
+
+		// Update text positions based on wave height
+		state.scene.traverse((child) => {
+			if (child.isMesh && child.userData.isTimestampLabel) {
+				const x = child.position.x
+				const z = child.position.z
+
+				const distanceFromCamera = calculateDistanceFromCamera(x, y);
+				const y = 0.1 + getWaveHeight(x, z, time, distanceFromCamera)
+
+				child.position.set(x, y, z)
+			}
+		})
+	})
 
 	function createDateLabel(index) {
 		const timestamp = timestamps[index]

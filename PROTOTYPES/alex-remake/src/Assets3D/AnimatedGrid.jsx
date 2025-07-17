@@ -1,34 +1,12 @@
 import {
-	size, divisions, step, scaleEffect, cameraPos, nodeDensity, wireframeColor,
+	size, divisions, step, nodeDensity, wireframeColor,
 	particlesSize, particlesSpeed, particleCount, bounds
-} from '../MyConfig'; // Import configuration constants
+} from '../MyConfig';
 
+import { getWaveHeight, calculateDistanceFromCamera } from '../Utils';
 import { useFrame } from '@react-three/fiber';
 import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
-
-/**
- * Calculate wave displacement for a given position and time
- * @param {number} x    - X coordinate
- * @param {number} y    - Y coordinate
- * @param {number} time - Current time
- * @param {number} distanceFromCamera - Distance from camera position
- * @returns {number} Wave height at the given position
- */
-function getWaveHeight(x, y, time, distanceFromCamera) {
-	// Waves get more intense farther from camera (Galaxy Video Technique).
-	// Η βασική ιδέα είναι ότι θέλουμε πρακτικά 0 μεταβολή [κύματα] κοντά
-	// στην κάμερα και να αυξάνεται η ένταση [εκθετικά] όσο απομακρυνόμαστε.
-	const intensityMultiplier = Math.exp(distanceFromCamera) - 2;
-	
-	// Multiple wave patterns for complex surface
-	const wave1  = Math.sin(x * 0.5 + time * 2) * 0.8;         // Primary sine wave
-	const wave2  = Math.cos(y * 0.3 + time * 1.5) * 0.6;       // Perpendicular cosine wave
-	const wave3  = Math.sin((x + y) * 0.2 + time * 0.8) * 1.2; // Diagonal interference wave
-	const ripple = Math.sin(Math.sqrt(x*x + y*y) * 0.3 - time * 3) * 0.4; // Radial ripples
-	
-	return scaleEffect * (wave1 + wave2 + wave3 + ripple) * intensityMultiplier;
-}
 
 /**
  * Main grid component with animated wireframe and nodes
@@ -94,7 +72,7 @@ function AnimatedGrid() {
 					const y     = -size/2 + j * step;
 					
 					// Calculate distance from camera for intensity scaling
-					const distanceFromCamera = Math.sqrt((x - cameraPos[0])**2 + (y - cameraPos[1])**2) / 50;
+					const distanceFromCamera = calculateDistanceFromCamera(x, y);
 					
 					// Apply wave displacement to Z-coordinate
 					positions[index + 2] = getWaveHeight(x, y, time, distanceFromCamera);
@@ -114,7 +92,7 @@ function AnimatedGrid() {
 				const [x, y] = nodePositions[index];
 				
 				// Calculate distance from camera for intensity scaling
-				const distanceFromCamera = Math.sqrt((x - cameraPos[0])**2 + (y - cameraPos[1])**2) / 50;
+				const distanceFromCamera = calculateDistanceFromCamera(x, y);
 				
 				// Apply same wave displacement as grid
 				const newZ = getWaveHeight(x, y, time, distanceFromCamera);

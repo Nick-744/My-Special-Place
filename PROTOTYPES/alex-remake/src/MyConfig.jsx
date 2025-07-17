@@ -2,7 +2,7 @@
 export const size        = 150;              // Grid size (units)
 export const divisions   = 180;              // Number of grid divisions
 export const step        = size / divisions; // Step size for grid nodes
-export const scaleEffect = 0.2;              // Wave amplitude multiplier
+export const scaleEffect = 0.2;              // Wave amplitude multiplier - [Utils.jsx] **
 export const cameraPos   = [0, -100, 4];     // Initial camera position [x, y, z]
 export const nodeDensity = 2;                // Node spacing
 export const wireframeColor = '#00aaff';   // Wireframe color
