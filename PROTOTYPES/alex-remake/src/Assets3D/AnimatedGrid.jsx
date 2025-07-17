@@ -1,24 +1,11 @@
+import {
+	size, divisions, step, scaleEffect, cameraPos, nodeDensity, wireframeColor,
+	particlesSize, particlesSpeed, particleCount, bounds
+} from '../MyConfig'; // Import configuration constants
+
 import { useFrame } from '@react-three/fiber';
 import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
-
-// Configuration constants
-const size        = 150;          // Grid size (units)
-const divisions   = 180;          // Number of grid divisions
-const scaleEffect = 0.2;          // Wave amplitude multiplier
-const cameraPos   = [0, -100, 4]; // Initial camera position [x, y, z]
-const nodeDensity = 2;            // Node spacing
-
-const particlesSize   = 0.08; // Particle size
-const particlesSpeed  = 0.03; // Particle movement speed
-const particleCount   = 5000; // Number of particles in the system
-
-// Size-based bounds for particle system
-const bounds = {
-  x: size / 2,
-  y: 30, // Keep vertical spread tight for visual clarity
-  z: size / 2
-};
 
 /**
  * Calculate wave displacement for a given position and time
@@ -47,9 +34,8 @@ function getWaveHeight(x, y, time, distanceFromCamera) {
  * Main grid component with animated wireframe and nodes
  */
 function AnimatedGrid() {
-	const gridRef  = useRef();         // Reference to grid geometry
-	const nodesRef = useRef();         // Reference to node group
-	const step     = size / divisions; // Distance between grid points
+	const gridRef  = useRef(); // Reference to grid geometry
+	const nodesRef = useRef(); // Reference to node group
   
 	// Create static grid geometry (wireframe structure)
 	const gridGeometry = useMemo(() => {
@@ -146,7 +132,7 @@ function AnimatedGrid() {
 			{/* Wireframe grid lines */}
 			<lineSegments ref = {gridRef} geometry = {gridGeometry}>
 				<lineBasicMaterial
-				color   = "#00aaff"
+				color   = {wireframeColor}
 				transparent
 				opacity = {0.3}
 				/>

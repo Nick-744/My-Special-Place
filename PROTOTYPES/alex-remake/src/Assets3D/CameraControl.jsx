@@ -1,9 +1,7 @@
+import { minZPosition, maxZPosition } from '../MyConfig'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { easing } from 'maath'
-
-const minZPosition = Math.ceil(150 / 3) // Minimum Z position limit
-const maxZPosition = Math.ceil(150 / 2) // Maximum Z position limit
 
 const CustomScrollZoom = () => {
 	const { camera, gl }    = useThree()
@@ -18,7 +16,7 @@ const CustomScrollZoom = () => {
 			const zDelta    = e.deltaY * 0.01 * zoomSpeed
 
 			const temp = pos.z + zDelta
-			if (minZPosition < temp && temp < maxZPosition) // Εδώ θα πρέπει να μπούνε τα όρια του Config!!!
+			if (minZPosition < temp && temp < maxZPosition)
 				pos.z += zDelta
 		}
 
