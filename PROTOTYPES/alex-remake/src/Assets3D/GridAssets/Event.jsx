@@ -40,6 +40,8 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 		if (isHovered) {
 			// Rotate the box when hovered
 			boxRef.current.rotation.y += 2 * dt
+
+			// So there is no over-animation of rotation
 			if (boxRef.current.rotation.y >= Math.PI * 2)
 				boxRef.current.rotation.y = 0
 		}
