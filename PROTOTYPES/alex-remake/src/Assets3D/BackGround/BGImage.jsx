@@ -5,7 +5,7 @@ import * as THREE from 'three';
 const BGImage = () => {
     const cylinderHeight = size / 3
     const bgTexture      = useTexture(
-        './Assets/ImageData/aleksander_background.png'
+        './Assets/ImageData/aleksander_background.jpg'
     )
 
     return (

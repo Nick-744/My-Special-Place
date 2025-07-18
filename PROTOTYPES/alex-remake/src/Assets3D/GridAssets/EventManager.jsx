@@ -3,18 +3,10 @@ import {
 } from '../../MyConfig'
 
 import { getWaveHeight, calculateDistanceFromCamera } from '../../Utils'
+import { eventsData } from '../../InfoData/EventsData'
 import { useFrame } from '@react-three/fiber'
 import React, { useRef } from 'react'
 import Event from './Event'
-
-// Sample events data - replace with your actual events
-const sampleEvents = [
-	{ id: 1, timestamp:  5, title: 'Ancient Event',     section: 'history'    },
-	{ id: 2, timestamp:  8, title: 'Historical Event',  section: 'culture'    },
-	{ id: 3, timestamp: 20, title: 'Medieval Event',    section: 'politics'   },
-	{ id: 4, timestamp: 30, title: 'Renaissance Event', section: 'art'        },
-	{ id: 5, timestamp: 40, title: 'Modern Event',      section: 'technology' }
-]
 
 const EventManager = () => {
 	// Calculate the range of timestamps for positioning
@@ -23,7 +15,7 @@ const EventManager = () => {
 	const timestampRange = maxTimestamp - minTimestamp
 
 	// Create an array of refs, 1 for each event
-	const eventRefs = useRef(sampleEvents.map(() => React.createRef()))
+	const eventRefs = useRef(eventsData.map(() => React.createRef()))
 
 	// Animation loop - update event positions with wave effect
 	useFrame((state) => {
@@ -62,7 +54,7 @@ const EventManager = () => {
 		return (
 			<Event
 				ref      = {eventRefs.current[index]}
-				key      = {event.id}
+				key      = {event.ID}
 				index    = {index}
 				event    = {event}
 				position = {position}
@@ -70,7 +62,7 @@ const EventManager = () => {
 		);
 	}
 
-	return sampleEvents.map((event, index) => createEvent(event, index));
+	return eventsData.map((event, index) => createEvent(event, index));
 }
 
 export default EventManager;

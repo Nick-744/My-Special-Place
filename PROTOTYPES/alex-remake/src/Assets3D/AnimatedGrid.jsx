@@ -46,7 +46,7 @@ function AnimatedGrid() {
 
 		return geometry;
 	}, []);
-  
+
 	// Create node positions (every [nodeDensity]-nd vertex to reduce density)
 	const nodePositions = useMemo(() => {
 		const positions = [];
@@ -104,7 +104,7 @@ function AnimatedGrid() {
 			});
 		}
 	});
-  
+
 	return (
 		<group>
 			{/* Wireframe grid lines */}
