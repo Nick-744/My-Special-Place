@@ -4,8 +4,8 @@ export const divisions   = 180;              // Number of grid divisions
 export const step        = size / divisions; // Step size for grid nodes
 export const scaleEffect = 0.20;             // Wave amplitude multiplier - [Utils.jsx] **
 export const cameraPos   = [0, 100, 0];      // Fake initial camera position for grid effect!!!
-export const nodeDensity = 2;                // Node spacing
-export const wireframeColor = '#00aaff';   // Wireframe color
+export const nodeDensity = 3;                // Node spacing
+export const wireframeColor = '#0099ee';   // Wireframe color
 
 export const particlesSize  = 0.08; // Particle size
 export const particlesSpeed = 0.03; // Particle movement speed
@@ -24,7 +24,7 @@ export const minZPosition = Math.ceil(step * 120 / 2)               // Minimum v
 export const maxZPosition = Math.ceil(step * ((divisions - 8) / 2)) // Maximum visible Z position limit
 
 export const cameraInitialZ = Math.ceil(step * divisions / 2) // Initial Z position for the camera
-export const cameraHeight   = 0.7; // Camera height above the grid
+export const cameraHeight   = 0.8; // Camera height above the grid
 export const cameraFOV      = 55;  // Camera field of view
 
 // ==================== Timestamps Configuration ====================
@@ -35,3 +35,7 @@ export const timestampsXPosition = 2 // Integer value!
 export const eventYFloat     = 0.4  // Float value y [offset above wave]
 export const eventsXPosition = -0.5
 export const eventWaveEffect = 0.35 // Wave effect multiplier for events
+
+export const originalColor = '#ff0000' // Original color for events
+export const hoveredColor  = '#ffA500'
+export const clickedColor  = '#a020f0'

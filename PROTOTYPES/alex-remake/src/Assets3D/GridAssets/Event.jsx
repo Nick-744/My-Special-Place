@@ -1,7 +1,8 @@
+import { step, originalColor, clickedColor, hoveredColor } from '../../MyConfig'
+
 import { Text, useTexture } from '@react-three/drei'
 import { forwardRef, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { step } from '../../MyConfig'
 import { easing } from 'maath'
 import * as THREE from 'three'
 
@@ -32,9 +33,9 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 
 	// Visual styling based on state
 	const getColor = () => {
-		if (isClicked) return '#800080';
-		if (isHovered) return '#009c41';
-		return '#ff0000';
+		if (isClicked) return clickedColor;
+		if (isHovered) return hoveredColor;
+		return originalColor;
 	}
 
 	const getScale = () => {
@@ -67,6 +68,7 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 			dt
 		)
 		
+		// Show/Hide title and event's timestamp
 		easing.damp(
 			titleRef.current,
 			'fillOpacity',
@@ -74,7 +76,13 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 			0.2,
 			dt
 		)
-
+		easing.damp(
+			titleRef.current,
+			'color',
+			getColor(),
+			0.5,
+			dt
+		)
 		easing.damp(
 			eventTimeRef.current,
 			'fillOpacity',
@@ -88,6 +96,7 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 		<group 
 		ref      = {ref}
 		position = {position}
+		// rotation = {[0, 0, 0]}
 		>
 			<mesh
 			ref           = {eventRef}
@@ -107,9 +116,10 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 			{/* Event title text */}
 			<Text
 			ref 	 = {titleRef}
-			position = {[0, step * 0.15, 0]}
+			position = {[0, step * 0.16, 0]}
 			fontSize = {step * 0.1}
-			color    = '#009c41'
+			fontWeight = {1000}
+			color    = {getColor()}
 			anchorX  = 'center'
 			anchorY  = 'bottom'
 			maxWidth = {step * 2}
@@ -121,7 +131,7 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 			{/* Event timestamp text */}
 			<Text
 			ref 	 = {eventTimeRef}
-			position = {[0, -step * 0.15, 0]}
+			position = {[0, -step * 0.16, 0]}
 			fontSize = {step * 0.06}
 			color    = '#888888'
 			anchorX  = 'center'
