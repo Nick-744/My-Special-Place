@@ -29,14 +29,14 @@ export const cameraFOV      = 55;  // Camera field of view
 
 // ==================== Timestamps Configuration ====================
 export const timestamps          = [
-  -360, -350, -345, -340, -338, -336, -334, -332, -330,
-  -328, -326, -325, -324, -322, -320
+  -360, -350, -345, -340, -338, -336, -334, -332,
+  -330, -328, -326, -325, -324, -322, -320
 ]
 export const timestampsXPosition = 2 // Integer value!
 
 // ==================== Event Configuration ====================
 export const eventYFloat     = 0.4  // Float value y [offset above wave]
-export const eventsXPosition = 0
+export const eventsXPosition = -step * 2
 export const eventWaveEffect = 0.35 // Wave effect multiplier for events
 
 export const originalColor = '#ff0000' // Original color for events

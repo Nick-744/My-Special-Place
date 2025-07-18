@@ -39,9 +39,9 @@ const EventManager = () => {
 	// Calculate position for each event based on timestamp
 	function calculateEventPosition(event, index) {
 		// Position based on the event's timestamp value
-		const normalizedPosition = (event.timestamp - minTimestamp) / timestampRange
+		const normalizedPosition = (event.startDate - minTimestamp) / timestampRange
 		const z = maxZPosition - normalizedPosition * (maxZPosition - minZPosition)
-		const x = step * eventsXPosition + (index * 0.2)
+		const x = step * eventsXPosition + (index * 0.1)
 		const y = 0 // Y will be updated by wave animation
 		
 		return [x, y, z];
