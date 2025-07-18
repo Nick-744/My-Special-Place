@@ -1,5 +1,5 @@
 import {
-	timestamps, step, minZPosition, maxZPosition, eventYFloat, eventsXPosition
+	timestamps, step, minZPosition, maxZPosition, eventYFloat, eventsXPosition, eventWaveEffect
 } from '../../MyConfig'
 
 import { getWaveHeight, calculateDistanceFromCamera } from '../../Utils'
@@ -10,10 +10,10 @@ import Event from './Event'
 // Sample events data - replace with your actual events
 const sampleEvents = [
 	{ id: 1, timestamp:  5, title: 'Ancient Event',     section: 'history'    },
-	{ id: 2, timestamp: 12, title: 'Historical Event',  section: 'culture'    },
+	{ id: 2, timestamp:  8, title: 'Historical Event',  section: 'culture'    },
 	{ id: 3, timestamp: 20, title: 'Medieval Event',    section: 'politics'   },
 	{ id: 4, timestamp: 30, title: 'Renaissance Event', section: 'art'        },
-	{ id: 5, timestamp: 50, title: 'Modern Event',      section: 'technology' }
+	{ id: 5, timestamp: 40, title: 'Modern Event',      section: 'technology' }
 ]
 
 const EventManager = () => {
@@ -39,7 +39,7 @@ const EventManager = () => {
 					time,
 					distanceFromCamera
 				)
-				ref.current.position.y = waveHeight + eventYFloat // Offset above wave
+				ref.current.position.y = waveHeight * eventWaveEffect + eventYFloat
 			}
 		})
 	})

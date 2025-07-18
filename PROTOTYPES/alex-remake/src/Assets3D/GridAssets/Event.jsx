@@ -1,14 +1,21 @@
+import { Text, useTexture } from '@react-three/drei'
 import { forwardRef, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Text } from '@react-three/drei'
 import { step } from '../../MyConfig'
 import { easing } from 'maath'
+import * as THREE from 'three'
 
 // Event component using forwardRef for compatibility with refs
 const Event = forwardRef(({ _, event, position }, ref) => {
 	const [isHovered, setIsHovered] = useState(false)
 	const [isClicked, setIsClicked] = useState(false)
-	const boxRef = useRef()
+	
+	const eventRef     = useRef()
+	const titleRef	   = useRef()
+	const eventTimeRef = useRef()
+	const eventTexture = useTexture(
+		'./Assets/Textures/shield_boarder_transparent.svg'
+	)
 
 	// Event handlers
 	const handlePointerOver = () => {
@@ -33,29 +40,45 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 	const getScale = () => {
 		if (isClicked) return 1.5;
 		if (isHovered) return 1.2;
-		return 1.0;
+		return 1.;
 	}
 
 	useFrame((_, dt) => {
 		if (isHovered) {
-			// Rotate the box when hovered
-			boxRef.current.rotation.y += 2 * dt
+			// Rotate the event when hovered
+			eventRef.current.rotation.y += 2 * dt
 
 			// So there is no over-animation of rotation
-			if (boxRef.current.rotation.y >= Math.PI * 2)
-				boxRef.current.rotation.y = 0
+			if (eventRef.current.rotation.y >= Math.PI * 2)
+				eventRef.current.rotation.y = 0
 		}
 		else
 			easing.damp3(
-				boxRef.current.rotation,
-				{ x: 0, y: 0, z: 0 },
+				eventRef.current.rotation,
+				{ x: 0, y: Math.PI * 2, z: 0 },
 				0.4,
 				dt
 			)
-		
+
 		easing.damp3(
-			boxRef.current.scale,
+			eventRef.current.scale,
 			{ x: getScale(), y: getScale(), z: getScale() },
+			0.2,
+			dt
+		)
+		
+		easing.damp(
+			titleRef.current,
+			'fillOpacity',
+			isHovered ? 1. : 0.,
+			0.2,
+			dt
+		)
+
+		easing.damp(
+			eventTimeRef.current,
+			'fillOpacity',
+			isHovered ? 1. : 0.,
 			0.2,
 			dt
 		)
@@ -65,32 +88,39 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 		<group 
 		ref      = {ref}
 		position = {position}
-		scale    = {[getScale(), getScale(), getScale()]}
 		>
 			<mesh
-			ref           = {boxRef}
+			ref           = {eventRef}
 			onPointerOver = {handlePointerOver}
 			onPointerOut  = {handlePointerOut}
 			onClick       = {handleClick}
 			>
-				<boxGeometry args = {[step * 0.2, step * 0.2, step * 0.2]} />
-				<meshBasicMaterial color = {getColor()} />
+				<planeGeometry args = {[step * 0.2, step * 0.2]} />
+				<meshBasicMaterial
+				map   = {eventTexture}
+				side  = {THREE.DoubleSide}
+				color = {getColor()}
+				transparent
+				/>
 			</mesh>
 
 			{/* Event title text */}
 			<Text
-			position = {[0, step * 0.2, 0]}
+			ref 	 = {titleRef}
+			position = {[0, step * 0.15, 0]}
 			fontSize = {step * 0.1}
-			color    = {getColor()}
+			color    = '#009c41'
 			anchorX  = 'center'
 			anchorY  = 'bottom'
 			maxWidth = {step * 2}
+			fillOpacity = {0.}
 			>
 				{event.title}
 			</Text>
 
 			{/* Event timestamp text */}
 			<Text
+			ref 	 = {eventTimeRef}
 			position = {[0, -step * 0.15, 0]}
 			fontSize = {step * 0.06}
 			color    = '#888888'

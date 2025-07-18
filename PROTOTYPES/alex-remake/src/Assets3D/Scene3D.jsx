@@ -1,4 +1,4 @@
-import { cameraFOV, cameraInitialZ } from '../MyConfig'
+import { cameraFOV, cameraInitialZ, cameraHeight } from '../MyConfig'
 
 import EventManager from './GridAssets/EventManager'
 import Timestamps from './GridAssets/Timestamps'
@@ -17,7 +17,10 @@ const Scene_3D = () => {
 		>
 			<Stats />
 			<Canvas
-			camera = {{ fov: cameraFOV, position: [0, 0.8, cameraInitialZ] }}
+			camera = {{
+				fov:      cameraFOV,
+				position: [0, cameraHeight, cameraInitialZ]
+			}}
 			>
 
 				<ambientLight intensity = {0.5} />
