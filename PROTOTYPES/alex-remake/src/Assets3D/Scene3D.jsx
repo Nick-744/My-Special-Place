@@ -5,6 +5,7 @@ import Timestamps from './GridAssets/Timestamps'
 import CustomScrollZoom from './CameraControl'
 import GridScenePackage from './AnimatedGrid'
 import { Canvas } from '@react-three/fiber'
+import BGImage from './BackGround/BGImage'
 
 // Performance stats overlay [click to toggle]
 import { OrbitControls, Stats } from '@react-three/drei'
@@ -23,12 +24,13 @@ const Scene_3D = () => {
 			}}
 			>
 
-				<ambientLight intensity = {0.5} />
+				<ambientLight intensity = {2} />
 				<pointLight position = {[10, 10, 10]} />
 
 				<CustomScrollZoom />
 				{/* <OrbitControls /> */}
 
+				<BGImage />
 				<GridScenePackage />
 					<Timestamps />
 					<EventManager />

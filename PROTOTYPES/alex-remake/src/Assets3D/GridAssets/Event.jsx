@@ -69,27 +69,9 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 		)
 		
 		// Show/Hide title and event's timestamp
-		easing.damp(
-			titleRef.current,
-			'fillOpacity',
-			isHovered ? 1. : 0.,
-			0.2,
-			dt
-		)
-		easing.damp(
-			titleRef.current,
-			'color',
-			getColor(),
-			0.5,
-			dt
-		)
-		easing.damp(
-			eventTimeRef.current,
-			'fillOpacity',
-			isHovered ? 1. : 0.,
-			0.2,
-			dt
-		)
+		easing.damp(titleRef.current,     'fillOpacity', isHovered ? 1. : 0., 0.2, dt)
+		easing.damp(titleRef.current,     'color',       getColor(),          0.5, dt)
+		easing.damp(eventTimeRef.current, 'fillOpacity', isHovered ? 1. : 0., 0.2, dt)
 	})
 
 	return (
