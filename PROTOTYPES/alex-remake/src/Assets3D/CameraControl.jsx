@@ -1,4 +1,4 @@
-import { minZPosition, cameraInitialZ } from '../MyConfig'
+import { minZPosition, cameraInitialZ, cameraLooking } from '../MyConfig'
 
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
@@ -38,4 +38,27 @@ const CustomScrollZoom = () => {
 	return null;
 }
 
-export default CustomScrollZoom;
+const SceneCameraLookAt = () => {
+	const { camera } = useThree()
+
+	useEffect(() => {
+		camera.lookAt(
+			cameraLooking[0],
+			cameraLooking[1],
+			cameraLooking[2]
+		)
+	}, [])
+
+	return null;
+}
+
+const Camera3D = () => {
+	return (
+		<>
+			<CustomScrollZoom />
+			<SceneCameraLookAt />
+		</>
+	);
+}
+
+export default Camera3D;

@@ -1,6 +1,6 @@
 import {
 	size, divisions, step, nodeDensity, wireframeColor,
-	particlesSize, particlesSpeed, particleCount, bounds
+	particlesSize, particlesSpeed, particleCount, bounds, gridOpacity
 } from '../MyConfig';
 
 import { getWaveHeight, calculateDistanceFromCamera } from '../Utils';
@@ -13,7 +13,7 @@ import * as THREE from 'three';
  */
 function AnimatedGrid() {
 	const gridRef  = useRef(); // Reference to grid geometry
-	const nodesRef = useRef(); // Reference to node group
+	// const nodesRef = useRef(); // Reference to node group
   
 	// Create static grid geometry (wireframe structure)
 	const gridGeometry = useMemo(() => {
@@ -48,61 +48,59 @@ function AnimatedGrid() {
 	}, []);
 
 	// Create node positions (every [nodeDensity]-nd vertex to reduce density)
-	const nodePositions = useMemo(() => {
-		const positions = [];
-		for (let i = 0; i <= divisions; i += nodeDensity)
-			for (let j = 0; j <= divisions; j += nodeDensity)
-				positions.push([-size/2 + i * step, 0, -size/2 + j * step]); // X, Y = 0, Z
+	// const nodePositions = useMemo(() => {
+	// 	const positions = [];
+	// 	for (let i = 0; i <= divisions; i += nodeDensity)
+	// 		for (let j = 0; j <= divisions; j += nodeDensity)
+	// 			positions.push([-size/2 + i * step, 0, -size/2 + j * step]); // X, Y = 0, Z
 
-		return positions;
-	}, []);
+	// 	return positions;
+	// }, []);
 
 	// Animation loop - runs every frame
 	useFrame((state) => {
 		const time = state.clock.elapsedTime;
 		
 		// Update grid vertices with wave displacement
-		if (gridRef.current) {
-			const positions = gridRef.current.geometry.attributes.position.array;
-		
-			for (let i = 0; i <= divisions; i++) {
-				for (let j = 0; j <= divisions; j++) {
-					const index = (i * (divisions + 1) + j) * 3; // Y-coordinate index
-					const x     = -size/2 + i * step;
-					const z     = -size/2 + j * step;
-					
-					// Calculate distance from camera for intensity scaling
-					const distanceFromCamera = calculateDistanceFromCamera(x, z);
-					
-					// Apply wave displacement to Y-coordinate
-					positions[index + 1] = getWaveHeight(x, z, time, distanceFromCamera);
-				}
-			}
-		
-			// Mark geometry as needing update
-			gridRef.current.geometry.attributes.position.needsUpdate = true;
-			
-			// Animate grid opacity with breathing effect
-			gridRef.current.material.opacity = 0.3 + 0.2 * Math.sin(time * 0.5);
-		}
+		const positions = gridRef.current.geometry.attributes.position.array;
 	
-		// Update node positions and properties
-		if (nodesRef.current) {
-			nodesRef.current.children.forEach((node, index) => {
-				const [x, _, z] = nodePositions[index];
+		for (let i = 0; i <= divisions; i++) {
+			for (let j = 0; j <= divisions; j++) {
+				const index = (i * (divisions + 1) + j) * 3; // Y-coordinate index
+				const x     = -size/2 + i * step;
+				const z     = -size/2 + j * step;
 				
 				// Calculate distance from camera for intensity scaling
 				const distanceFromCamera = calculateDistanceFromCamera(x, z);
 				
-				// Apply same wave displacement as grid
-				const newY = getWaveHeight(x, z, time, distanceFromCamera);
-				node.position.set(x, newY, z);
-				
-				// Scale nodes based on height and add pulsing animation
-				const scale = 1 + Math.abs(newY) * 0.3 + 0.5 * Math.sin(time * 2 + index * 0.1);
-				node.scale.setScalar(scale);
-			});
+				// Apply wave displacement to Y-coordinate
+				positions[index + 1] = getWaveHeight(x, z, time, distanceFromCamera);
+			}
 		}
+	
+		// Mark geometry as needing update
+		gridRef.current.geometry.attributes.position.needsUpdate = true;
+		
+		// Animate grid opacity with breathing effect
+		// gridRef.current.material.opacity = 0.3 + 0.2 * Math.sin(time * 0.5); // Original equation
+	
+		// Update node positions and properties
+		// if (nodesRef.current) {
+		// 	nodesRef.current.children.forEach((node, index) => {
+		// 		const [x, _, z] = nodePositions[index];
+				
+		// 		// Calculate distance from camera for intensity scaling
+		// 		const distanceFromCamera = calculateDistanceFromCamera(x, z);
+				
+		// 		// Apply same wave displacement as grid
+		// 		const newY = getWaveHeight(x, z, time, distanceFromCamera);
+		// 		node.position.set(x, newY, z);
+				
+		// 		// Scale nodes based on height and add pulsing animation
+		// 		const scale = 1 + Math.abs(newY) * 0.3 + 0.5 * Math.sin(time * 2 + index * 0.1);
+		// 		node.scale.setScalar(scale);
+		// 	});
+		// }
 	});
 
 	return (
@@ -110,21 +108,23 @@ function AnimatedGrid() {
 			{/* Wireframe grid lines */}
 			<lineSegments ref = {gridRef} geometry = {gridGeometry}>
 				<lineBasicMaterial
-				color   = {wireframeColor}
+				color     = {wireframeColor}
+				side      = {THREE.DoubleSide}
+				depthTest = {false}
+				opacity   = {gridOpacity}
 				transparent
-				opacity = {0.3}
 				/>
 			</lineSegments>
 			
 			{/* Node spheres at grid intersections */}
-			<group ref = {nodesRef}>
+			{/* <group ref = {nodesRef}>
 				{nodePositions.map((pos, index) => (
 					<mesh key = {index} position = {pos}>
 						<sphereGeometry args = {[0.04, 16, 16]} />
 						<meshBasicMaterial color = '#ffffff' />
 					</mesh>
 				))}
-			</group>
+			</group> */}
 		</group>
 	);
 }
@@ -203,16 +203,19 @@ function Particles() {
 /**
  * Main grid scene setup
  */
-function GridScenePackage({ packPosition = [0, 0, 0] }) {
+function GridScenePackage({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
 	return (
 		<>
 			{/* Main grid component */}
-			<mesh position = {packPosition}>
+			<mesh position = {position} rotation = {rotation}>
 				<AnimatedGrid />
 			</mesh>
 			
 			{/* Particle system positioned below grid */}
-			<mesh position = {[packPosition[0], packPosition[1] - bounds.y + 10, packPosition[2]]}>
+			<mesh
+			position = {[position[0], position[1] - bounds.y + 10, position[2]]}
+			rotation = {rotation}
+			>
 				<Particles />
 			</mesh>
 		</>

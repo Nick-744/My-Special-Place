@@ -98,12 +98,12 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 			{/* Event title text */}
 			<Text
 			ref 	   = {titleRef}
-			position   = {[0, step * 0.16, 0]}
+			position   = {[0, -step * 0.16, 0]}
 			fontSize   = {step * 0.1}
 			fontWeight = {1000}
 			color      = {getColor()}
 			anchorX    = 'center'
-			anchorY    = 'bottom'
+			anchorY    = 'top'
 			maxWidth   = {step * 2}
 			fillOpacity = {0.}
 			>
@@ -113,11 +113,11 @@ const Event = forwardRef(({ _, event, position }, ref) => {
 			{/* Event timestamp text */}
 			<Text
 			ref 	 = {eventTimeRef}
-			position = {[0, -step * 0.16, 0]}
+			position = {[0, step * 0.16, 0]}
 			fontSize = {step * 0.06}
 			color    = '#888888'
 			anchorX  = 'center'
-			anchorY  = 'top'
+			anchorY  = 'bottom'
 			>
 				{event.startDate < 0 
 					? `${Math.abs(event.startDate)} BC`
