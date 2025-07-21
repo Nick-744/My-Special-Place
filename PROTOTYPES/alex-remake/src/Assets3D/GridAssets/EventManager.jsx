@@ -36,12 +36,38 @@ const EventManager = () => {
 		})
 	})
 
+	const usedXPerZ = new Map()
+	function getNonOverlappingX(z, baseX, buffer = step * 1, jitterRange = step * 2) {
+		let tryX
+		let maxTries = 100
+
+		if (!usedXPerZ.has(z)) usedXPerZ.set(z, [])
+		const usedX = usedXPerZ.get(z)
+
+		do {
+			const jitter = (Math.random() - 0.5) * 2 * jitterRange
+			tryX         = baseX + jitter
+
+			// Only check for collisions in this Z layer
+			const collides = usedX.some(
+				x => Math.abs(x - tryX) < buffer
+			)
+			if (!collides) break;
+
+			maxTries--;
+		} while (maxTries > 0)
+
+		usedX.push(tryX)
+
+		return tryX;
+	}
+
 	// Calculate position for each event based on timestamp
-	function calculateEventPosition(event, index) {
+	function calculateEventPosition(event, _) {
 		// Position based on the event's timestamp value
 		const normalizedPosition = (event.startDate - minTimestamp) / timestampRange
 		const z = maxZPosition - normalizedPosition * (maxZPosition - minZPosition)
-		const x = step * eventsXPosition + (index * 0.1)
+		const x = getNonOverlappingX(z, eventsXPosition)
 		const y = 0 // Y will be updated by wave animation
 		
 		return [x, y, z];
@@ -53,11 +79,13 @@ const EventManager = () => {
 		
 		return (
 			<Event
-				ref      = {eventRefs.current[index]}
-				key      = {event.ID}
-				index    = {index}
-				event    = {event}
-				position = {position}
+				ref        = {eventRefs.current[index]}
+				key        = {event.ID}
+				eventIndex = {index}
+				event      = {event}
+				position   = {position}
+
+				eventsRefArray = {eventRefs}
 			/>
 		);
 	}

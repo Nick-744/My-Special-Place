@@ -38,7 +38,7 @@ export const timestampsXPosition = 2 // Integer value!
 
 // ==================== Event Configuration ====================
 export const eventYFloat     = 0.4  // Float value y [offset above wave]
-export const eventsXPosition = -step * 2
+export const eventsXPosition = -step * 0
 export const eventWaveEffect = 0.35 // Wave effect multiplier for events
 
 export const originalColor = '#ff0000' // Original color for events
@@ -46,4 +46,4 @@ export const hoveredColor  = '#ffA500'
 export const clickedColor  = '#a020f0'
 
 // ==================== Background Configuration ====================
-export const cylinderHeight = size / 3.4
+export const cylinderHeight = size / 2.5
