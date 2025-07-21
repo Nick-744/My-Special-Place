@@ -1,5 +1,5 @@
 import {
-	timestamps, step, minZPosition, maxZPosition, timestampsXPosition
+	timestamps, step, minZPosition, maxZPosition, timestampsXPosition, gObjRotationX
 } from '../../MyConfig'
 
 import { getWaveHeight, calculateDistanceFromCamera } from '../../Utils'
@@ -51,7 +51,7 @@ const Timestamps = () => {
 		const y = 0.1
 		
 		// Rotate to face the camera
-		const rotation = new THREE.Euler(0, 0, 0, 'XYZ')
+		const rotation = new THREE.Euler(gObjRotationX, 0, 0, 'XYZ')
 
 		return (
 			<Text

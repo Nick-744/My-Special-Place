@@ -1,16 +1,27 @@
-import { step, originalColor, clickedColor, hoveredColor } from '../../MyConfig'
+import {
+	step,
+	cameraLooking,
+	cameraFOV,
+	originalColor,
+	clickedColor,
+	hoveredColor,
+	gObjRotationX
+} from '../../MyConfig'
 
+import { forwardRef, useRef, useState, useContext } from 'react'
+import { globalVarContext } from '../../Context/GlobalContext'
 import { Text, useTexture } from '@react-three/drei'
-import { forwardRef, useRef, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { events, useFrame, useThree } from '@react-three/fiber'
 import { easing } from 'maath'
 import * as THREE from 'three'
-import { temp } from 'three/tsl'
 
 // Event component using forwardRef for compatibility with refs
 const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) => {
 	const [isHovered, setIsHovered] = useState(false)
 	const [isClicked, setIsClicked] = useState(false)
+
+	// ----- Global ----- //
+	const globalVar = useContext(globalVarContext)
 	
 	const eventRef     = useRef()
 	const titleRef	   = useRef()
@@ -19,7 +30,10 @@ const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) 
 		'./Assets/Textures/shield_boarder_transparent.svg'
 	)
 
-	// Event handlers
+	// ----- Camera ----- //
+	const { camera } = useThree()
+
+	// ----- Event handlers ----- //
 	const handlePointerOver = () => {
 		setIsHovered(true)
 		document.body.style.cursor = 'pointer'
@@ -30,7 +44,22 @@ const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) 
 		document.body.style.cursor = 'default'
 	}
 
-	const handleClick = () => { setIsClicked(!isClicked) }
+	const handleClick = () => {
+		if (isClicked) {
+			camera.fov = cameraFOV
+			camera.lookAt(...cameraLooking)
+		}
+		else {
+			camera.fov = 10
+			camera.lookAt(
+				ref.current.position.x,
+				ref.current.position.y,
+				ref.current.position.z
+			)
+		}
+
+		setIsClicked(!isClicked)
+	}
 
 	// Visual styling based on state
 	const getColor = () => {
@@ -45,7 +74,7 @@ const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) 
 		return 1.;
 	}
 
-	useFrame((_, dt) => {
+	useFrame((state, dt) => {
 		if (isHovered)
 		{
 			// Rotate the event when hovered
@@ -57,7 +86,7 @@ const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) 
 
 			eventsRefArray.current.forEach((tempRef, index) => {
 				if (index !== eventIndex) {
-					tempRef.current.position.y = -5; // Reset rotation for other events
+					tempRef.current.visible = false;
 				}
 			})
 		}
@@ -69,6 +98,12 @@ const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) 
 				0.4,
 				dt
 			)
+
+			eventsRefArray.current.forEach((tempRef, index) => {
+				if (index !== eventIndex) {
+					tempRef.current.visible = true;
+				}
+			})
 		}
 
 		easing.damp3(
@@ -83,7 +118,7 @@ const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) 
 		easing.damp(eventTimeRef.current, 'fillOpacity', isHovered ? 1. : 0., 0.2, dt)
 
 		// Control visibility based on fillOpacity for smooth fade-out
-		titleRef.current.visible     = titleRef.current.fillOpacity > 0.01;
+		titleRef.current.visible     = titleRef.current.fillOpacity     > 0.01;
 		eventTimeRef.current.visible = eventTimeRef.current.fillOpacity > 0.01;
 	})
 
@@ -91,7 +126,7 @@ const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) 
 		<group 
 		ref      = {ref}
 		position = {position}
-		// rotation = {[0, 0, 0]}
+		rotation = {[gObjRotationX, 0, 0]}
 		>
 			<mesh
 			ref           = {eventRef}
@@ -99,26 +134,28 @@ const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) 
 			onPointerOut  = {handlePointerOut}
 			onClick       = {handleClick}
 			>
-				<planeGeometry args = {[step * 0.2, step * 0.2]} />
+				<planeGeometry args = {[step * 0.25, step * 0.25]} />
 				<meshBasicMaterial
 				map         = {eventTexture}
 				side        = {THREE.DoubleSide}
 				color       = {getColor()}
 				transparent = {true}
 				alphaTest   = {0.1}
+
+				// visible = {globalVar.eventHoveringContext}
 				/>
 			</mesh>
 
 			{/* Event title text */}
 			<Text
 			ref 	   = {titleRef}
-			position   = {[0, -step * 0.16, 0]}
-			fontSize   = {step * 0.08}
+			position   = {[0, +step * 0.5, 0]}
+			fontSize   = {step * 0.15}
 			fontWeight = {1000}
 			color      = {getColor()}
 			anchorX    = 'center'
 			anchorY    = 'top'
-			maxWidth   = {step * 1.6}
+			maxWidth   = {step * 3}
 			visible	   = {false}
 			>
 				{event.title['gr']}
@@ -127,8 +164,8 @@ const Event = forwardRef(({ eventIndex, event, position, eventsRefArray }, ref) 
 			{/* Event timestamp text */}
 			<Text
 			ref 	 = {eventTimeRef}
-			position = {[0, step * 0.16, 0]}
-			fontSize = {step * 0.06}
+			position = {[0, -step * 0.35, 0]}
+			fontSize = {step * 0.1}
 			color    = '#888888'
 			anchorX  = 'center'
 			anchorY  = 'bottom'

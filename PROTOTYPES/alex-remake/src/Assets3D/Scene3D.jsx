@@ -1,6 +1,5 @@
 import { cameraFOV, cameraInitialZ, cameraHeight } from '../MyConfig'
 
-import BGImageCylinder from './BackGround/BGImageCylinder'
 import EventManager from './GridAssets/EventManager'
 import BackgroundImage from '../Assets2D/BGImage2D'
 import Timestamps from './GridAssets/Timestamps'
@@ -19,8 +18,9 @@ const Scene_3D = () => {
 		>
 			<Stats />
 
-			{/* <BackgroundImage /> */}
+			<BackgroundImage />
 			<Canvas
+			
 			camera = {{
 				fov:      cameraFOV,
 				position: [0, cameraHeight, cameraInitialZ]
@@ -30,7 +30,6 @@ const Scene_3D = () => {
 				<Camera3D />
 				{/* <OrbitControls /> */}
 
-				<BGImageCylinder />
 				<GridScenePackage />
 					<Timestamps />
 					<EventManager />

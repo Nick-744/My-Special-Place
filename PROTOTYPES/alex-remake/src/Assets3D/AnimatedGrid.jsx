@@ -1,6 +1,6 @@
 import {
-	size, divisions, step, nodeDensity, wireframeColor,
-	particlesSize, particlesSpeed, particleCount, bounds, gridOpacity
+	size, divisions, step, wireframeColor, particlesSize,
+	particlesSpeed, particleCount, bounds, gridOpacity
 } from '../MyConfig';
 
 import { getWaveHeight, calculateDistanceFromCamera } from '../Utils';
@@ -47,16 +47,6 @@ function AnimatedGrid() {
 		return geometry;
 	}, []);
 
-	// Create node positions (every [nodeDensity]-nd vertex to reduce density)
-	// const nodePositions = useMemo(() => {
-	// 	const positions = [];
-	// 	for (let i = 0; i <= divisions; i += nodeDensity)
-	// 		for (let j = 0; j <= divisions; j += nodeDensity)
-	// 			positions.push([-size/2 + i * step, 0, -size/2 + j * step]); // X, Y = 0, Z
-
-	// 	return positions;
-	// }, []);
-
 	// Animation loop - runs every frame
 	useFrame((state) => {
 		const time = state.clock.elapsedTime;
@@ -80,27 +70,6 @@ function AnimatedGrid() {
 	
 		// Mark geometry as needing update
 		gridRef.current.geometry.attributes.position.needsUpdate = true;
-		
-		// Animate grid opacity with breathing effect
-		// gridRef.current.material.opacity = 0.3 + 0.2 * Math.sin(time * 0.5); // Original equation
-	
-		// Update node positions and properties
-		// if (nodesRef.current) {
-		// 	nodesRef.current.children.forEach((node, index) => {
-		// 		const [x, _, z] = nodePositions[index];
-				
-		// 		// Calculate distance from camera for intensity scaling
-		// 		const distanceFromCamera = calculateDistanceFromCamera(x, z);
-				
-		// 		// Apply same wave displacement as grid
-		// 		const newY = getWaveHeight(x, z, time, distanceFromCamera);
-		// 		node.position.set(x, newY, z);
-				
-		// 		// Scale nodes based on height and add pulsing animation
-		// 		const scale = 1 + Math.abs(newY) * 0.3 + 0.5 * Math.sin(time * 2 + index * 0.1);
-		// 		node.scale.setScalar(scale);
-		// 	});
-		// }
 	});
 
 	return (
@@ -115,16 +84,6 @@ function AnimatedGrid() {
 				transparent
 				/>
 			</lineSegments>
-			
-			{/* Node spheres at grid intersections */}
-			{/* <group ref = {nodesRef}>
-				{nodePositions.map((pos, index) => (
-					<mesh key = {index} position = {pos}>
-						<sphereGeometry args = {[0.04, 16, 16]} />
-						<meshBasicMaterial color = '#ffffff' />
-					</mesh>
-				))}
-			</group> */}
 		</group>
 	);
 }

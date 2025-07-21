@@ -12,7 +12,7 @@ export function getWaveHeight(x, y, time, distanceFromCamera) {
     // Waves get more intense farther from camera (Galaxy Video Technique).
     // Η βασική ιδέα είναι ότι θέλουμε πρακτικά 0 μεταβολή [κύματα] κοντά
     // στην κάμερα και να αυξάνεται η ένταση [εκθετικά] όσο απομακρυνόμαστε.
-    const intensityMultiplier = Math.exp(distanceFromCamera) - 2;
+    const intensityMultiplier = Math.exp(distanceFromCamera) - 1;
     
     // Multiple wave patterns for complex surface
     const wave1  = Math.sin(x * 0.5 + time * 2) * 0.8;         // Primary sine wave

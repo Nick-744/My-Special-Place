@@ -37,7 +37,7 @@ const EventManager = () => {
 	})
 
 	const usedXPerZ = new Map()
-	function getNonOverlappingX(z, baseX, buffer = step * 1, jitterRange = step * 2) {
+	function getNonOverlappingX(z, baseX, buffer = step * 1, jitterRange = step * 1.5) {
 		let tryX
 		let maxTries = 100
 

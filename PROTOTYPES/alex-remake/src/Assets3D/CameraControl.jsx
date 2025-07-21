@@ -1,4 +1,6 @@
-import { minZPosition, cameraInitialZ, cameraLooking } from '../MyConfig'
+import { 
+	minZPosition, cameraInitialZ, cameraLooking, cameraZoomSpeed
+} from '../MyConfig'
 
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
@@ -12,7 +14,7 @@ const CustomScrollZoom = () => {
 	useEffect(() => {
 		const handleWheel = (e) => {
 			e.preventDefault()
-			const zoomSpeed = 0.3
+			const zoomSpeed = cameraZoomSpeed
 			const pos       = cameraPositionRef.current
 			const zDelta    = e.deltaY * 0.01 * zoomSpeed
 

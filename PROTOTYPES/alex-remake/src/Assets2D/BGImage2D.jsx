@@ -1,27 +1,34 @@
-import { Box } from '@mui/material'
+import { Box,keyframes  } from '@mui/material'
 
 const BackgroundImage = () => {
-  return (
-    <Box
-      sx = {{
-        backgroundImage:
-        `
-        
-        url(./Assets/ImageData/aleksander_background2D.jpg)
-        `,
-        backgroundSize:     'cover',
-        backgroundPosition: 'center top',
-        backgroundRepeat:   'no-repeat',
+	const fadeIn = keyframes`
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}`;
 
-        position: 'absolute',
-        width:    '100%',
-        height:   '100vh',
-        top:  0,
-        left: 0,
-        opacity: 0.4,
-      }}
-    />
-  );
+	return (
+		<Box
+		sx = {{
+			backgroundImage:
+				'url(./Assets/ImageData/aleksander_background.png)',
+			backgroundSize:     'cover',
+			backgroundPosition: 'center top',
+			backgroundRepeat:   'no-repeat',
+			
+			position: 'absolute',
+			width:    '100%',
+			height:   '52vh',
+			top:  -50,
+			left: 0,
+			
+			opacity:   0,
+			animation: `${fadeIn} 2s forwards`,
+		}}
+		/>
+	);
 }
 
 export default BackgroundImage;
