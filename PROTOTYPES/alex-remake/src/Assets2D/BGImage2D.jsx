@@ -1,4 +1,4 @@
-import { Box,keyframes  } from '@mui/material'
+import { Box, keyframes } from '@mui/material'
 
 const BackgroundImage = () => {
 	const fadeIn = keyframes`
