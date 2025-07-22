@@ -117,9 +117,16 @@ const EventModal = () => {
                             >
                                 <Box
                                 sx = {{
-                                    height:       250,
-                                    borderRadius: 2,
-                                    overflow:     'hidden',
+                                    height:         250,
+                                    width:          '100%',
+                                    minWidth:       200,
+                                    maxWidth:       300,
+                                    display:        'flex',
+                                    alignItems:     'center',
+                                    justifyContent: 'center',
+                                    background:     '#e0e0e0',
+                                    borderRadius:   2,
+                                    overflow:       'hidden',
                                 }}
                                 >
                                     {selectedEventContext.image ? (
@@ -127,11 +134,13 @@ const EventModal = () => {
                                         src   = {selectedEventContext.image}
                                         alt   = {selectedEventContext.title?.gr}
                                         style = {{
-                                            display:      'block',
-                                            width:        '100%',
-                                            height:       '100%',
-                                            objectFit:    'contain',
-                                            borderRadius: 2,
+                                            display:        'block',
+                                            width:          '100%',
+                                            height:         '100%',
+                                            objectFit:      'cover',
+                                            objectPosition: 'top',
+                                            borderRadius:   2,
+                                            background:     '#e0e0e0',
                                         }}
                                         />
                                     ) : (
