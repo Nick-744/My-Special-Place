@@ -45,7 +45,6 @@ export const eventWaveEffect = 3    // Wave effect multiplier for events
 
 export const originalColor = '#ff0000' // Original color for events
 export const hoveredColor  = '#ffA500'
-export const clickedColor  = '#a020f0'
 
 // ==================== Background Configuration ====================
 export const cylinderHeight = size / 2.5

@@ -1,7 +1,6 @@
 import {
 	step,
 	originalColor,
-	clickedColor,
 	hoveredColor,
 	gObjRotationX
 } from '../../MyConfig'
@@ -13,12 +12,10 @@ import { useFrame } from '@react-three/fiber'
 import { easing } from 'maath'
 import * as THREE from 'three'
 
-// Event component using forwardRef for compatibility with refs
 const Event = forwardRef(({
 	eventIndex, event, position, eventsRefArray, iconsRefArray, eventIconRef
 }, ref) => {
 	const [isHovered, setIsHovered] = useState(false)
-	const [isClicked, setIsClicked] = useState(false)
 
 	// ----- Global ----- //
 	const globalVar = useContext(globalVarContext)
@@ -46,11 +43,13 @@ const Event = forwardRef(({
 		globalVar.setEventHoveringContext(-1) // Default
 	}
 
-	const handleClick = () => { setIsClicked(!isClicked) }
+	const handleClick = () => {
+		globalVar.setSelectedEventContext(event)
+		globalVar.setIsModalOpenContext(!globalVar.isModalOpenContext)
+	}
 
 	// Visual styling based on state
 	const getColor = () => {
-		if (isClicked) return clickedColor;
 		if (isHovered) return hoveredColor;
 
 		// TODO: Κάνε την ανάθεση χρωμάτων πιο ευέλικτη / παραμετροποιήσιμη
@@ -61,8 +60,7 @@ const Event = forwardRef(({
 	}
 
 	const getScale = () => {
-		if (isClicked) return 1.8;
-		if (isHovered) return 1.4;
+		if (isHovered) return 1.5;
 		return 1.;
 	}
 
@@ -86,7 +84,7 @@ const Event = forwardRef(({
 			)
 		}
 
-		// Scale based on hover/click
+		// Scale based on hover
 		const targetScale = getScale()
 		easing.damp3(
 			eventIconRef.current.scale,
@@ -104,8 +102,6 @@ const Event = forwardRef(({
 		titleRef.current.visible         = titleRef.current.fillOpacity         > 0.01
 		eventTimeRef.current.visible     = eventTimeRef.current.fillOpacity     > 0.01
 		eventLocationRef.current.visible = eventLocationRef.current.fillOpacity > 0.01
-
-
 
 		// Adjust opacity of all events when 1 is hovered
 		eventsRefArray.current.forEach((temp, i) => {
