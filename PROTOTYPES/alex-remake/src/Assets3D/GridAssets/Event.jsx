@@ -86,7 +86,7 @@ const Event = forwardRef(({
 		easing.damp3(
 			eventIconRef.current.scale,
 			{ x: targetScale, y: targetScale, z: targetScale },
-			0.2,
+			0.1,
 			dt
 		)
 		
