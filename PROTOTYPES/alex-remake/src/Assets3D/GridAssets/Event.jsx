@@ -91,8 +91,8 @@ const Event = forwardRef(({
 		)
 		
 		// Show/Hide title and event's timestamp
-		easing.damp(titleRef.current,     'fillOpacity', isHovered ? 1. : 0., 0.2, dt)
-		easing.damp(eventTimeRef.current, 'fillOpacity', isHovered ? 1. : 0., 0.2, dt)
+		easing.damp(titleRef.current,     'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
+		easing.damp(eventTimeRef.current, 'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
 
 		// Control visibility based on fillOpacity for smooth fade-out
 		titleRef.current.visible     = titleRef.current.fillOpacity     > 0.01
