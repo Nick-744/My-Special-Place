@@ -15,7 +15,8 @@ const EventManager = () => {
 	const timestampRange = maxTimestamp - minTimestamp
 
 	// Create an array of refs, 1 for each event
-	const eventRefs = useRef(eventsData.map(() => React.createRef()))
+	const eventRefs     = useRef(eventsData.map(() => React.createRef()))
+	const eventIconRefs = useRef(eventsData.map(() => React.createRef()))
 
 	// Animation loop - update event positions with wave effect
 	useFrame((state) => {
@@ -86,6 +87,8 @@ const EventManager = () => {
 				position   = {position}
 
 				eventsRefArray = {eventRefs}
+				iconsRefArray  = {eventIconRefs}
+				eventIconRef   = {eventIconRefs.current[index]}
 			/>
 		);
 	}

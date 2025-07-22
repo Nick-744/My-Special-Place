@@ -2,7 +2,7 @@
 export const size        = 300;              // Grid size (units)
 export const divisions   = 220;              // Number of grid divisions
 export const step        = size / divisions; // Step size for grid nodes
-export const scaleEffect = 0.030;            // Wave amplitude multiplier - [Utils.jsx] **
+export const scaleEffect = 0.025;            // Wave amplitude multiplier - [Utils.jsx] **
 export const cameraPos   = [0, 100, 0];      // Fake initial camera position for grid effect!!!
 export const nodeDensity = 3;                // Node spacing
 export const wireframeColor = '#00aaff';   // Wireframe color
@@ -25,8 +25,8 @@ export const minZPosition = Math.ceil(step * 90 / 2)                 // Minimum 
 export const maxZPosition = Math.ceil(step * ((divisions - 22) / 2)) // Maximum visible Z position limit
 
 export const cameraInitialZ  = Math.ceil(step * (divisions / 2)) // Initial Z position for the camera
-export const cameraLooking   = [0, -100, -2000] // Camera look-at target position
-export const cameraHeight    = 4.0; // Camera height above the grid
+export const cameraLooking   = [0, -200, -2000] // Camera look-at target position
+export const cameraHeight    = 3.0; // Camera height above the grid
 export const cameraFOV       = 30;  // Camera field of view
 export const cameraZoomSpeed = 1.0; // Speed of zooming with mouse wheel
 

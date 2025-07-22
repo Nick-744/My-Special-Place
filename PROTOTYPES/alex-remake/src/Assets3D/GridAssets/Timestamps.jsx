@@ -41,8 +41,8 @@ const Timestamps = () => {
 		
 		// Simplified label formatting
 		const label = timestamp < 0 
-		? `${Math.abs(timestamp)} B.C`
-		: `${Math.abs(timestamp)} A.D`
+		? `${Math.abs(timestamp)} π.Χ.`
+		: `${timestamp} μ.Χ.`
 
 		// Position based on the actual timestamp value
 		const normalizedPosition = (timestamp - minTimestamp) / timestampRange

@@ -4,7 +4,7 @@ export const globalVarContext = createContext(null)
 
 export const GlobalProviderComponent = ({ children }) => {
     // Με απλό const δεν δουλεύει!!!
-    const [eventHoveringContext, setEventHoveringContext] = useState(true)
+    const [eventHoveringContext, setEventHoveringContext] = useState(-1)
 
     return (
         <globalVarContext.Provider 
