@@ -9,8 +9,8 @@ export const eventsData = [
     long_lat: [40.761351, 22.526087],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6044.061291122796!2d22.5260868!3d40.7613507!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1357d6e3994c1551%3A0x400bd2ce2b9aa90!2sPella%20580%2005!5e0!3m2!1sen!2sgr!4v1692709454121!5m2!1sen!2sgr",
-    image: "data/images/section1/1.jpg",
-    thumbnail: "data/images/section1/1t.jpg",
+    image: "Assets/ImageData/section1/1.jpg",
+    thumbnail: "Assets/ImageData/section1/1t.jpg",
     imageDescription: {
       gr: "Bernigeroth Johann Martin, O Μέγας Αλέξανδρος σε παιδική ηλικία, Χαλκογραφία βασισμένη σε έργο του Johann Daniel Preissler, Δρέσδη 1733.",
       en: "Bernigeroth Johann Martin, Alexander the Great as a child, Copper engraving based on a work by Johann Daniel Preissler, Dresden 1733.",
@@ -33,8 +33,8 @@ export const eventsData = [
     long_lat: [40.761351, 22.526087],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6044.061295669364!2d22.5260868!3d40.761350650000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1357d6e3994c1551%3A0x400bd2ce2b9aa90!2sPella%20580%2005!5e0!3m2!1sen!2sgr!4v1692710944917!5m2!1sen!2sgr",
-    image: "data/images/section1/2.jpg",
-    thumbnail: "data/images/section1/2t.jpg",
+    image: "Assets/ImageData/section1/2.jpg",
+    thumbnail: "Assets/ImageData/section1/2t.jpg",
     imageDescription: {
       gr: "Τόμπρος Μιχάλης, Κεφαλή αλόγου, Ορειχάλκινη προτομή επί μαρμάρινης βάσης.",
       en: "Tombros Michael, Horse’s Head, Brass bust on a marble base. ",
@@ -58,8 +58,8 @@ export const eventsData = [
     long_lat: [37.935949, 22.930569],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25174.11015253741!2d22.930569249999998!3d37.935948849999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a0144ce0a75b5f%3A0xcbec55e5ce5dabf4!2sCorinth%20201%2000!5e0!3m2!1sen!2sgr!4v1692711365689!5m2!1sen!2sgr",
-    image: "data/images/section1/3.jpg",
-    thumbnail: "data/images/section1/3t.jpg",
+    image: "Assets/ImageData/section1/3.jpg",
+    thumbnail: "Assets/ImageData/section1/3t.jpg",
     imageDescription: {
       gr: "Schoonebeek Adriaan, Αλέξανδρος και Διογένης, Χαλκογραφία, 1696.",
       en: "Schoonebeek Adriaan, Alexander and Diogenes, Copper engraving, 1696.",
@@ -86,8 +86,8 @@ export const eventsData = [
     long_lat: [39.649836, 31.980683],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3071.971515134709!2d31.9760557!3d39.6503556!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d260ba52a30203%3A0x2b196879943a580e!2sGordion%20Ancient%20City!5e0!3m2!1sen!2sgr!4v1692711426498!5m2!1sen!2sgr",
-    image: "data/images/section1/4.jpg",
-    thumbnail: "data/images/section1/4t.jpg",
+    image: "Assets/ImageData/section1/4.jpg",
+    thumbnail: "Assets/ImageData/section1/4t.jpg",
     imageDescription: {
       gr: "Τζανουλίνος Πραξιτέλης, Ο Μέγας Αλέξανδρος κόβει τον Γόρδιο Δεσμό, Ορειχάλκινη ανάγλυφη πλακέτα, Έργο βασισμένο σε χαρακτικό του Bartolomeo Pinelli.",
       en: "Tzanoulinos Praxitelis, Alexander the Great cuts the Gordian Knot, Brass embossed plaque, Work based on an engraving by Bartolomeo Pinelli.",
@@ -112,8 +112,8 @@ export const eventsData = [
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3566185.4515476828!2d22.9313179!3d29.2058135!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x147aaface8f3a523%3A0x6f335df8f19a074d!2sSiwa%20Oasis%2C%20Siwa%2C%20Matrouh%20Governorate%2C%20Egypt!5e0!3m2!1sen!2sgr!4v1692713183767!5m2!1sen!2sgr",
     long_lat: [29.205814, 25.526838],
-    image: "data/images/section1/5.jpg",
-    thumbnail: "data/images/section1/5t.jpg",
+    image: "Assets/ImageData/section1/5.jpg",
+    thumbnail: "Assets/ImageData/section1/5t.jpg",
     imageDescription: {
       gr: "Schoonebeek Adriaan, Ο Αλέξανδρος ανακηρύσσεται γιος του Άμμωνα Δία, Χαλκογραφία, 1696.",
       en: "Schoonebeek Adriaan, Alexander the Great declared son of Zeus Ammon, Copper engraving, 1696.",
@@ -139,8 +139,8 @@ export const eventsData = [
     long_lat: [29.935582, 52.889182],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13830.107036715224!2d52.8915658!3d29.9355235!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3fade35f5cf0ad6d%3A0x2363ec76997cfee!2sPersepolis!5e0!3m2!1sen!2sgr!4v1692714481445!5m2!1sen!2sgr",
-    image: "data/images/section1/6.jpg",
-    thumbnail: "data/images/section1/6t.jpg",
+    image: "Assets/ImageData/section1/6.jpg",
+    thumbnail: "Assets/ImageData/section1/6t.jpg",
     imageDescription: {
       gr: "Edelinck Gérard, Ο Αλέξανδρος και ο Ηφαιστίων επισκέπτονται την Οικογένεια του Δαρείου, Χαλκογραφία βασισμένη στην ελαιογραφία του Charles Le Brun, Οι Βασίλισσες της Περσίας στα πόδια του Αλέξανδρου, 1852.",
       en: "Edelinck Gérard, Alexander and Hephaestion visit the family of Darius, Copper engraving based on Charles Le Brun’s oil painting The Queens of Persia at the feet of Alexander, 1852.",
@@ -164,8 +164,8 @@ export const eventsData = [
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3139.91544940273!2d67.1841877!3d38.0956318!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f4ac7f4598726b5%3A0xc063564f4dfc8fca!2sSogdian%20Rock!5e0!3m2!1sen!2sgr!4v1692714517287!5m2!1sen!2sgr",
     long_lat: [38.095632, 67.184188],
-    image: "data/images/section1/7.jpg",
-    thumbnail: "data/images/section1/7t.jpg",
+    image: "Assets/ImageData/section1/7.jpg",
+    thumbnail: "Assets/ImageData/section1/7t.jpg",
     imageDescription: {
       gr: "Αγνώστου χαράκτη, Ο Γάμος του Μεγάλου Αλεξάνδρου εν Σούσοις, Ξυλογραφία βασισμένη στην ομώνυμη ελαιογραφία του Andreas Müller, από το τεύχος της 1ης/13ης Μαΐου 1883 του περιοδικού «Έσπερος» της Λειψίας.",
       en: "Unknown engraver, The Wedding of Alexander the Great at Susa, Woodcut based on an oil painting of the same name by Andreas Müller, from the 1st/13th May 1883 issue of the Leipzig magazine “Hesperus”.",
@@ -188,8 +188,8 @@ export const eventsData = [
     long_lat: [30.464581, 75.887633],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3521530.840928087!2d73.6486104!3d30.4645808!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39105d382f8d8ad7%3A0xa30f6b605fd494c4!2sSangala%2C%20Punjab%20148023%2C%20India!5e0!3m2!1sen!2sgr!4v1692714576438!5m2!1sen!2sgr",
-    image: "data/images/section1/8.jpg",
-    thumbnail: "data/images/section1/8t.jpg",
+    image: "Assets/ImageData/section1/8.jpg",
+    thumbnail: "Assets/ImageData/section1/8t.jpg",
     imageDescription: {
       gr: "Blaise Simonet Jean-Baptiste, Ο Αλέξανδρος επιστρέφει στον Πώρο το Βασίλειό του, Χαλκογραφία βασισμένη σε ελαιογραφία του François Gérard, πρώιμος 19ος αιώνας.",
       en: "Blaise Simonet Jean-Baptiste, Alexander gives Porus back his Kingdom, Copper engraving based on an oil painting by François Gérard, early 19th century.",
@@ -217,8 +217,8 @@ export const eventsData = [
     long_lat: [26.215794, 63.399977],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d458164.75822821516!2d63.39997731214671!3d26.21579379353364!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sgr!4v1692715095137!5m2!1sen!2sgr",
-    image: "data/images/section1/9.jpg",
-    thumbnail: "data/images/section1/9t.jpg",
+    image: "Assets/ImageData/section1/9.jpg",
+    thumbnail: "Assets/ImageData/section1/9t.jpg",
     imageDescription: {
       gr: "Η Διάβασις της Ερήμου Γεδρωσίας, Επιχρωματισμένο χαρακτικό.",
       en: "The Crossing of the Gedrosian Desert, Coloured engraving.",
@@ -244,8 +244,8 @@ export const eventsData = [
     long_lat: [34.813586, 48.525814],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d26834509.20013044!2d30.5961256!3d34.8135661!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ff1ecc4b3aab593%3A0x7b0b82ddf4074b5b!2sHamedan%2C%20Hamadan%20Province%2C%20Iran!5e0!3m2!1sen!2sgr!4v1692715133271!5m2!1sen!2sgr",
-    image: "data/images/section1/10.jpg",
-    thumbnail: "data/images/section1/10t.jpg",
+    image: "Assets/ImageData/section1/10.jpg",
+    thumbnail: "Assets/ImageData/section1/10t.jpg",
     imageDescription: {
       gr: "Τζανουλίνος Πραξιτέλης , Ο θάνατος του Ηφαιστίωνα, Ορειχάλκινη ανάγλυφη πλακέτα, Έργο βασισμένο σε χαρακτικό του Bartolomeo Pinelli.",
       en: "Tzanoulinos Praxitelis, The Death of Hephaestion, Brass embossed plaque, Work based on an engraving by Bartolomeo Pinelli.",
@@ -270,8 +270,8 @@ export const eventsData = [
     long_lat: [32.656051, 44.531959],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d859936.6412699488!2d44.5319585!3d32.65605095!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x155857e55425dcb9%3A0x138d1ca648ae5972!2sBabylon%20Governorate%2C%20Iraq!5e0!3m2!1sen!2sgr!4v1692715580081!5m2!1sen!2sgr",
-    image: "data/images/section1/11.jpg",
-    thumbnail: "data/images/section1/11t.jpg",
+    image: "Assets/ImageData/section1/11.jpg",
+    thumbnail: "Assets/ImageData/section1/11t.jpg",
     imageDescription: {
       gr: "Αγνώστου χαράκτη, Ο θάνατος του Μεγάλου Αλεξάνδρου, Λιθογραφία βασισμένη στην ομώνυμη ελαιογραφία του Carl von Piloty, ύστερος 19ος αιώνας.",
       en: "Unknown engraver, The Death of Alexander the Great, Lithograph based on the oil painting of the same name by Karl von Piloty, late 19th century.",
@@ -296,8 +296,8 @@ export const eventsData = [
     long_lat: [38.495789, 22.84432],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6245.293771274865!2d22.84431995!3d38.495789249999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a091ab8c41e5f9%3A0x400bd2ce2b98550!2sChaeronea%20321%2000!5e0!3m2!1sen!2sgr!4v1692716555242!5m2!1sen!2sgr",
-    image: "data/images/section2/1.jpg",
-    thumbnail: "data/images/section2/1t.jpg",
+    image: "Assets/ImageData/section2/1.jpg",
+    thumbnail: "Assets/ImageData/section2/1t.jpg",
     imageDescription: {
       gr: "Λαμέρας Λάζαρος, Φίλιππος Β’ της Μακεδονίας, Ορειχάλκινο ανάγλυφο μετάλλιο.",
       en: "Lameras Lazaros, Philip II of Macedon, Brass embossed medal.",
@@ -322,8 +322,8 @@ export const eventsData = [
     long_lat: [40.693964, 20.908238],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1945192.0307029192!2d19.76577927165226!3d40.66657903320341!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1350af5380ce859b%3A0x610f76f641976aa3!2sCangonj%2C%20Albania!5e0!3m2!1sen!2sgr!4v1692716812723!5m2!1sen!2sgr",
-    image: "data/images/section2/2.jpg",
-    thumbnail: "data/images/section2/2t.jpg",
+    image: "Assets/ImageData/section2/2.jpg",
+    thumbnail: "Assets/ImageData/section2/2t.jpg",
     imageDescription: {
       gr: "Παππάς Ιωάννης, Ο Μέγας Αλέξανδρος έφιππος, Ορειχάλκινο αγαλματίδιο.",
       en: "Pappas Ioannis, Alexander the Great on horseback, Brass statuette.",
@@ -350,8 +350,8 @@ export const eventsData = [
 
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25043.409800339912!2d23.31815585!3d38.3159596!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14a0fc275854b959%3A0x5364a1a6d75481b2!2sThiva%20322%2000!5e0!3m2!1sen!2sgr!4v1692716911170!5m2!1sen!2sgr",
-    image: "data/images/section2/3.jpg",
-    thumbnail: "data/images/section2/3t.jpg",
+    image: "Assets/ImageData/section2/3.jpg",
+    thumbnail: "Assets/ImageData/section2/3t.jpg",
     imageDescription: {
       gr: "Νικολακόπουλος Δημήτριος, Κοπίς (Μακεδονική σπαθομαχαίρα), Αντίγραφο.",
       en: "Nikolakopoulos Dimitrios, Kopis (Macedonian sword-knife), Copy.",
@@ -378,8 +378,8 @@ export const eventsData = [
     long_lat: [40.335897, 27.276425],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d779005.2000537019!2d26.7274514!3d40.2982018!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14b6a924521384c5%3A0xee37c498949b8e9c!2sBiga%20Stream!5e0!3m2!1sen!2sgr!4v1692717008445!5m2!1sen!2sgr",
-    image: "data/images/section2/4.jpg",
-    thumbnail: "data/images/section2/4t.jpg",
+    image: "Assets/ImageData/section2/4.jpg",
+    thumbnail: "Assets/ImageData/section2/4t.jpg",
     imageDescription: {
       gr: "Audran Jean, Η Αρετή υπερνικά όλα τα εμπόδια, Η Μάχη του Γρανικού, Χαλκογραφία βασισμένη σε έργο του Charles le Brun, 1721.",
       en: "Audran Jean, La vertu surmonte tout obstacle, Battle of the Granicus River, Copper engraving based on a work by Charles le Brun, 1721.",
@@ -407,8 +407,8 @@ export const eventsData = [
     long_lat: [40.335897, 27.276425],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d779005.2000537019!2d26.7274514!3d40.2982018!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14b6a924521384c5%3A0xee37c498949b8e9c!2sBiga%20Stream!5e0!3m2!1sen!2sgr!4v1692717008445!5m2!1sen!2sgr",
-    image: "data/images/section2/5.jpg",
-    thumbnail: "data/images/section2/5t.jpg",
+    image: "Assets/ImageData/section2/5.jpg",
+    thumbnail: "Assets/ImageData/section2/5t.jpg",
     imageDescription: {
       gr: "Gargiulo Raffaele, Η Μάχη της Ισσού, Λιθογραφία βασισμένη στο ρωμαϊκό Μωσαϊκό του Αλεξάνδρου, 1863.",
       en: "Gargiulo Raffaele, The Battle of Issus, Lithograph based on the Roman Alexander Mosaic, 1863.",
@@ -435,8 +435,8 @@ export const eventsData = [
     long_lat: [33.267398, 35.209924],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13343.86166505511!2d35.209923599999996!3d33.267397700000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151e7d902f915d95%3A0xcf0e3fc6fb997408!2sTyre%2C%20Lebanon!5e0!3m2!1sen!2sgr!4v1692717269465!5m2!1sen!2sgr",
-    image: "data/images/section2/6.jpg",
-    thumbnail: "data/images/section2/6t.jpg",
+    image: "Assets/ImageData/section2/6.jpg",
+    thumbnail: "Assets/ImageData/section2/6t.jpg",
     imageDescription: {
       gr: "Schoonebeek Adriaan, Η Πολιορκία της Τύρου από τα στρατεύματα του Αλέξανδρου, Χαλκογραφία, 1696.",
       en: "Schoonebeek Adriaan, The Siege of Tyre by Alexander’s troops, Copper engraving, 1696.",
@@ -463,8 +463,8 @@ export const eventsData = [
     long_lat: [36.197296, 44.008963],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d824252.4798724505!2d43.5186982!3d36.1972958!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x400722fe13443461%3A0x3e01d63391de79d1!2sErbil%2C%20Iraq!5e0!3m2!1sen!2sgr!4v1692717421166!5m2!1sen!2sgr",
-    image: "data/images/section2/7.jpg",
-    thumbnail: "data/images/section2/7t.jpg",
+    image: "Assets/ImageData/section2/7.jpg",
+    thumbnail: "Assets/ImageData/section2/7t.jpg",
     imageDescription: {
       gr: "Audran Jean, Μόνον η Αρετή αξίζει την Αυτοκρατορία του Κόσμου, Η Μάχη των Γαυγαμήλων, Χαλκογραφία βασισμένη σε ελαιογραφία του Charles le Brun, 1699-1708.",
       en: "Audran Jean, Only Virtue is worthy of the Empire of the World, The Battle of Gaugamela, Copper engraving based on an oil painting by Charles le Brun, 1699-1708.",
@@ -491,8 +491,8 @@ export const eventsData = [
     long_lat: [30.700819, 51.575942],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14051840.965692023!2d42.6110979!3d30.7008188!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3fb0a5be12c2e455%3A0xef80ad250ee5e616!2z2K_Ysdio2YbYryDZvtin2LHYsw!5e0!3m2!1sen!2sgr!4v1692716040961!5m2!1sen!2sgr",
-    image: "data/images/section2/8.jpg",
-    thumbnail: "data/images/section2/8t.jpg",
+    image: "Assets/ImageData/section2/8.jpg",
+    thumbnail: "Assets/ImageData/section2/8t.jpg",
     imageDescription: {
       gr: "Schoonebeek Adriaan, Η καταδίωξη του Δαρείου, Χαλκογραφία, 1696.",
       en: "Schoonebeek Adriaan, The Pursuit of Darius, Copper engraving, 1696.",
@@ -519,8 +519,8 @@ export const eventsData = [
     long_lat: [40.286631, 69.636927],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d97392.32463258061!2d69.6369266!3d40.28663055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b1b2ddc3ab3e0d%3A0x1f4cdc45cf4fee37!2sKhujand%2C%20Tajikistan!5e0!3m2!1sen!2sgr!4v1692716007215!5m2!1sen!2sgr",
-    image: "data/images/section2/9.jpg",
-    thumbnail: "data/images/section2/9t.jpg",
+    image: "Assets/ImageData/section2/9.jpg",
+    thumbnail: "Assets/ImageData/section2/9t.jpg",
     imageDescription: {
       gr: "Τρισδιάστατο Μοντέλο Ελεπόλεως - Πολιορκητικού Πύργου.",
       en: "3D Model of a Helepolis / Siege Tower",
@@ -547,8 +547,8 @@ export const eventsData = [
     long_lat: [40.285149, 69.618198],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6087.19800344262!2d69.6114027!3d40.2846571!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b1b3abad6ef5bb%3A0xfb2b940e964a1efe!2sHistorical%20Museum%20of%20Sughd%20Region!5e0!3m2!1sen!2sgr!4v1692715930939!5m2!1sen!2sgr",
-    image: "data/images/section2/10.jpg",
-    thumbnail: "data/images/section2/10t.jpg",
+    image: "Assets/ImageData/section2/10.jpg",
+    thumbnail: "Assets/ImageData/section2/10t.jpg",
     imageDescription: {
       gr: "Amsler Samuel, Ο Αλέξανδρος επικεφαλής του Μακεδονικού Ιππικού, Χαλκογραφία βασισμένη σε ανάγλυφο του Bartel Thorvaldsen, 1870.",
       en: "Amsler Samuel, Alexander at the Head of the Macedonian Cavalry, Copper engraving based on a carving by Bartel Thorvaldsen, 1870.",
@@ -574,8 +574,8 @@ export const eventsData = [
     long_lat: [38.095632, 67.184188],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3139.91544940273!2d67.1841877!3d38.0956318!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f4ac7f4598726b5%3A0xc063564f4dfc8fca!2sSogdian%20Rock!5e0!3m2!1sen!2sgr!4v1692717620884!5m2!1sen!2sgr",
-    image: "data/images/section2/11.jpg",
-    thumbnail: "data/images/section2/11t.jpg",
+    image: "Assets/ImageData/section2/11.jpg",
+    thumbnail: "Assets/ImageData/section2/11t.jpg",
     imageDescription: {
       gr: "Castaigne Andre, Ο γάμος του Αλεξάνδρου και της Ρωξάνης, Χαρακτικό, 1898-1899.",
       en: "Castaigne Andre, The Wedding of Alexander and Roxane, Engraving, 1898-1899.  ",
@@ -601,8 +601,8 @@ export const eventsData = [
     long_lat: [34.829123, 72.880806],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13100.31337432762!2d72.8720514!3d34.8291227!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ddd153e1b56411%3A0x80ea5b9331621e45!2sPir-Sar%20Ridge%20(Rock%20of%20Aornos)!5e0!3m2!1sen!2sgr!4v1692717695388!5m2!1sen!2sgr",
-    image: "data/images/section2/12.jpg",
-    thumbnail: "data/images/section2/12t.jpg",
+    image: "Assets/ImageData/section2/12.jpg",
+    thumbnail: "Assets/ImageData/section2/12t.jpg",
     imageDescription: {
       gr: "Castaigne Andre, Ο Αλέξανδρος επιτίθεται στην ακρόπολη στον Ινδό Ποταμό, Χαρακτικό, 1898-1899.",
       en: "Castaigne Andre, Alexander attacking the citadel on the Indus, Engraving, 1898-1899.",
@@ -628,8 +628,8 @@ export const eventsData = [
     long_lat: [32.942708, 73.76225],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d53588.044086209375!2d73.7052746!3d32.9179197!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391f972eedcae363%3A0x57f77eea7eb2ed10!2sPakki%20Bailey%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2sgr!4v1692717752261!5m2!1sen!2sgr",
-    image: "data/images/section2/13.jpg",
-    thumbnail: "data/images/section2/13t.jpg",
+    image: "Assets/ImageData/section2/13.jpg",
+    thumbnail: "Assets/ImageData/section2/13t.jpg",
     imageDescription: {
       gr: "Audran Jean, Η πραγματική ανδρεία είναι πάντα ανίκητη, Η μάχη του Υδάσπη, Χαλκογραφία βασισμένη σε ελαιογραφία του Charles le Brun, 1699-1708.",
       en: "Audran Jean, True valour is always invincible, The Battle of Hydaspes, Copper engraving based on an oil painting by Charles le Brun, 1699-1708.",
@@ -655,8 +655,8 @@ export const eventsData = [
     long_lat: [30.181256, 71.474658],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d220733.1719983582!2d71.4746583!3d30.1812562!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x393b315778dea7d9%3A0xbad72fc74e55d42f!2sMultan%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2sgr!4v1692782714557!5m2!1sen!2sgr",
-    image: "data/images/section2/14.jpg",
-    thumbnail: "data/images/section2/14t.jpg",
+    image: "Assets/ImageData/section2/14.jpg",
+    thumbnail: "Assets/ImageData/section2/14t.jpg",
     imageDescription: {
       gr: "Castaigne Andre, Η σπασμένη σκάλα, Χαρακτικό, 1898-1899.",
       en: "Castaigne Andre, The Broken Ladder, Engraving, 1898-1899.",
@@ -681,8 +681,8 @@ export const eventsData = [
     long_lat: [31.224111, 29.954886],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109180.09413296964!2d29.954885900000004!3d31.224110850000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c49126710fd3%3A0xb4e0cda629ee6bb9!2sAlexandria%2C%20Alexandria%20Governorate%2C%20Egypt!5e0!3m2!1sen!2sgr!4v1692783109088!5m2!1sen!2sgr",
-    image: "data/images/section3/1.jpg",
-    thumbnail: "data/images/section3/1t.jpg",
+    image: "Assets/ImageData/section3/1.jpg",
+    thumbnail: "Assets/ImageData/section3/1t.jpg",
     imageDescription: {
       gr: "Αγνώστου χαράκτη, Αναπαράσταση της Αλεξάνδρειας, Από το βιβλίο του Léo Joubert “Alexandre le Grand, roi de Macédoine”, Παρίσι 1889.",
       en: "Unknown engraver, Representation of Alexandria, From Léo Joubert’s book “Alexandre le Grand, roi de Macédoine”, Paris 1889.",
@@ -708,8 +708,8 @@ export const eventsData = [
     long_lat: [34.353456, 62.21107],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52702.12779756697!2d62.211070050000004!3d34.353456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f3ce6a894be6cf7%3A0x9db9f81752d677c4!2sHerat%2C%20Afghanistan!5e0!3m2!1sen!2sgr!4v1692784341313!5m2!1sen!2sgr",
-    image: "data/images/section3/2.jpg",
-    thumbnail: "data/images/section3/2t.jpg",
+    image: "Assets/ImageData/section3/2.jpg",
+    thumbnail: "Assets/ImageData/section3/2t.jpg",
     imageDescription: {
       gr: "Αγνώστου χαράκτη, Νόμισμα με αναπαράσταση του Αλεξάνδρου, Από το βιβλίο του Léo Joubert “Alexandre le Grand, roi de Macédoine”, Παρίσι 1889.",
       en: "Unknown engraver, Coin depicting Alexander, From Léo Joubert’s book “Alexandre le Grand, roi de Macédoine”, Paris 1889.",
@@ -735,8 +735,8 @@ export const eventsData = [
     long_lat: [31.63496, 65.75017],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d54351.35147529095!2d65.7501696!3d31.634960149999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ed671baa0e28837%3A0x2759b21c9042aa75!2sKandahar%2C%20Afghanistan!5e0!3m2!1sen!2sgr!4v1692784418555!5m2!1sen!2sgr",
-    image: "data/images/section3/3.jpg",
-    thumbnail: "data/images/section3/3t.jpg",
+    image: "Assets/ImageData/section3/3.jpg",
+    thumbnail: "Assets/ImageData/section3/3t.jpg",
     imageDescription: {
       gr: "Αγνώστου γλύπτη, Αλέξανδρος ο Μέγας, Ορειχάλκινη προτομή βασισμένη σε ρωμαϊκό αντίγραφο.",
       en: "Unknown sculptor, Alexander the Great, Brass bust based on a Roman copy.",
@@ -762,8 +762,8 @@ export const eventsData = [
     long_lat: [40.286631, 69.636927],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d97392.32463258061!2d69.6369266!3d40.28663055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38b1b2ddc3ab3e0d%3A0x1f4cdc45cf4fee37!2sKhujand%2C%20Tajikistan!5e0!3m2!1sen!2sgr!4v1692784652878!5m2!1sen!2sgr",
-    image: "data/images/section3/4.jpg",
-    thumbnail: "data/images/section3/4t.jpg",
+    image: "Assets/ImageData/section3/4.jpg",
+    thumbnail: "Assets/ImageData/section3/4t.jpg",
     imageDescription: {
       gr: "Jansson Jan, Η Εκστρατεία του Μεγάλου Αλεξάνδρου του Μακεδόνα, Χαλκόγραφος χάρτης, Άμστερνταμ 1652.",
       en: "Jansson Jan, The Campaign of Alexander the Great of Macedon, Copper-engraved map, Amsterdam 1652.",
@@ -789,8 +789,8 @@ export const eventsData = [
     long_lat: [35.006297, 68.903697],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d13386638.163546069!2d59.938274!3d35.0011423!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38d18f6813256ad5%3A0xfa277b1ce72d6b6b!2sParwan%2C%20Afghanistan!5e0!3m2!1sen!2sgr!4v1692784790518!5m2!1sen!2sgr",
-    image: "data/images/section3/5.jpg",
-    thumbnail: "data/images/section3/5t.jpg",
+    image: "Assets/ImageData/section3/5.jpg",
+    thumbnail: "Assets/ImageData/section3/5t.jpg",
     imageDescription: {
       gr: "Amsler Samuel, Ο Αλέξανδρος στο βασιλικό του άρμα, Χαλκογραφία βασισμένη σε ανάγλυφο του Bartel Thorvaldsen, 1870.",
       en: "Amsler Samuel, Alexander in his Royal Chariot, Copper engraving based on a carving by Bartel Thorvaldsen, 1870.",
@@ -816,8 +816,8 @@ export const eventsData = [
     long_lat: [32.930744, 73.715918],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53580.27804018378!2d73.71591765!3d32.93074375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391f90e6e5066453%3A0xef87b72a42ae072d!2sJhelum%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2sgr!4v1692784940507!5m2!1sen!2sgr",
-    image: "data/images/section3/6.jpg",
-    thumbnail: "data/images/section3/6t.jpg",
+    image: "Assets/ImageData/section3/6.jpg",
+    thumbnail: "Assets/ImageData/section3/6t.jpg",
     imageDescription: {
       gr: "Τζανουλίνος Πραξιτέλης, Ο Μέγας Αλέξανδρος έφιππος, Ορειχάλκινη ανάγλυφη πλακέτα, βασισμένη σε χαρακτικό έργο του Bartolomeo Pinelli.",
       en: "Tzanoulinos Praxitelis, Alexander the Great on horseback, Brass embossed plaque, based on an engraving by Bartolomeo Pinelli.",
@@ -844,8 +844,8 @@ export const eventsData = [
     long_lat: [31.006644, 47.439789],
     googleMapsLink:
       "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d799.9824098647582!2d47.43963592504503!3d31.0064877823988!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3fdcd3b7222fdbf9%3A0x132f165dbc7ccd1c!2z2K3Yr9mK2YLYqSDYp9mE2KfZhdmH!5e0!3m2!1sen!2sgr!4v1697109714302!5m2!1sen!2sgr",
-    image: "data/images/section3/7.jpg",
-    thumbnail: "data/images/section3/7t.jpg",
+    image: "Assets/ImageData/section3/7.jpg",
+    thumbnail: "Assets/ImageData/section3/7t.jpg",
     imageDescription: {
       gr: "Amsler Samuel, Σκηνές από την είσοδο στη Βαβυλώνα, Χαλκογραφία βασισμένη σε ανάγλυφο του Bartel Thorvaldsen, 1870.",
       en: "Amsler Samuel, Scenes from the Entry into Babylon, Copper engraving based on a sculpture by Bartel Thorvaldsen, 1870. ",

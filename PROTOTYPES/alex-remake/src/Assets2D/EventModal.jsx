@@ -14,7 +14,7 @@ const EventModal = () => {
         setSelectedEventContext(null)
     }
 
-    if (!selectedEventContext) return null
+    if (!selectedEventContext) return null;
 
     return (
         <Modal
@@ -59,7 +59,7 @@ const EventModal = () => {
                             justifyContent: 'space-between',
                             alignItems:     'center',
                             p: 2,
-                            borderBottom: '1px solid #ddd',
+                            borderBottom:   '1px solid #ddd',
                         }}
                         >
                             <Typography variant = 'h6' sx = {{ fontWeight: 'bold' }}>
@@ -97,7 +97,7 @@ const EventModal = () => {
                                 variant = 'body2'
                                 sx      = {{
                                     fontStyle: 'italic',
-                                    color: '#333',
+                                    color:     '#333',
                                 }}
                                 >
                                     {selectedEventContext.startDate < 0
@@ -106,9 +106,9 @@ const EventModal = () => {
                                 </Typography>
                             </Box>
 
-                            {/* Right: Image or map or share */}
+                            {/* Right: Image and caption */}
                             <Box
-                            sx={{
+                            sx = {{
                                 flex: 1,
                                 gap:  2,
                                 display:       'flex',
@@ -117,24 +117,52 @@ const EventModal = () => {
                             >
                                 <Box
                                 sx = {{
-                                    height:       150,
-                                    bgcolor:      '#ccc',
+                                    height:       250,
                                     borderRadius: 2,
+                                    overflow:     'hidden',
                                 }}
                                 >
-                                {/* TODO: Add Image or Map here */}
+                                    {selectedEventContext.image ? (
+                                        <img
+                                        src   = {selectedEventContext.image}
+                                        alt   = {selectedEventContext.title?.gr}
+                                        style = {{
+                                            display:      'block',
+                                            width:        '100%',
+                                            height:       '100%',
+                                            objectFit:    'contain',
+                                            borderRadius: 2,
+                                        }}
+                                        />
+                                    ) : (
+                                        <Typography
+                                        variant = 'body2'
+                                        sx      = {{ textAlign: 'center', paddingTop: 5 }}
+                                        >
+                                            Δεν υπάρχει εικόνα διαθέσιμη.
+                                        </Typography>
+                                    )}
                                 </Box>
 
-                                <Box sx = {{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                                {/* TODO: Add share buttons if you want */}
-                                </Box>
+                                <Typography
+                                variant = 'caption'
+                                sx      = {{
+                                    display:   'block',
+                                    textAlign: 'left',
+                                    color:     '#000000',
+                                    fontStyle: 'italic',
+                                    mt: 1,
+                                }}
+                                >
+                                    {selectedEventContext.imageDescription?.gr || 'Χωρίς περιγραφή εικόνας.'}
+                                </Typography>
                             </Box>
                         </Box>
                     </Card>
                 </Slide>
             </Box>
         </Modal>
-    )
+    );
 }
 
 export default EventModal;
