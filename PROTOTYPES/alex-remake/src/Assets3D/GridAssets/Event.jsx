@@ -52,8 +52,8 @@ const Event = forwardRef(({
 		if (isHovered) return hoveredColor;
 
 		// TODO: Κάνε την ανάθεση χρωμάτων πιο ευέλικτη / παραμετροποιήσιμη
-		if (event.type === 'Γλυπτά')                return '#008000';
-		if (event.type === 'Μοντέλα και Αντίγραφα') return '#1F51FF';
+		if (event.section === 'Η Ζωή του Μ. Αλεξάνδρου') return '#1F51FF';
+		if (event.section === 'Ίδρυση Πόλεων')           return '#008000';
 
 		return originalColor;
 	}
