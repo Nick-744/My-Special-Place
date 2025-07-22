@@ -10,8 +10,8 @@ import {
 
 import { forwardRef, useRef, useState, useContext } from 'react'
 import { globalVarContext } from '../../Context/GlobalContext'
-import { useFrame, useThree } from '@react-three/fiber'
 import { Text, useTexture } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 import { easing } from 'maath'
 import * as THREE from 'three'
 
@@ -30,9 +30,6 @@ const Event = forwardRef(({
 	const eventTexture = useTexture(
 		'./Assets/Textures/shield_boarder_transparent.svg'
 	)
-
-	// ----- Camera ----- //
-	const { camera } = useThree()
 
 	// ----- Event handlers ----- //
 	const handlePointerOver = () => {
@@ -104,12 +101,12 @@ const Event = forwardRef(({
 
 
 		// Adjust opacity of all events when 1 is hovered
-		eventsRefArray.current.forEach((ref, i) => {
-			const shouldDim     = globalVar.eventHoveringContext !== -1 && i !== globalVar.eventHoveringContext;
-			const targetOpacity = shouldDim ? 0.15 : 1;
+		eventsRefArray.current.forEach((temp, i) => {
+			const shouldDim     = globalVar.eventHoveringContext !== -1 && i !== globalVar.eventHoveringContext
+			const targetOpacity = shouldDim ? 0.15 : 1
 
-			easing.damp(iconsRefArray.current[i].current.material, 'opacity', targetOpacity, 4, dt);
-		});
+			easing.damp(iconsRefArray.current[i].current.material, 'opacity', targetOpacity, 4, dt)
+		})
 	})
 
 	return (
@@ -131,8 +128,6 @@ const Event = forwardRef(({
 				color       = {getColor()}
 				transparent = {true}
 				alphaTest   = {0.1}
-
-				// visible = {globalVar.eventHoveringContext}
 				/>
 			</mesh>
 

@@ -1,4 +1,6 @@
-import { scaleEffect, cameraPos } from './MyConfig';
+import {
+    scaleEffect, cameraPos, timestamps, minZPosition, maxZPosition, exponentialBase
+} from './MyConfig';
 
 /** --- Calculate wave displacement for a given position and time ---
  *
@@ -6,6 +8,7 @@ import { scaleEffect, cameraPos } from './MyConfig';
  * @param {number} y    - Y coordinate
  * @param {number} time - Current time
  * @param {number} distanceFromCamera - Distance from camera position
+ * 
  * @returns {number} Wave height at the given position
  */
 export function getWaveHeight(x, y, time, distanceFromCamera) {
@@ -29,8 +32,35 @@ export function getWaveHeight(x, y, time, distanceFromCamera) {
  *
  * @param {number} x - The x-coordinate of the point.
  * @param {number} y - The y-coordinate of the point.
+ * 
  * @returns {number} The normalized distance from the camera to the point.
  */
 export const calculateDistanceFromCamera = (x, y) => {
     return Math.sqrt((x - cameraPos[0])**2 + (y - cameraPos[1])**2) / 50;
+}
+
+/**
+ * Calculates the Z position for an event based on its timestamp, using
+ * exponential mapping to compress later values and normalize the range.
+ *
+ * @param {number} timestamp - The timestamp of the event to position.
+ * 
+ * @returns {number} The calculated Z position for the event.
+ */
+export function calculateEventZPosition(timestamp) {
+	const safeMin   = Math.min(...timestamps)
+	const safeMax   = Math.max(...timestamps)
+	const safeRange = safeMax - safeMin + 1
+
+	// Normalize [0, 1]
+	const linearNormalized = (timestamp - safeMin) / safeRange
+
+	// Apply exponential mapping to compress later values
+	const expValue = (
+        Math.exp(linearNormalized * exponentialBase) - 1) / (Math.exp(exponentialBase) - 1
+    )
+
+	const z = maxZPosition - expValue * (maxZPosition - minZPosition)
+
+	return z;
 }

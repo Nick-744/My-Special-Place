@@ -31,16 +31,17 @@ export const cameraFOV       = 30;  // Camera field of view
 export const cameraZoomSpeed = 1.0; // Speed of zooming with mouse wheel
 
 // ==================== Timestamps Configuration ====================
-export const timestamps          = [
+export const timestamps = [
   -360, -350, -345, -340, -338, -336, -334, -332,
   -330, -328, -326, -325, -324, -322, -320
 ]
 export const timestampsXPosition = 3 // Integer value!
+export const exponentialBase     = 3 // Base for exponential mapping - Make the spacing better!
 
 // ==================== Event Configuration ====================
 export const eventYFloat     = 0.4  // Float value y [offset above wave]
 export const eventsXPosition = -step * 0
-export const eventWaveEffect = 1    // Wave effect multiplier for events
+export const eventWaveEffect = 3    // Wave effect multiplier for events
 
 export const originalColor = '#ff0000' // Original color for events
 export const hoveredColor  = '#ffA500'

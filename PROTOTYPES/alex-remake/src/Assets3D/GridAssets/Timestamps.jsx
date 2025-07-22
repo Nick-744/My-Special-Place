@@ -1,19 +1,18 @@
 import {
-	timestamps, step, minZPosition, maxZPosition, timestampsXPosition, gObjRotationX
+	timestamps, step, timestampsXPosition, gObjRotationX, eventWaveEffect
 } from '../../MyConfig'
 
-import { getWaveHeight, calculateDistanceFromCamera } from '../../Utils'
+import {
+	getWaveHeight,
+	calculateDistanceFromCamera,
+	calculateEventZPosition
+} from '../../Utils'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import React, { useRef } from 'react'
 import * as THREE from 'three'
 
 const Timestamps = () => {
-	// Calculate the range of timestamps for scaling
-	const minTimestamp   = Math.min(...timestamps)
-	const maxTimestamp   = Math.max(...timestamps)
-	const timestampRange = maxTimestamp - minTimestamp
-
 	// Create an array of refs, 1 for each timestamp
 	const timestampRefs = useRef(timestamps.map(() => React.createRef()))
 
@@ -31,7 +30,7 @@ const Timestamps = () => {
 					time,
 					distanceFromCamera
 				)
-				ref.current.position.y = waveHeight
+				ref.current.position.y = waveHeight * eventWaveEffect
 			}
 		})
 	})
@@ -45,8 +44,7 @@ const Timestamps = () => {
 		: `${timestamp} μ.Χ.`
 
 		// Position based on the actual timestamp value
-		const normalizedPosition = (timestamp - minTimestamp) / timestampRange
-		const z = maxZPosition - normalizedPosition * (maxZPosition - minZPosition)
+		const z = calculateEventZPosition(timestamp)
 		const x = step * timestampsXPosition + 0.1
 		const y = 0.1
 		

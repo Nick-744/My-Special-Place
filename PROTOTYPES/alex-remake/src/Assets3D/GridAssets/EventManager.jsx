@@ -1,19 +1,18 @@
 import {
-	timestamps, step, minZPosition, maxZPosition, eventYFloat, eventsXPosition, eventWaveEffect
+	step, eventYFloat, eventsXPosition, eventWaveEffect
 } from '../../MyConfig'
 
-import { getWaveHeight, calculateDistanceFromCamera } from '../../Utils'
+import {
+	getWaveHeight,
+	calculateDistanceFromCamera,
+	calculateEventZPosition
+} from '../../Utils'
 import { eventsData } from '../../InfoData/EventsData'
 import { useFrame } from '@react-three/fiber'
 import React, { useRef } from 'react'
 import Event from './Event'
 
 const EventManager = () => {
-	// Calculate the range of timestamps for positioning
-	const minTimestamp   = Math.min(...timestamps)
-	const maxTimestamp   = Math.max(...timestamps)
-	const timestampRange = maxTimestamp - minTimestamp
-
 	// Create an array of refs, 1 for each event
 	const eventRefs     = useRef(eventsData.map(() => React.createRef()))
 	const eventIconRefs = useRef(eventsData.map(() => React.createRef()))
@@ -37,37 +36,40 @@ const EventManager = () => {
 		})
 	})
 
+	// ----- Positioning Logic/Pattern ----- //
+	const Z_BUCKET_SIZE = step * 3
+	function getZBucket(z) { return Math.round(z / Z_BUCKET_SIZE) * Z_BUCKET_SIZE; }
+
 	const usedXPerZ = new Map()
-	function getNonOverlappingX(z, baseX, buffer = step * 1, jitterRange = step * 1.5) {
-		let tryX
-		let maxTries = 100
+	function getNonOverlappingX(z, baseX, buffer = step * 0.6, maxAttempts = 20) {
+		const bucketZ = getZBucket(z)
+		if (!usedXPerZ.has(bucketZ)) usedXPerZ.set(bucketZ, [])
+		const usedX   = usedXPerZ.get(bucketZ)
 
-		if (!usedXPerZ.has(z)) usedXPerZ.set(z, [])
-		const usedX = usedXPerZ.get(z)
+		// Try spreading X left and right from baseX in a predictable pattern
+		for (let i = 0; i < maxAttempts; i++) {
+			const offset = ((i % 2 === 0 ? 1 : -1) * Math.ceil(i / 2)) * buffer
+			const tryX   = baseX + offset
 
-		do {
-			const jitter = (Math.random() - 0.5) * 2 * jitterRange
-			tryX         = baseX + jitter
+			const collides = usedX.some(x => Math.abs(x - tryX) < buffer)
+			if (!collides) {
+				usedX.push(tryX)
 
-			// Only check for collisions in this Z layer
-			const collides = usedX.some(
-				x => Math.abs(x - tryX) < buffer
-			)
-			if (!collides) break;
+				return tryX;
+			}
+		}
 
-			maxTries--;
-		} while (maxTries > 0)
+		// Fallback: add random jitter if no spot found after all attempts
+		const fallbackX = baseX + (Math.random() - 0.5) * buffer
+		usedX.push(fallbackX)
 
-		usedX.push(tryX)
-
-		return tryX;
+		return fallbackX;
 	}
 
 	// Calculate position for each event based on timestamp
 	function calculateEventPosition(event, _) {
 		// Position based on the event's timestamp value
-		const normalizedPosition = (event.startDate - minTimestamp) / timestampRange
-		const z = maxZPosition - normalizedPosition * (maxZPosition - minZPosition)
+		const z = calculateEventZPosition(event.startDate)
 		const x = getNonOverlappingX(z, eventsXPosition)
 		const y = 0 // Y will be updated by wave animation
 		
