@@ -20,7 +20,7 @@ const BackgroundImage = () => {
 			
 			position: 'absolute',
 			width:    '100%',
-			height:   '52vh',
+			height:   '45vh',
 			top:  -50,
 			left: 0,
 			

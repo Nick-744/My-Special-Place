@@ -8,7 +8,7 @@ export const nodeDensity = 3;                // Node spacing
 export const wireframeColor = '#00aaff';   // Wireframe color
 export const gridOpacity    = 0.1;           // Opacity of the grid lines
 
-export const particlesSize  = 0.1;  // Particle size
+export const particlesSize  = 0.2;  // Particle size
 export const particlesSpeed = 0.03; // Particle movement speed
 export const particleCount  = 6000; // Number of particles in the system
 

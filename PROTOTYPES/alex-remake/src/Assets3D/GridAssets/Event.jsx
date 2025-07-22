@@ -1,7 +1,5 @@
 import {
 	step,
-	cameraLooking,
-	cameraFOV,
 	originalColor,
 	clickedColor,
 	hoveredColor,
@@ -52,6 +50,11 @@ const Event = forwardRef(({
 	const getColor = () => {
 		if (isClicked) return clickedColor;
 		if (isHovered) return hoveredColor;
+
+		// TODO: Κάνε την ανάθεση χρωμάτων πιο ευέλικτη / παραμετροποιήσιμη
+		if (event.type === 'Γλυπτά')                return '#008000';
+		if (event.type === 'Μοντέλα και Αντίγραφα') return '#1F51FF';
+
 		return originalColor;
 	}
 
