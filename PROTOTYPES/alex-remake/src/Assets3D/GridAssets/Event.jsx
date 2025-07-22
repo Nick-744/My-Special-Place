@@ -23,8 +23,10 @@ const Event = forwardRef(({
 	// ----- Global ----- //
 	const globalVar = useContext(globalVarContext)
 	
-	const titleRef	   = useRef()
-	const eventTimeRef = useRef()
+	const titleRef	       = useRef()
+	const eventTimeRef     = useRef()
+	const eventLocationRef = useRef()
+
 	const eventTexture = useTexture(
 		'./Assets/Textures/shield_boarder_transparent.svg'
 	)
@@ -94,12 +96,14 @@ const Event = forwardRef(({
 		)
 		
 		// Show/Hide title and event's timestamp
-		easing.damp(titleRef.current,     'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
-		easing.damp(eventTimeRef.current, 'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
+		easing.damp(titleRef.current,         'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
+		easing.damp(eventTimeRef.current,     'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
+		easing.damp(eventLocationRef.current, 'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
 
 		// Control visibility based on fillOpacity for smooth fade-out
-		titleRef.current.visible     = titleRef.current.fillOpacity     > 0.01
-		eventTimeRef.current.visible = eventTimeRef.current.fillOpacity > 0.01
+		titleRef.current.visible         = titleRef.current.fillOpacity         > 0.01
+		eventTimeRef.current.visible     = eventTimeRef.current.fillOpacity     > 0.01
+		eventLocationRef.current.visible = eventLocationRef.current.fillOpacity > 0.01
 
 
 
@@ -162,6 +166,19 @@ const Event = forwardRef(({
 				{event.startDate < 0 
 					? `${Math.abs(event.startDate)} π.Χ.`
 					: `${event.startDate} μ.Χ.`}
+			</Text>
+
+			{/* Event location text */}
+			<Text
+			ref 	 = {eventLocationRef}
+			position = {[0, -step * 0.54, 0]}
+			fontSize = {step * 0.1}
+			color    = '#888888'
+			anchorX  = 'center'
+			anchorY  = 'bottom'
+			visible  = {false}
+			>
+				{event.location['gr'] || 'Άγνωστο'}
 			</Text>
 		</group>
 	);
