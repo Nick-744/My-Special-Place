@@ -2,6 +2,7 @@ import { cameraFOV, cameraInitialZ, cameraHeight } from '../MyConfig'
 
 import EventManager from './GridAssets/EventManager'
 import BackgroundImage from '../Assets2D/BGImage2D'
+import Timestamps2D from '../Assets2D/Timestamps2D'
 import Timestamps from './GridAssets/Timestamps'
 import GridScenePackage from './AnimatedGrid'
 import { Canvas } from '@react-three/fiber'
@@ -12,20 +13,11 @@ import { OrbitControls, Stats } from '@react-three/drei'
 
 const Scene_3D = () => {
 	return (
-		<div
-		id        = 'canvas-container'
-		className = 'w3-animate-opacity'
-		>
+		<div id = 'canvas-container' className = 'w3-animate-opacity'>
 			<Stats />
 
 			<BackgroundImage />
-			<Canvas
-			
-			camera = {{
-				fov:      cameraFOV,
-				position: [0, cameraHeight, cameraInitialZ]
-			}}
-			>
+			<Canvas camera = {{ fov: cameraFOV, position: [0, cameraHeight, cameraInitialZ] }}>
 
 				<Camera3D />
 				{/* <OrbitControls /> */}
@@ -33,8 +25,10 @@ const Scene_3D = () => {
 				<GridScenePackage />
 					<Timestamps />
 					<EventManager />
-				
+
 			</Canvas>
+
+			<Timestamps2D />
 		</div>
 	);
 }
