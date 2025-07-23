@@ -1,5 +1,5 @@
 import { GlobalProviderComponent } from './Context/GlobalContext'
-import EventModal from './Assets2D/EventModal'
+import EventModal from './Assets2D/Modal/EventModal'
 import { createRoot } from 'react-dom/client'
 import Scene_3D from './Assets3D/Scene3D'
 import { StrictMode } from 'react'

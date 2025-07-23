@@ -43,6 +43,7 @@ const Event = forwardRef(({
 		globalVar.setEventHoveringContext(-1) // Default
 	}
 
+	/* --- Open modal with event details --- */
 	const handleClick = () => {
 		globalVar.setSelectedEventContext(event)
 		globalVar.setIsModalOpenContext(!globalVar.isModalOpenContext)
