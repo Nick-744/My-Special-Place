@@ -5,6 +5,8 @@ Contains the right panel of the modal that
 displays event images and captions.
 */
 const ModalRightPanel = ({ selectedEventContext }) => {
+    const borderRadius = 4
+
     return (
         <Box
         sx = {{
@@ -24,7 +26,7 @@ const ModalRightPanel = ({ selectedEventContext }) => {
                 alignItems:     'center',
                 justifyContent: 'center',
                 background:     '#e0e0e0',
-                borderRadius:   2,
+                borderRadius:   borderRadius,
                 overflow:       'hidden',
             }}
             >
@@ -38,7 +40,7 @@ const ModalRightPanel = ({ selectedEventContext }) => {
                         height:         '100%',
                         objectFit:      'cover',
                         objectPosition: 'top',
-                        borderRadius:   2,
+                        borderRadius:   borderRadius,
                         background:     '#e0e0e0',
                     }}
                     />
