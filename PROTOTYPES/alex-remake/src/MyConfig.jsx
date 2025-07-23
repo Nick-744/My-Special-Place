@@ -32,8 +32,8 @@ export const cameraZoomSpeed = 1.0; // Speed of zooming with mouse wheel
 
 // ==================== Timestamps Configuration ====================
 export const timestamps = [
-  -360, -350, -345, -340, -338, -336, -334, -332,
-  -330, -328, -326, -325, -324, -322
+  -360, -350, -345, -340, -338, -336, -334,
+  -332, -330, -328, -326, -325, -324, -322
 ]
 export const timestampsXPosition = 4   // Integer value!
 export const exponentialBase     = 3.0 // Base for exponential mapping - Make the spacing better!
@@ -46,13 +46,9 @@ export const eventWaveEffect = 3    // Wave effect multiplier for events
 export const originalColor = {
   'Μάχες και Πολιορκίες':    '#ff0000',
   'Η Ζωή του Μ. Αλεξάνδρου': '#1f51ff',
-  'Ίδρυση Πόλεων':           '#008000',
-
+  'Ίδρυση Πόλεων':           '#008000'
 } // Original color for events
 export const hoveredColor  = '#ffA500'
-
-// ==================== Background Configuration ====================
-export const cylinderHeight = size / 2.5
 
 // ==================== Grid Objects Configuration ====================
 export const gObjRotationX = -0.2 // Grid Objects [gObj] Rotation around X-axis
