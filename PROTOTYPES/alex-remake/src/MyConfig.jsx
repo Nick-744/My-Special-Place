@@ -39,9 +39,9 @@ export const timestampsXPosition = 4   // Integer value!
 export const exponentialBase     = 3.0 // Base for exponential mapping - Make the spacing better!
 
 // ==================== Event Configuration ====================
-export const eventYFloat     = 0.5 // Float value y [offset above wave]
-export const eventsXPosition = -step * 1
-export const eventWaveEffect = 3   // Wave effect multiplier for events
+export const eventYFloat     = 0.5       // Float value y [offset above wave]
+export const eventsXPosition = -step * 0 // Offset for where is the center mass of the Grid Events!
+export const eventWaveEffect = 3         // Wave effect multiplier for events
 
 export const originalColor = {
   'Μάχες και Πολιορκίες':    '#ff0000',
