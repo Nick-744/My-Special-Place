@@ -23,7 +23,7 @@ const Scene_3D = () => {
 				{/* <OrbitControls /> */}
 
 				<GridScenePackage />
-					<Timestamps />
+					{/* <Timestamps /> */}
 					<EventManager />
 
 			</Canvas>

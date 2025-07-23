@@ -21,7 +21,7 @@ const CustomScrollZoom = () => {
 			const zDelta    = e.deltaY * 0.01 * zoomSpeed
 
 			const temp = pos.z + zDelta
-			if (minZPosition < temp && temp < cameraInitialZ)
+			if (minZPosition <= temp && temp <= cameraInitialZ)
 				pos.z += zDelta
 		}
 
@@ -38,8 +38,8 @@ const CustomScrollZoom = () => {
 			dt
 		)
 
-		// Update the camera Z position reference, so
-		// it can be used in the Timestamps2D component!
+		// Update the camera Z position reference,
+		// so it can be used in [X] component!
 		globalContext.setCameraZPositionContext(camera.position.z)
 	})
 
