@@ -53,11 +53,7 @@ const Event = forwardRef(({
 	const getColor = () => {
 		if (isHovered) return hoveredColor;
 
-		// TODO: Κάνε την ανάθεση χρωμάτων πιο ευέλικτη / παραμετροποιήσιμη
-		if (event.section === 'Η Ζωή του Μ. Αλεξάνδρου') return '#1F51FF';
-		if (event.section === 'Ίδρυση Πόλεων')           return '#008000';
-
-		return originalColor;
+		return originalColor[event.section];
 	}
 
 	const getScale = () => {

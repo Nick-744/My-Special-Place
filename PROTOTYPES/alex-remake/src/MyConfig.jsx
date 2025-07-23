@@ -35,15 +35,20 @@ export const timestamps = [
   -360, -350, -345, -340, -338, -336, -334, -332,
   -330, -328, -326, -325, -324, -322
 ]
-export const timestampsXPosition = 3 // Integer value!
-export const exponentialBase     = 3 // Base for exponential mapping - Make the spacing better!
+export const timestampsXPosition = 4   // Integer value!
+export const exponentialBase     = 3.0 // Base for exponential mapping - Make the spacing better!
 
 // ==================== Event Configuration ====================
 export const eventYFloat     = 0.4  // Float value y [offset above wave]
 export const eventsXPosition = -step * 0
 export const eventWaveEffect = 3    // Wave effect multiplier for events
 
-export const originalColor = '#ff0000' // Original color for events
+export const originalColor = {
+  'Μάχες και Πολιορκίες':    '#ff0000',
+  'Η Ζωή του Μ. Αλεξάνδρου': '#1f51ff',
+  'Ίδρυση Πόλεων':           '#008000',
+
+} // Original color for events
 export const hoveredColor  = '#ffA500'
 
 // ==================== Background Configuration ====================

@@ -1,12 +1,10 @@
 import {
-	step, eventYFloat, eventsXPosition, eventWaveEffect
+	eventYFloat, eventsXPosition, eventWaveEffect
 } from '../../MyConfig'
 
-import {
-	getWaveHeight,
-	calculateDistanceFromCamera,
-	calculateEventZPosition
-} from '../../Utils'
+import { getWaveHeight, calculateEventZPosition } from '../../Helpers/Utils'
+import { getNonOverlappingX } from '../../Helpers/EventsPositioningHelp'
+
 import { eventsData } from '../../InfoData/EventsData'
 import { useFrame } from '@react-three/fiber'
 import React, { useRef } from 'react'
@@ -22,49 +20,15 @@ const EventManager = () => {
 		const time = state.clock.elapsedTime
 		eventRefs.current.forEach((ref, _) => {
 			if (ref.current) {
-				const distanceFromCamera = calculateDistanceFromCamera(
-					ref.current.position.x, ref.current.position.z
-				)
 				const waveHeight = getWaveHeight(
 					ref.current.position.x,
 					ref.current.position.z,
-					time,
-					distanceFromCamera
+					time
 				)
 				ref.current.position.y = waveHeight * eventWaveEffect + eventYFloat
 			}
 		})
 	})
-
-	// ----- Positioning Logic/Pattern ----- //
-	const Z_BUCKET_SIZE = step * 3
-	function getZBucket(z) { return Math.round(z / Z_BUCKET_SIZE) * Z_BUCKET_SIZE; }
-
-	const usedXPerZ = new Map()
-	function getNonOverlappingX(z, baseX, buffer = step * 0.6, maxAttempts = 20) {
-		const bucketZ = getZBucket(z)
-		if (!usedXPerZ.has(bucketZ)) usedXPerZ.set(bucketZ, [])
-		const usedX   = usedXPerZ.get(bucketZ)
-
-		// Try spreading X left and right from baseX in a predictable pattern
-		for (let i = 0; i < maxAttempts; i++) {
-			const offset = ((i % 2 === 0 ? 1 : -1) * Math.ceil(i / 2)) * buffer
-			const tryX   = baseX + offset
-
-			const collides = usedX.some(x => Math.abs(x - tryX) < buffer)
-			if (!collides) {
-				usedX.push(tryX)
-
-				return tryX;
-			}
-		}
-
-		// Fallback: add random jitter if no spot found after all attempts
-		const fallbackX = baseX + (Math.random() - 0.5) * buffer
-		usedX.push(fallbackX)
-
-		return fallbackX;
-	}
 
 	// Calculate position for each event based on timestamp
 	function calculateEventPosition(event, _) {

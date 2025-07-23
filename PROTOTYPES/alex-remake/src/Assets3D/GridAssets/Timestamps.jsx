@@ -2,11 +2,8 @@ import {
 	timestamps, step, timestampsXPosition, gObjRotationX, eventWaveEffect
 } from '../../MyConfig'
 
-import {
-	getWaveHeight,
-	calculateDistanceFromCamera,
-	calculateEventZPosition
-} from '../../Utils'
+import { getWaveHeight, calculateEventZPosition } from '../../Helpers/Utils'
+
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
 import React, { useRef } from 'react'
@@ -21,14 +18,10 @@ const Timestamps = () => {
 		const time = state.clock.elapsedTime
 		timestampRefs.current.forEach((ref, _) => {
 			if (ref.current) {
-				const distanceFromCamera = calculateDistanceFromCamera(
-					ref.current.position.x, ref.current.position.z
-				)
 				const waveHeight = getWaveHeight(
 					ref.current.position.x,
 					ref.current.position.z,
-					time,
-					distanceFromCamera
+					time
 				)
 				ref.current.position.y = waveHeight * eventWaveEffect
 			}

@@ -1,5 +1,9 @@
 import { Box, Typography } from '@mui/material'
 
+/*
+Contains the right panel of the modal that
+displays event images and captions.
+*/
 const ModalRightPanel = ({ selectedEventContext }) => {
     return (
         <Box

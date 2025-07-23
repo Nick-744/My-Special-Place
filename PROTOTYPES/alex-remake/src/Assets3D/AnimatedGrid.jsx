@@ -3,7 +3,7 @@ import {
 	particlesSpeed, particleCount, bounds, gridOpacity
 } from '../MyConfig';
 
-import { getWaveHeight, calculateDistanceFromCamera } from '../Utils';
+import { getWaveHeight } from '../Helpers/Utils';
 import { useFrame } from '@react-three/fiber';
 import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
@@ -60,11 +60,8 @@ function AnimatedGrid() {
 				const x     = -size/2 + i * step;
 				const z     = -size/2 + j * step;
 				
-				// Calculate distance from camera for intensity scaling
-				const distanceFromCamera = calculateDistanceFromCamera(x, z);
-				
 				// Apply wave displacement to Y-coordinate
-				positions[index + 1] = getWaveHeight(x, z, time, distanceFromCamera);
+				positions[index + 1] = getWaveHeight(x, z, time);
 			}
 		}
 	
