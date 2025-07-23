@@ -1,5 +1,5 @@
 import {
-	timestamps, step, timestampsXPosition, gObjRotationX, eventWaveEffect
+	timestamps, step, timestampsXPosition, gObjRotationX, eventWaveEffect, textColor
 } from '../../MyConfig'
 
 import { getWaveHeight, calculateEventZPosition } from '../../Helpers/Utils'
@@ -50,6 +50,7 @@ const Timestamps = () => {
 			ref      = {timestampRefs.current[index]}
 			key      = {index}
 			position = {[x, y, z]}
+			color    = {textColor}
 			fontSize = {step * 0.2}
 			rotation = {rotation}
 			anchorX  = 'left'

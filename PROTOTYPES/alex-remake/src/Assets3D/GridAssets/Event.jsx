@@ -1,8 +1,5 @@
 import {
-	step,
-	originalColor,
-	hoveredColor,
-	gObjRotationX
+	step, originalColor, hoveredColor, gObjRotationX, textColor
 } from '../../MyConfig'
 
 import { forwardRef, useRef, useState, useContext } from 'react'
@@ -151,7 +148,7 @@ const Event = forwardRef(({
 			ref 	 = {eventTimeRef}
 			position = {[0, -step * 0.4, 0]}
 			fontSize = {step * 0.1}
-			color    = '#888888'
+			color    = {textColor}
 			anchorX  = 'center'
 			anchorY  = 'bottom'
 			visible  = {false}
@@ -166,7 +163,7 @@ const Event = forwardRef(({
 			ref 	 = {eventLocationRef}
 			position = {[0, -step * 0.54, 0]}
 			fontSize = {step * 0.1}
-			color    = '#888888'
+			color    = {textColor}
 			anchorX  = 'center'
 			anchorY  = 'bottom'
 			visible  = {false}

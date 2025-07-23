@@ -52,3 +52,6 @@ export const hoveredColor  = '#ffA500'
 
 // ==================== Grid Objects Configuration ====================
 export const gObjRotationX = -0.2 // Grid Objects [gObj] Rotation around X-axis
+
+// ==================== Text Configuration (in grid) ====================
+export const textColor = '#888888'
