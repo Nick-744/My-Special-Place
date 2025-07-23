@@ -37,7 +37,7 @@ const Timestamps2D = () => {
         sx        = {{
             position: 'absolute',
             top:      '15%',
-            right:    '100px',
+            right:    '30px',
             width:    '90px',
             height:   '66%',
 
