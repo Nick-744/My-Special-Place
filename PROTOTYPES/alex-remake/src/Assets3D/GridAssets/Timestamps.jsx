@@ -11,7 +11,8 @@ import * as THREE from 'three'
 
 const Timestamps = () => {
 	// Create an array of refs, 1 for each timestamp
-	const timestampRefs = useRef(timestamps.map(() => React.createRef()))
+	const timestampRefs     = useRef(timestamps.map(() => React.createRef()))
+	const timestampsYHeight = 0.1
 
 	// Animation loop - Update positions with wave effect
 	useFrame((state) => {
@@ -23,7 +24,7 @@ const Timestamps = () => {
 					ref.current.position.z,
 					time
 				)
-				ref.current.position.y = waveHeight * eventWaveEffect
+				ref.current.position.y = waveHeight * eventWaveEffect + timestampsYHeight
 			}
 		})
 	})
@@ -39,7 +40,7 @@ const Timestamps = () => {
 		// Position based on the actual timestamp value
 		const z = calculateEventZPosition(timestamp)
 		const x = step * timestampsXPosition + 0.1
-		const y = 0.1
+		const y = timestampsYHeight
 		
 		// Rotate to face the camera
 		const rotation = new THREE.Euler(gObjRotationX, 0, 0, 'XYZ')
@@ -50,7 +51,6 @@ const Timestamps = () => {
 			key      = {index}
 			position = {[x, y, z]}
 			fontSize = {step * 0.2}
-			// font     = '/OpenSans.ttf'
 			rotation = {rotation}
 			anchorX  = 'left'
 			anchorY  = 'bottom'
