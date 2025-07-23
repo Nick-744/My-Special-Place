@@ -1,4 +1,5 @@
-import { useRef, useLayoutEffect, useState } from 'react'
+import { useRef, useLayoutEffect, useState, useContext, useEffect } from 'react'
+import { globalVarContext } from '../Context/GlobalContext'
 import { Box, Typography, Paper } from '@mui/material'
 import { timestamps } from '../MyConfig'
 
@@ -20,13 +21,18 @@ const Timestamps2D = () => {
             setContentHeight(contentRef.current.offsetHeight)
 	}, [timestamps])
 
+    const globalContext = useContext(globalVarContext)
+    useEffect(() => {
+        console.log(globalContext.cameraZPositionContext)
+    }, [globalContext.cameraZPositionContext])
+
 	return (
 		<Paper
         elevation = {4}
         sx        = {{
             position: 'absolute',
             top:      '10%',
-            right:    '35px',
+            right:    '40px',
             width:    '90px',
             height:   '75%',
 
