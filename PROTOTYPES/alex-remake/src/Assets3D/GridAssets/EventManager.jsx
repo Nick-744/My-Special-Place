@@ -5,15 +5,22 @@ import {
 import { getWaveHeight, calculateEventZPosition } from '../../Helpers/Utils'
 import { getNonOverlappingX } from '../../Helpers/EventsPositioningHelp'
 
+import { globalVarContext } from '../../Context/GlobalContext'
+import React, { useRef, useContext, useEffect } from 'react'
 import { eventsData } from '../../InfoData/EventsData'
 import { useFrame } from '@react-three/fiber'
-import React, { useRef } from 'react'
 import Event from './Event'
 
 const EventManager = () => {
 	// Create an array of refs, 1 for each event
 	const eventRefs     = useRef(eventsData.map(() => React.createRef()))
 	const eventIconRefs = useRef(eventsData.map(() => React.createRef()))
+
+	// --- Global context --- //
+	useEffect(() => {
+		// const globalContext            = useContext(globalVarContext)
+		// globalContext.eventRefsContext = eventIconRefs
+	}, [])
 
 	// Animation loop - update event positions with wave effect
 	useFrame((state) => {

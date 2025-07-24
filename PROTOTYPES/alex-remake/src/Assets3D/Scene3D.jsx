@@ -16,7 +16,11 @@ const Scene_3D = () => {
 		<div id = 'canvas-container' className = 'w3-animate-opacity'>
 			<Stats />
 
+			{ /* --- 2D Elements --- */ }
 			<BackgroundImage />
+			<Timestamps2D />
+			
+			{ /* --- 3D Elements --- */ }
 			<Canvas camera = {{ fov: cameraFOV, position: [0, cameraHeight, cameraInitialZ] }}>
 
 				<Camera3D />
@@ -27,8 +31,6 @@ const Scene_3D = () => {
 					<EventManager />
 
 			</Canvas>
-
-			<Timestamps2D />
 		</div>
 	);
 }

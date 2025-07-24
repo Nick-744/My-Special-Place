@@ -15,7 +15,7 @@ const formatLabel = (year) => {
 const Timestamps2D = () => {
 	const sorted = [...timestamps].sort((a, b) => b - a)
 	
-    // Camera Z Position Context - Arrow step movement logic
+    // Camera Z Position Context - Arrow step movement logic (Global Context usage)
     const globalContext = useContext(globalVarContext)
     const cameraZPos    = globalContext.cameraZPositionContext
     const setCameraZPos = globalContext.setCameraZPositionContext

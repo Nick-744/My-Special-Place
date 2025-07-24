@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useState, useRef } from 'react'
 import { cameraInitialZ } from '../MyConfig'
 
 export const globalVarContext = createContext(null)
@@ -9,6 +9,8 @@ export const GlobalProviderComponent = ({ children }) => {
     const [selectedEventContext,   setSelectedEventContext  ] = useState(null)
     const [isModalOpenContext,     setIsModalOpenContext    ] = useState(false)
     const [cameraZPositionContext, setCameraZPositionContext] = useState(cameraInitialZ)
+    
+    const eventRefsContext = useRef([])
 
     return (
         <globalVarContext.Provider 
@@ -16,7 +18,9 @@ export const GlobalProviderComponent = ({ children }) => {
             eventHoveringContext,   setEventHoveringContext,
             selectedEventContext,   setSelectedEventContext,
             isModalOpenContext,     setIsModalOpenContext,
-            cameraZPositionContext, setCameraZPositionContext
+            cameraZPositionContext, setCameraZPositionContext,
+            
+            eventRefsContext
         }}
         >
             {children}
