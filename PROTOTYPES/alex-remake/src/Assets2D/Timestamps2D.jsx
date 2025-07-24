@@ -1,9 +1,9 @@
 import { useRef, useLayoutEffect, useState, useContext, useEffect } from 'react'
 import { globalVarContext } from '../Context/GlobalContext'
-import { Box, Typography, Paper } from '@mui/material'
-import { timestamps } from '../MyConfig'
-
 import { calculateEventZPosition } from '../Helpers/Utils'
+import { Box, Typography, Paper } from '@mui/material'
+
+import { timestamps } from '../MyConfig'
 
 const formatLabel = (year) => {
 	if (year < 0) return `${Math.abs(year)} π.Χ.`;
@@ -27,7 +27,7 @@ const Timestamps2D = () => {
 
     // --- Arrow position calculation/handling ---
     useEffect(() => {
-        let closestIndex  = 0
+        let closestIndex = 0
         
         timestamps.forEach((year, index) => {
             const difference = Math.abs(cameraZPos - calculateEventZPosition(year))
@@ -36,10 +36,9 @@ const Timestamps2D = () => {
             closestIndex  = index
         })
 
-        // Calculate the position based on the closest timestamp
-        // Each label takes up contentHeight / timestamps.length space
+        // Each label takes up contentHeight / timestamps.length space!
         const labelHeight   = contentHeight / timestamps.length
-        // Position arrow at the center of the corresponding label, starting from bottom
+        // Position arrow at the center of the corresponding label, starting from bottom...
         const arrowPosition = contentHeight - (closestIndex * labelHeight) + (labelHeight / 2) - 10 // -10 to center the 20px arrow
         
         setArrowTop(arrowPosition)
