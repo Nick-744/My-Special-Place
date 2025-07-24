@@ -26,8 +26,12 @@ const CustomScrollZoom = () => {
 			const zDelta    = e.deltaY * 0.01 * zoomSpeed
 
 			const temp = pos.z + zDelta
-			if (minZPosition <= temp && temp <= cameraInitialZ)
+			if (minZPosition <= temp && temp <= cameraInitialZ) {
 				pos.z += zDelta
+
+				// Update the context with the new z position!
+				globalContext.setCameraZPositionContext(pos.z)
+			}
 		}
 
 		gl.domElement.addEventListener('wheel', handleWheel)
