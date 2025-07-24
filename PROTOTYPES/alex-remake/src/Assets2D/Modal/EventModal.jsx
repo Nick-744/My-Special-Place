@@ -16,7 +16,7 @@ const EventModal = () => {
     useEffect(() => {
         if (isModalOpenContext) {
             // Small delay to allow the backdrop to render in its initial state first
-            const timer = setTimeout(() => { setShowModalContent(true) }, 40)
+            const timer = setTimeout(() => { setShowModalContent(true) }, 10)
 
             return () => clearTimeout(timer);
         }
@@ -29,7 +29,7 @@ const EventModal = () => {
         setSelectedEventContext(null)
     }
 
-    // Only close if clicking the backdrop itself, not the content - Optional (Use X...)!
+    // Only close if clicking the backdrop itself, not the content - [Could use only X to close...]
     const handleBackdropClick = (e) => { if (e.target === e.currentTarget) handleClose() }
 
     if (!selectedEventContext) return null;
@@ -43,7 +43,7 @@ const EventModal = () => {
         >
             {/* --- Custom backdrop with smooth transitions --- */}
             <Box
-            // onClick = {handleBackdropClick}
+            onClick = {handleBackdropClick}
             sx      = {{
                 position: 'fixed',
                 top:    0,
@@ -67,7 +67,7 @@ const EventModal = () => {
                     display: 'flex',
                     alignItems:     'center',
                     justifyContent: 'center',
-                    // pointerEvents:  'none' // Allow clicks to pass through to backdrop
+                    pointerEvents:  'none' // Allow clicks to pass through to backdrop
                 }}
                 >
                     <Slide
@@ -89,7 +89,7 @@ const EventModal = () => {
                             overflow:      'hidden',
                             display:       'flex',
                             flexDirection: 'column',
-                            // pointerEvents: 'auto' // Re-enable clicks on the card
+                            pointerEvents: 'auto' // Re-enable clicks on the card
                         }}
                         >
                             {/* Top bar with close */}

@@ -59,15 +59,13 @@ export const calculateDistanceFromCamera = (x, z) => {
 export function calculateEventZPosition(timestamp) {
 	const safeMin   = Math.min(...timestamps)
 	const safeMax   = Math.max(...timestamps)
-	const safeRange = safeMax - safeMin + 1
+	const safeRange = safeMax - safeMin
 
 	// Normalize [0, 1]
 	const linearNormalized = (timestamp - safeMin) / safeRange
 
 	// Apply exponential mapping to compress later values
-	const expValue = (
-        Math.exp(linearNormalized * exponentialBase) - 1) / (Math.exp(exponentialBase) - 1
-    )
+	const expValue = Math.exp(linearNormalized * exponentialBase) / Math.exp(exponentialBase)
 
 	const z = maxZPosition - expValue * (maxZPosition - minZPosition)
 

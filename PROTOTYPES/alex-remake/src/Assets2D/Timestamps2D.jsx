@@ -1,7 +1,9 @@
 import { useRef, useLayoutEffect, useState, useContext, useEffect } from 'react'
-import { timestamps, cameraInitialZ, minZPosition } from '../MyConfig'
 import { globalVarContext } from '../Context/GlobalContext'
 import { Box, Typography, Paper } from '@mui/material'
+import { timestamps } from '../MyConfig'
+
+import { calculateEventZPosition } from '../Helpers/Utils'
 
 const formatLabel = (year) => {
 	if (year < 0) return `${Math.abs(year)} π.Χ.`;
@@ -23,26 +25,38 @@ const Timestamps2D = () => {
     const [contentHeight, setContentHeight] = useState(0)
 	useLayoutEffect(() => { setContentHeight(contentRef.current.offsetHeight) }, [timestamps])
 
-    // Normalize cameraZPos into an index within the timestamp range
-    const tempMin  = minZPosition + 15 // 15px, based on the FOV of the camera!
-    const clampedZ = Math.max(tempMin, Math.min(cameraInitialZ, cameraZPos))
-    const t        = (clampedZ - tempMin) / (cameraInitialZ - tempMin)
+    // --- Arrow position calculation/handling ---
+    useEffect(() => {
+        let closestIndex  = 0
+        
+        timestamps.forEach((year, index) => {
+            const difference = Math.abs(cameraZPos - calculateEventZPosition(year))
+            if (difference > 10) return; // The threshold 10 is based on the FOV!
 
-    useEffect(() => { setArrowTop(t * (contentHeight - 20)) }, [cameraZPos, contentHeight])
-    // - 20, because the arrow is 20px tall (10px borderTop + 10px borderBottom)
+            closestIndex  = index
+        })
+
+        // Calculate the position based on the closest timestamp
+        // Each label takes up contentHeight / timestamps.length space
+        const labelHeight   = contentHeight / timestamps.length
+        // Position arrow at the center of the corresponding label, starting from bottom
+        const arrowPosition = contentHeight - (closestIndex * labelHeight) + (labelHeight / 2) - 10 // -10 to center the 20px arrow
+        
+        setArrowTop(arrowPosition)
+    }, [cameraZPos, contentHeight])
 
 	return (
 		<Paper
         elevation = {4}
         sx        = {{
             position: 'absolute',
-            top:      '15%',
+            top:      '10%',
             right:    '30px',
             width:    '90px',
-            height:   '66%',
+            height:   '75%',
 
             backgroundColor: '#fafafa',
-            borderRadius:    2,
+            borderRadius:    3,
             boxShadow:       '0 4px 16px rgba(0, 0, 0, 0.15)',
             display:         'flex',
             justifyContent:  'center',

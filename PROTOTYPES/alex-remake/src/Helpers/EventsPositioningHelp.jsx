@@ -19,7 +19,7 @@ function getZBucket(z) { return Math.round(z / Z_BUCKET_SIZE) * Z_BUCKET_SIZE; }
 
 const usedXPerZ = new Map()
 export function getNonOverlappingX(
-    z, baseX, buffer = step * 0.2, maxAttempts = 30, numOffsetTypes = 4
+    z, baseX, buffer = step * 0.1, maxAttempts = 30, numOffsetTypes = 4
 ) {
     const bucketZ     = getZBucket(z)
     if (!usedXPerZ.has(bucketZ)) usedXPerZ.set(bucketZ, [])
