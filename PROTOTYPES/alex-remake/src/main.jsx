@@ -1,8 +1,7 @@
 import { GlobalProviderComponent } from './Context/GlobalContext'
-import EventModal from './Assets2D/Modal/EventModal'
 import { createRoot } from 'react-dom/client'
-import Scene_3D from './Assets3D/Scene3D'
 import { StrictMode } from 'react'
+import Scene from './Scene'
 import './index.css'
 
 createRoot(
@@ -12,8 +11,7 @@ createRoot(
         <StrictMode>
             <GlobalProviderComponent>
             
-                <Scene_3D />
-                <EventModal />
+                <Scene />
             
             </GlobalProviderComponent>
         </StrictMode>

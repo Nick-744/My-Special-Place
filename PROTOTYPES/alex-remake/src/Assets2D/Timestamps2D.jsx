@@ -1,5 +1,4 @@
 import { useRef, useLayoutEffect, useState, useContext, useEffect } from 'react'
-import { globalVarContext } from '../Context/GlobalContext'
 import { calculateEventZPosition } from '../Helpers/Utils'
 import { Box, Typography, Paper } from '@mui/material'
 
@@ -12,13 +11,8 @@ const formatLabel = (year) => {
 	return '0';
 }
 
-const Timestamps2D = () => {
+const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
 	const sorted = [...timestamps].sort((a, b) => b - a)
-	
-    // Camera Z Position Context - Arrow step movement logic (Global Context usage)
-    const globalContext = useContext(globalVarContext)
-    const cameraZPos    = globalContext.cameraZPositionContext
-    const setCameraZPos = globalContext.setCameraZPositionContext
     
     const contentRef              = useRef(null)
     const [arrowTop, setArrowTop] = useState(0)
@@ -32,7 +26,7 @@ const Timestamps2D = () => {
         let closestIndex = 0
         
         timestamps.forEach((year, index) => {
-            const difference = Math.abs(cameraZPos - calculateEventZPosition(year))
+            const difference = Math.abs(cameraZPositionState - calculateEventZPosition(year))
             if (difference > FOVconstant) return; // The threshold 10 is based on the FOV!
 
             closestIndex  = index
@@ -44,12 +38,12 @@ const Timestamps2D = () => {
         const arrowPosition = contentHeight - (closestIndex * labelHeight) + (labelHeight / 2) - 10 // -10 to center the 20px arrow
         
         setArrowTop(arrowPosition)
-    }, [cameraZPos, contentHeight])
+    }, [cameraZPositionState, contentHeight])
 
     // --- Handle timestamp click ---
     const handleTimestampClick = (year) => {
         const targetZPosition = calculateEventZPosition(year)
-        setCameraZPos(targetZPosition + FOVconstant - 0.1)
+        setCameraZPositionState(targetZPosition + FOVconstant - 0.1)
     }
 
 	return (

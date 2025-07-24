@@ -2,21 +2,17 @@ import {
 	minZPosition, cameraInitialZ, cameraLooking, cameraZoomSpeed
 } from '../MyConfig'
 
-import { globalVarContext } from '../Context/GlobalContext'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useContext } from 'react'
 import { easing } from 'maath'
 
-const CustomScrollZoom = () => {
+const CustomScrollZoom = ({ cameraZPositionState, setCameraZPositionState }) => {
 	const { camera, gl }    = useThree()
 	// useRef is used to keep the camera position reference stable across renders
-	const cameraPositionRef     = useRef(camera.position.clone())
-	const globalContext         = useContext(globalVarContext)
+	const cameraPositionRef = useRef(camera.position.clone())
 
-	// The z coordinate of the camera is set from the global context, so
-	// it can be controlled with the setCameraZPositionContext function!
-	// Example: Timestamps2D.jsx file - Timestamp click handler
-	cameraPositionRef.current.z = globalContext.cameraZPositionContext
+	// It has to be used and from other components!
+	cameraPositionRef.current.z = cameraZPositionState
 
 	useEffect(() => {
 		const handleWheel = (e) => {
@@ -30,7 +26,7 @@ const CustomScrollZoom = () => {
 				pos.z += zDelta
 
 				// Update the context with the new z position!
-				globalContext.setCameraZPositionContext(pos.z)
+				setCameraZPositionState(pos.z)
 			}
 		}
 
@@ -59,10 +55,13 @@ const SceneCameraLookAt = () => {
 	return null;
 }
 
-const Camera3D = () => {
+const Camera3D = ({ cameraZPositionState, setCameraZPositionState }) => {
 	return (
 		<>
-			<CustomScrollZoom />
+			<CustomScrollZoom
+			cameraZPositionState    = {cameraZPositionState}
+			setCameraZPositionState = {setCameraZPositionState}
+			/>
 			<SceneCameraLookAt />
 		</>
 	);
