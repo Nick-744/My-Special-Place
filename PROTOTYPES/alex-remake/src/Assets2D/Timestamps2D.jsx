@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useState, useContext, useEffect } from 'react'
+import { useRef, useLayoutEffect, useState, useEffect } from 'react'
 import { calculateEventZPosition } from '../Helpers/Utils'
 import { Box, Typography, Paper } from '@mui/material'
 

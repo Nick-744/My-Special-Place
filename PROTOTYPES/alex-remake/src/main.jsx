@@ -8,12 +8,10 @@ createRoot(
     document.getElementById('root')
 ).render(
     <>
-        <StrictMode>
-            <GlobalProviderComponent>
-            
-                <Scene />
-            
-            </GlobalProviderComponent>
-        </StrictMode>
+        <GlobalProviderComponent>
+        
+            <Scene />
+        
+        </GlobalProviderComponent>
     </>
 );

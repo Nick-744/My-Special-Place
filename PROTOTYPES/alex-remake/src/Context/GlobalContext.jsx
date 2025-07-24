@@ -1,5 +1,4 @@
-import { createContext, useState, useRef } from 'react'
-import { cameraInitialZ } from '../MyConfig'
+import { createContext, useState } from 'react'
 
 export const globalVarContext = createContext(null)
 

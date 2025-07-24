@@ -1,6 +1,4 @@
-import {
-	timestamps, step, timestampsXPosition, gObjRotationX, eventWaveEffect, textColor
-} from '../../MyConfig'
+import { timestamps, step, timestampsXPosition, gObjRotationX, eventWaveEffect, textColor } from '../../MyConfig'
 
 import { getWaveHeight, calculateEventZPosition } from '../../Helpers/Utils'
 

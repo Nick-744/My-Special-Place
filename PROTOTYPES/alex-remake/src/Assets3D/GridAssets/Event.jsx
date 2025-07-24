@@ -1,6 +1,4 @@
-import {
-	step, originalColor, hoveredColor, gObjRotationX, textColor
-} from '../../MyConfig'
+import { step, originalColor, hoveredColor, gObjRotationX, textColor } from '../../MyConfig'
 
 import { forwardRef, useRef, useState, useContext } from 'react'
 import { globalVarContext } from '../../Context/GlobalContext'

@@ -1,6 +1,4 @@
-import { 
-	minZPosition, cameraInitialZ, cameraLooking, cameraZoomSpeed
-} from '../MyConfig'
+import { minZPosition, cameraInitialZ, cameraLooking, cameraZoomSpeed } from '../MyConfig'
 
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef, useContext } from 'react'

@@ -1,6 +1,4 @@
-import {
-	eventYFloat, eventsXPosition, eventWaveEffect
-} from '../../MyConfig'
+import { eventYFloat, eventsXPosition, eventWaveEffect } from '../../MyConfig'
 
 import { getWaveHeight, calculateEventZPosition } from '../../Helpers/Utils'
 import { getNonOverlappingX } from '../../Helpers/EventsPositioningHelp'

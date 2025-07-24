@@ -1,6 +1,4 @@
-import {
-    scaleEffect, cameraPos, timestamps, minZPosition, maxZPosition, exponentialBase
-} from '../MyConfig';
+import { scaleEffect, cameraPos, timestamps, minZPosition, maxZPosition, exponentialBase } from '../MyConfig';
 
 
 
