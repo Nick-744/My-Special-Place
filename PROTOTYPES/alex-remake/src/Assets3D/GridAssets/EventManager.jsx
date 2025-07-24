@@ -3,15 +3,12 @@ import { eventYFloat, eventsXPosition, eventWaveEffect } from '../../MyConfig'
 import { getWaveHeight, calculateEventZPosition } from '../../Helpers/Utils'
 import { getNonOverlappingX } from '../../Helpers/EventsPositioningHelp'
 
-import { globalVarContext } from '../../Context/GlobalContext'
 import { eventsData } from '../../InfoData/EventsData'
-import React, { useRef, useContext } from 'react'
 import { useFrame } from '@react-three/fiber'
+import React, { useRef } from 'react'
 import Event from './Event'
 
 const EventManager = ({ eventRefs }) => {
-	const globalContext = useContext(globalVarContext)
-
 	// Create an array of refs, 1 for each event
 	const eventIconRefs = useRef(eventsData.map(() => React.createRef()))
 
@@ -38,7 +35,7 @@ const EventManager = ({ eventRefs }) => {
 		eventsData.map((event, _) => {
 			// Position based on the event's timestamp value
 			const z = calculateEventZPosition(event.startDate)
-			const x = getNonOverlappingX(z, eventsXPosition)
+			const x = getNonOverlappingX(z, eventsXPosition, event.section)
 			const y = 0 // Y will be updated by wave animation
 			
 			return [x, y, z];
