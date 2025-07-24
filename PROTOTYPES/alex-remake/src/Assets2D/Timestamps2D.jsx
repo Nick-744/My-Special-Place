@@ -15,9 +15,10 @@ const formatLabel = (year) => {
 const Timestamps2D = () => {
 	const sorted = [...timestamps].sort((a, b) => b - a)
 	
-    // Camera Z Position Context - Arrow movement logic
-    const globalContext           = useContext(globalVarContext)
-    const cameraZPos              = globalContext.cameraZPositionContext
+    // Camera Z Position Context - Arrow step movement logic
+    const globalContext = useContext(globalVarContext)
+    const cameraZPos    = globalContext.cameraZPositionContext
+    const setCameraZPos = globalContext.setCameraZPositionContext
     
     const contentRef              = useRef(null)
     const [arrowTop, setArrowTop] = useState(0)
@@ -26,12 +27,13 @@ const Timestamps2D = () => {
 	useLayoutEffect(() => { setContentHeight(contentRef.current.offsetHeight) }, [timestamps])
 
     // --- Arrow position calculation/handling ---
+    const FOVconstant = 10 // This is the threshold for the arrow to appear, based on the FOV!
     useEffect(() => {
         let closestIndex = 0
         
         timestamps.forEach((year, index) => {
             const difference = Math.abs(cameraZPos - calculateEventZPosition(year))
-            if (difference > 10) return; // The threshold 10 is based on the FOV!
+            if (difference > FOVconstant) return; // The threshold 10 is based on the FOV!
 
             closestIndex  = index
         })
@@ -44,6 +46,12 @@ const Timestamps2D = () => {
         setArrowTop(arrowPosition)
     }, [cameraZPos, contentHeight])
 
+    // --- Handle timestamp click ---
+    const handleTimestampClick = (year) => {
+        const targetZPosition = calculateEventZPosition(year)
+        setCameraZPos(targetZPosition + FOVconstant - 0.1)
+    }
+
 	return (
 		<Paper
         elevation = {4}
@@ -51,7 +59,7 @@ const Timestamps2D = () => {
             position: 'absolute',
             top:      '10%',
             right:    '30px',
-            width:    '90px',
+            width:    '100px',
             height:   '75%',
 
             backgroundColor: '#fafafa',
@@ -62,8 +70,12 @@ const Timestamps2D = () => {
             alignItems:      'center',
             zIndex:          1000,
             userSelect:      'none',
-            pointerEvents:   'none',
-            overflow:        'hidden'
+            pointerEvents:   'auto',
+            overflow:        'hidden',
+
+            // Make the Timestamps2D component responsive [bigger]!
+            transition:      'all 0.3s ease',
+            '&:hover': { transform: 'scale(1.06)' }
         }}
 		>
 			<Box
@@ -79,14 +91,15 @@ const Timestamps2D = () => {
 				<Box
                 sx = {{
                     position:  'absolute',
-                    left:      '75px',
+                    left:      '86px',
                     top:       `${arrowTop}px`,
                     width:     0,
                     height:    0,
-                    borderTop:    '10px solid transparent',
-                    borderBottom: '10px solid transparent',
-                    borderRight:  '12px solid red',
-                    transition:   'top 0.1s ease-out',
+                    borderTop:     '10px solid transparent',
+                    borderBottom:  '10px solid transparent',
+                    borderRight:   '12px solid red',
+                    transition:    'top 0.1s ease-out',
+                    pointerEvents: 'none' // Prevent arrow from blocking clicks!
                 }}
 				/>
 				
@@ -95,12 +108,27 @@ const Timestamps2D = () => {
 					<Typography
                     key     = {index}
                     variant = "body2"
+                    onClick = {() => handleTimestampClick(year)}
                     sx      = {{
                         textAlign:    'center',
                         color:        '#333',
                         width:        '100%',
-                        borderBottom: index < sorted.length - 1 ? '1px solid #e0e0e0' : 'none',
+                        borderBottom: index < sorted.length - 1 ? '1px solid #b9b9b9' : 'none',
                         pb: 0.5,
+
+                        cursor:     'pointer',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                            backgroundColor: '#e3f2fd',
+                            color:           '#00aaff',
+                            
+                            borderRadius:    '4px',
+                            transform:       'scale(1.3)',
+                        },
+                        '&:active': {
+                            backgroundColor: '#bbdefb',
+                            transform:       'scale(0.9)',
+                        }
                     }}
 					>
 						{formatLabel(year)}

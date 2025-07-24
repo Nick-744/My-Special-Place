@@ -10,8 +10,13 @@ import { easing } from 'maath'
 const CustomScrollZoom = () => {
 	const { camera, gl }    = useThree()
 	// useRef is used to keep the camera position reference stable across renders
-	const cameraPositionRef = useRef(camera.position.clone())
-	const globalContext     = useContext(globalVarContext)
+	const cameraPositionRef     = useRef(camera.position.clone())
+	const globalContext         = useContext(globalVarContext)
+
+	// The z coordinate of the camera is set from the global context, so
+	// it can be controlled with the setCameraZPositionContext function!
+	// Example: Timestamps2D.jsx file - Timestamp click handler
+	cameraPositionRef.current.z = globalContext.cameraZPositionContext
 
 	useEffect(() => {
 		const handleWheel = (e) => {
@@ -30,18 +35,8 @@ const CustomScrollZoom = () => {
 		return () => gl.domElement.removeEventListener('wheel', handleWheel);
 	}, [gl])
 
-	useFrame((_, dt) => {
-		easing.damp3(
-			camera.position,
-			cameraPositionRef.current,
-			0.5,
-			dt
-		)
-
-		// Update the camera Z position reference,
-		// so it can be used in [X] component!
-		globalContext.setCameraZPositionContext(camera.position.z)
-	})
+	// Smooth animation for camera new position!
+	useFrame((_, dt) => { easing.damp3(camera.position, cameraPositionRef.current, 0.5, dt) })
 
 	return null;
 }
