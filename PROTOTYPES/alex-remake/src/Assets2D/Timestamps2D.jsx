@@ -51,7 +51,7 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
         elevation = {4}
         sx        = {{
             position: 'absolute',
-            top:      '10%',
+            top:      '30px',
             right:    '30px',
             width:    '100px',
             height:   '75%',
@@ -68,8 +68,8 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
             overflow:        'hidden',
 
             // Make the Timestamps2D component responsive [bigger]!
-            transition:      'all 0.3s ease',
-            '&:hover': { transform: 'scale(1.06)' }
+            transition: 'all 0.3s ease',
+            '&:hover':  { transform: 'scale(1.06)' }
         }}
 		>
 			<Box
