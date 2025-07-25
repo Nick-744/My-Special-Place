@@ -11,9 +11,9 @@ export const GlobalProviderComponent = ({ children }) => {
     return (
         <globalVarContext.Provider 
         value = {{
-            eventHoveringContext,   setEventHoveringContext,
-            selectedEventContext,   setSelectedEventContext,
-            isModalOpenContext,     setIsModalOpenContext
+            eventHoveringContext, setEventHoveringContext,
+            selectedEventContext, setSelectedEventContext,
+            isModalOpenContext,   setIsModalOpenContext
         }}
         >
             {children}

@@ -53,8 +53,8 @@ export const hoveredColor  = '#ffA500'
 
 // ==================== Grid Objects Configuration ====================
 export const gObjRotationX    = -0.2 // Grid Objects [gObj] Rotation around X-axis
-export const spaceBetweenGObj = 2.8  // Space between grid objects (events in this case)
-export const gObjPathWidth    = 5    // Width of the path lines for grid objects
+export const spaceBetweenGObj = 2.5  // Space between grid objects (events in this case)
+export const gObjPathWidth    = 4    // Width of the path lines for grid objects
 
 // ==================== Text Configuration (in grid) ====================
 export const textColor = '#888888'
