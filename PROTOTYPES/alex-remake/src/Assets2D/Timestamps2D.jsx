@@ -54,7 +54,7 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
             top:      '30px',
             right:    '30px',
             width:    '100px',
-            height:   '75%',
+            height:   '518px',
 
             backgroundColor: '#fafafa',
             borderRadius:    3,

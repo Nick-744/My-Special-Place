@@ -1,4 +1,4 @@
-import { step, spaceBetweenGObjs } from '../MyConfig'
+import { step, spaceBetweenGObj, gObjPathWidth } from '../MyConfig'
 import { eventsData } from '../InfoData/EventsData'
 
 // Η Ζωή του Μ. Αλεξάνδρου | Μάχες και Πολιορκίες | Ίδρυση Πόλεων
@@ -9,31 +9,47 @@ import { eventsData } from '../InfoData/EventsData'
 const uniqueSections    = [...new Set(eventsData.map(e => e.section))]
 const sectionsConstants = Object.fromEntries(
     uniqueSections.map((section, index) => [
-        section, (index - Math.floor(uniqueSections.length / 2)) * step * spaceBetweenGObjs
+        section, (index - Math.floor(uniqueSections.length / 2)) * step * spaceBetweenGObj
     ])
 )
 
-const usedZPositions = new Map()
-export function getNonOverlappingX(z, baseX, section) {
-    const currentKey    = `${z}-${section}`
-
+// --- Helpers ---
+const getRandomX = (baseX, section) => {
     const sectionOffset = sectionsConstants[section]
-    let   returnX       = baseX + sectionOffset + (Math.random() - 0.5) * step * 1.8
 
+    return baseX + sectionOffset + (Math.random() - 0.5) * step * gObjPathWidth / 2;
+}
+
+const usedZPositions = new Map()
+/**
+ * Returns a non-overlapping X position for a given Z and section.
+ * Ensures that the generated X position does not overlap with previously used positions
+ * for the same Z and section combination.
+ *
+ * @param {number} z       - The Z coordinate or identifier.
+ * @param {number} baseX   - The base X position to start from.
+ * @param {string} section - The section identifier.
+ * 
+ * @returns {number} A non-overlapping X position.
+ */
+export function getNonOverlappingX(z, baseX, section) {
+    const currentKey = `${z}-${section}`
+
+    let   returnX    = getRandomX(baseX, section)
     if (usedZPositions.has(currentKey)) {
         const existingX = usedZPositions.get(currentKey)
         let   distance  = Math.abs(existingX - returnX)
 
         // O(n!) implementation...
-        while (distance < step * 0.6) {
-            returnX  = baseX + sectionOffset + (Math.random() - 0.5) * step * 1.8
+        while (distance < step * gObjPathWidth / 5) {
+            returnX  = getRandomX(baseX, section)
             distance = Math.abs(existingX - returnX)
         }
 
-        usedZPositions.set(currentKey, returnX)
+        usedZPositions.set(currentKey, returnX);
     }
     else
-        usedZPositions.set(currentKey, returnX)
+        usedZPositions.set(currentKey, returnX);
 
     return returnX;
 }

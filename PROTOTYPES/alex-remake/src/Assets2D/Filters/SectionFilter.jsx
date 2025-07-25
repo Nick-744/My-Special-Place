@@ -11,37 +11,39 @@ const SectionFilter = ({ eventRefs }) => {
     const uniqueSections = [...new Set(eventsData.map(e => e.section))]
 
     // Initialize: all sections visible
-    useEffect(() => { setActiveSections(uniqueSections) }, [eventsData])
+    useEffect(() => { setActiveSections(uniqueSections) }, [])
 
     // Apply visibility changes
     useEffect(() => {
-        if (!eventRefs?.current || !eventsData) return;
-
         eventRefs.current.forEach((ref, i) => {
-            if (!ref?.current) return;
+            if (!ref?.current) return; // Skip if ref is not set!
 
-            const event         = eventsData[i]
-            const shouldShow    = activeSections.includes(event.section)
+            const event      = eventsData[i]
+            const shouldShow = activeSections.includes(event.section)
 
 			// --- Visibility control ---
             ref.current.visible = shouldShow
 
 			// --- Disable pointer interaction when hidden ---
 			ref.current.traverse((child) => {
-				if (child.isMesh)
-					child.raycast = shouldShow
-						? THREE.Mesh.prototype.raycast
-						: () => {}
+                child.raycast = shouldShow ? THREE.Mesh.prototype.raycast : () => {}
 			})
         })
-    }, [activeSections, eventRefs, eventsData])
+    }, [activeSections, eventRefs])
 
     // Toggle section visibility
     const toggleSection = (section) => {
         setActiveSections(prev =>
-            prev.includes(section)
-				? prev.filter(s => s !== section)
-				: [...prev, section]
+            prev.includes(section) ? prev.filter(s => s !== section) : [...prev, section]
+            /*  First, it checks if the current section already exists in the previous state
+            using [prev.includes(section)]. If the section is found, it means the user is
+            trying to deactivate it, so the function uses [prev.filter(s => s !== section)]
+            to create a new array with that section removed. The filter method keeps all
+            elements except the 1 that matches the section being toggled off.
+
+                If the section is not currently active, the function takes the opposite
+            approach using the spread operator [[...prev, section]] to create a new array
+            containing all previously active sections plus the new 1! */
         )
     }
 
