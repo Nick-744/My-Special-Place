@@ -5,13 +5,10 @@ import { getNonOverlappingX } from '../../Helpers/EventsPositioningHelp'
 
 import { eventsData } from '../../InfoData/EventsData'
 import { useFrame } from '@react-three/fiber'
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import Event from './Event'
 
-const EventManager = ({ eventRefs }) => {
-	// Create an array of refs, 1 for each event
-	const eventIconRefs = useRef(eventsData.map(() => React.createRef()))
-
+const EventManager = ({ eventRefs, eventIconRefs }) => {
 	// Animation loop - update event positions with wave effect
 	useFrame((state) => {
 		const time = state.clock.elapsedTime

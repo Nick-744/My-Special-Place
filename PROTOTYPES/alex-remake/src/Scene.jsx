@@ -18,7 +18,9 @@ import { Stats } from '@react-three/drei'
 const Scene = () => {
 	const [cameraZPositionState, setCameraZPositionState] = useState(cameraInitialZ)
 
-	const eventRefs = useRef(eventsData.map(() => React.createRef()))
+	// Create an array of refs, 1 for each event
+	const eventRefs     = useRef(eventsData.map(() => React.createRef()))
+	const eventIconRefs = useRef(eventsData.map(() => React.createRef()))
 
 	return (
 		<div id = 'canvas-container' className = 'w3-animate-opacity'>
@@ -34,7 +36,7 @@ const Scene = () => {
 
 				<GridScenePackage />
 					{/* <Timestamps /> */}
-					<EventManager eventRefs = {eventRefs}/>
+					<EventManager eventRefs = {eventRefs} eventIconRefs = {eventIconRefs} />
 
 			</Canvas>
 
@@ -46,7 +48,7 @@ const Scene = () => {
 			cameraZPositionState    = {cameraZPositionState}
 			setCameraZPositionState = {setCameraZPositionState}
 			/>
-			<SectionFilter eventRefs = {eventRefs}/>
+			<SectionFilter eventRefs = {eventRefs} eventIconRefs = {eventIconRefs} />
 		</div>
 	);
 }

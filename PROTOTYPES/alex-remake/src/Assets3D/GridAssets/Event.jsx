@@ -96,11 +96,15 @@ const Event = forwardRef(({
 		eventLocationRef.current.visible = eventLocationRef.current.fillOpacity > 0.01
 
 		// Adjust opacity of all events when 1 is hovered
-		eventsRefArray.current.forEach((temp, i) => {
+		iconsRefArray.current.forEach((tempRef, i) => {
 			const shouldDim     = globalVar.eventHoveringContext !== -1 && i !== globalVar.eventHoveringContext
-			const targetOpacity = shouldDim ? 0.15 : 1
+			let   targetOpacity = shouldDim ? 0.15 : 1
 
-			easing.damp(iconsRefArray.current[i].current.material, 'opacity', targetOpacity, 4, dt)
+			// === SPECIAL WAY === //
+			if (tempRef.current.material.color.r === tempRef.current.material.color.b &&
+				tempRef.current.material.color.g === tempRef.current.material.color.b) targetOpacity = 0.12
+
+			easing.damp(tempRef.current.material, 'opacity', targetOpacity, 4, dt)
 		})
 	})
 

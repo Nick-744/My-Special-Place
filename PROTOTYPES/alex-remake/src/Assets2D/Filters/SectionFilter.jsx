@@ -4,7 +4,7 @@ import { Button, Paper } from '@mui/material'
 import { useState, useEffect } from 'react'
 import * as THREE from 'three'
 
-const SectionFilter = ({ eventRefs }) => {
+const SectionFilter = ({ eventRefs, eventIconRefs }) => {
     const [activeSections, setActiveSections] = useState([])
 
     // Extract unique sections
@@ -21,8 +21,9 @@ const SectionFilter = ({ eventRefs }) => {
             const event      = eventsData[i]
             const shouldShow = activeSections.includes(event.section)
 
-			// --- Visibility control ---
-            ref.current.visible = shouldShow
+			// Visibility control | === SPECIAL WAY === //
+            if (!shouldShow) eventIconRefs.current[i].current.material.color.set(0xffffff) // Set to white for effect!
+            else             eventIconRefs.current[i].current.material.color.set(originalColor[event.section])
 
 			// --- Disable pointer interaction when hidden ---
 			ref.current.traverse((child) => {
