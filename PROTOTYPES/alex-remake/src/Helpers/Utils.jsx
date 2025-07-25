@@ -1,4 +1,4 @@
-import { scaleEffect, cameraPos, timestamps, minZPosition, maxZPosition, exponentialBase } from '../MyConfig';
+import { scaleEffect, cameraPos, minZPosition, maxZPosition } from '../MyConfig';
 
 
 
@@ -46,26 +46,52 @@ export const calculateDistanceFromCamera = (x, z) => {
 
 
 
+// ========= TIMELINE SEGMENTS WITH RELATIVE LENGTHS ========= //
+
+// These are *relative weights*, not absolute Z distances!!!
+const timelineSegments = [
+  { from: -360, to: -320, weight: 100}, // Cluster of events
+  { from: -320,  to: 1600, weight: 20  }, // 2 events
+  { from: 1600, to: 2020, weight: 50 }  // Cluster of events
+]
+
+// === NORMALIZE SEGMENTS TO FIT EXACTLY WITHIN Z RANGE ===
+const totalWeight = timelineSegments.reduce((sum, seg) => sum + seg.weight, 0)
+const fullZSpan   = maxZPosition - minZPosition
+
+// Precompute absolute zLengths that perfectly fit within minZ → maxZ
+const normalizedSegments = timelineSegments.map(seg => ({
+  ...seg, zLength: (seg.weight / totalWeight) * fullZSpan
+}))
+
 /**
- * Calculates the Z position for an event based on its timestamp, using
- * exponential mapping to compress later values and normalize the range.
+ * Calculates the Z position of an event based on its year, using normalized segments.
+ * The function iterates through predefined segments, each with a range of years and a Z-length,
+ * and determines the Z position for the given year. If the year falls outside all segments,
+ * the position is clamped to the minimum or maximum Z position.
  *
- * @param {number} timestamp - The timestamp of the event to position.
+ * @param {number} year - The year for which to calculate the Z position.
  * 
- * @returns {number} The calculated Z position for the event.
+ * @returns {number}      The calculated Z position for the event.
  */
-export function calculateEventZPosition(timestamp) {
-	const safeMin   = Math.min(...timestamps)
-	const safeMax   = Math.max(...timestamps)
-	const safeRange = safeMax - safeMin
+export function calculateEventZPosition(year) {
+  let accumulatedZ = maxZPosition // Start at the front (camera side)
 
-	// Normalize [0, 1]
-	const linearNormalized = (timestamp - safeMin) / safeRange
+  for (const seg of normalizedSegments) {
+    const { from, to, zLength } = seg
 
-	// Apply exponential mapping to compress later values
-	const expValue = Math.exp(linearNormalized * exponentialBase) / Math.exp(exponentialBase)
+    if (year >= from && year <= to) {
+      const t = (year - from) / (to - from) // normalized position in segment
+      const z = accumulatedZ - t * zLength
 
-	const z = maxZPosition - expValue * (maxZPosition - minZPosition)
+      return z;
+    }
 
-	return z;
+    accumulatedZ -= zLength
+  }
+
+  // If outside all segments, clamp within bounds
+  return (year < normalizedSegments[0].from
+    ? maxZPosition
+    : minZPosition);
 }

@@ -18,7 +18,7 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
     const [arrowTop, setArrowTop] = useState(0)
 
     const [contentHeight, setContentHeight] = useState(0)
-	useLayoutEffect(() => { setContentHeight(contentRef.current.offsetHeight) }, [timestamps])
+	useLayoutEffect(() => { setContentHeight(contentRef.current.offsetHeight) }, [contentRef.current])
 
     // --- Arrow position calculation/handling ---
     const FOVconstant = 10 // This is the threshold for the arrow to appear, based on the FOV!
@@ -33,12 +33,16 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
         })
 
         // Each label takes up contentHeight / timestamps.length space!
-        const labelHeight   = contentHeight / timestamps.length
-        // Position arrow at the center of the corresponding label, starting from bottom...
-        const arrowPosition = contentHeight - (closestIndex * labelHeight) + (labelHeight / 2) - 10 // -10 to center the 20px arrow
+        const labelHeight   = (contentHeight + 6) / timestamps.length // + 6px ( = border-radius / 2 in Paper)! 
+        // Position the arrow at the vertical center of the corresponding label,
+        // accounting for extra white bottom spacing in the Paper container.
+        const arrowOffset   = 20
+        const arrowPosition = contentHeight - (closestIndex * labelHeight) + (labelHeight / 2) - arrowOffset
         
         setArrowTop(arrowPosition)
     }, [cameraZPositionState, contentHeight])
+    // contentHeight, so the arrow starts at
+    // the right position when the component mounts!
 
     // --- Handle timestamp click ---
     const handleTimestampClick = (year) => {
@@ -54,7 +58,7 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
             top:      '30px',
             right:    '30px',
             width:    '100px',
-            height:   '518px',
+            height:   '810px',
 
             backgroundColor: '#fafafa',
             borderRadius:    3,
@@ -69,7 +73,7 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
 
             // Make the Timestamps2D component responsive [bigger]!
             transition: 'all 0.3s ease',
-            '&:hover':  { transform: 'scale(1.06)' }
+            '&:hover':  { transform: 'scale(1.025)' }
         }}
 		>
 			<Box
@@ -105,10 +109,11 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
                     onClick = {() => handleTimestampClick(year)}
                     sx      = {{
                         textAlign:    'center',
+                        fontSize:     '13px',
                         color:        '#333',
                         width:        '100%',
                         borderBottom: index < sorted.length - 1 ? '1px solid #b9b9b9' : 'none',
-                        pb: 0.5,
+                        pb: 0.1,
 
                         cursor:     'pointer',
                         transition: 'all 0.2s ease',

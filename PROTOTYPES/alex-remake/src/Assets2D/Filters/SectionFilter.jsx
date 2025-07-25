@@ -64,12 +64,12 @@ const SectionFilter = ({ eventRefs }) => {
 
 			// Make component responsive [bigger]!
             transition: 'all 0.3s ease',
-            '&:hover':  { transform: 'scale(1.06)' }
+            '&:hover':  { transform: 'scale(1.03)' }
         }}
         >
             {uniqueSections.map((section, idx) => {
                 const isActive = activeSections.includes(section)
-				const color    = originalColor[section] || '#800080'
+				const color    = originalColor[section] || '#ffff00'
 
                 return (
                     <Button
