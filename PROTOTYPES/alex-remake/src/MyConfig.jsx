@@ -28,7 +28,7 @@ export const cameraInitialZ  = Math.ceil(step * (divisions / 2)) // Initial Z po
 export const cameraLooking   = [0, -200, -2000] // Camera look-at target position
 export const cameraHeight    = 3.0 // Camera height above the grid
 export const cameraFOV       = 30  // Camera field of view
-export const cameraZoomSpeed = 1.5 // Speed of zooming with mouse wheel
+export const cameraZoomSpeed = 1.2 // Speed of zooming with mouse wheel
 
 // ==================== Timestamps Configuration ====================
 export const timestamps = [
