@@ -100,7 +100,7 @@ const Event = forwardRef(({
 		// Adjust opacity of all events when 1 is hovered
 		iconsRefArray.current.forEach((tempRef, i) => {
 			const shouldDim     = globalVar.eventHoveringContext !== -1 && i !== globalVar.eventHoveringContext
-			let   targetOpacity = shouldDim ? 0.145 : 1
+			let   targetOpacity = shouldDim ? 0.15 : 1
 
 			// === SPECIAL WAY === //
 			if (tempRef.current.material.color.r === tempRef.current.material.color.b &&
