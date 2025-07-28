@@ -133,13 +133,13 @@ const Event = forwardRef(({
 			{/* Event title text */}
 			<Text
 			ref 	   = {titleRef}
-			position   = {[0, +step * 0.5, 0]}
-			fontSize   = {step * 0.15}
+			position   = {[0, +step * 0.6, 0]}
+			fontSize   = {step * 0.18}
 			fontWeight = {1000}
 			color      = {getColor()}
 			anchorX    = 'center'
 			anchorY    = 'top'
-			maxWidth   = {step * 3}
+			maxWidth   = {step * 3.4}
 			visible	   = {false}
 			>
 				{event.title['gr']}
@@ -148,8 +148,8 @@ const Event = forwardRef(({
 			{/* Event timestamp text */}
 			<Text
 			ref 	 = {eventTimeRef}
-			position = {[0, -step * 0.4, 0]}
-			fontSize = {step * 0.1}
+			position = {[0, -step * 0.5, 0]}
+			fontSize = {step * 0.12}
 			color    = {textColor}
 			anchorX  = 'center'
 			anchorY  = 'bottom'
@@ -163,8 +163,8 @@ const Event = forwardRef(({
 			{/* Event location text */}
 			<Text
 			ref 	 = {eventLocationRef}
-			position = {[0, -step * 0.54, 0]}
-			fontSize = {step * 0.1}
+			position = {[0, -step * 0.65, 0]}
+			fontSize = {step * 0.12}
 			color    = {textColor}
 			anchorX  = 'center'
 			anchorY  = 'bottom'
