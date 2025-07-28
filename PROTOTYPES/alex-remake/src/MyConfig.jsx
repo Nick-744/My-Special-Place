@@ -2,7 +2,7 @@
 export const size        = 300              // Grid size (units)
 export const divisions   = 350              // Number of grid divisions
 export const step        = size / divisions // Step size for grid nodes
-export const scaleEffect = 0.025            // Wave amplitude multiplier - [Utils.jsx] **
+export const scaleEffect = 0.020            // Wave amplitude multiplier - [Utils.jsx] **
 export const cameraPos   = [0, 100, 0]      // Fake initial camera position for grid effect!!!
 export const nodeDensity = 3                // Node spacing
 export const wireframeColor = '#00aaff'   // Wireframe color
@@ -61,3 +61,6 @@ export const gObjPathWidth    = 4    // Width of the path lines for grid objects
 
 // ==================== Text Configuration (in grid) ====================
 export const textColor = '#888888'
+
+// ==================== Panels Configuration ====================
+export const panelsOpacityEventHovering = 0.2 // Opacity of all panels when an event is hovered

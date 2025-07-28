@@ -1,8 +1,9 @@
-import { useRef, useLayoutEffect, useState, useEffect } from 'react'
+import { timestamps, panelsOpacityEventHovering } from '../MyConfig'
+
+import { useRef, useLayoutEffect, useState, useEffect, useContext } from 'react'
+import { globalVarContext } from '../Context/GlobalContext'
 import { calculateEventZPosition } from '../Helpers/Utils'
 import { Box, Typography, Paper } from '@mui/material'
-
-import { timestamps } from '../MyConfig'
 
 const formatLabel = (year) => {
 	if (year < 0) return `${Math.abs(year)} π.Χ.`;
@@ -18,6 +19,9 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
     const scrollContainerRef      = useRef(null)
     const [arrowTop, setArrowTop] = useState(0)
 
+    // ----- Global ----- //
+    const globalVar = useContext(globalVarContext)
+
     const [contentHeight, setContentHeight] = useState(0)
 	useLayoutEffect(() => {
         setContentHeight(contentRef.current.offsetHeight)
@@ -28,7 +32,7 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
     }, [contentRef.current])
 
     // --- Arrow position calculation/handling ---
-    const FOVconstant = 10 // This is the threshold for the arrow to appear, based on the FOV!
+    const FOVconstant = 8.6 // This is the threshold for the arrow to appear, based on the FOV!
     useEffect(() => {
         let closestIndex = 0
         
@@ -79,6 +83,7 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
             pointerEvents:   'auto',
             overflow:        'scroll',
             overflowX:       'hidden',
+            opacity:         globalVar.panelsVisibility ? 1 : panelsOpacityEventHovering,
 
             // Make the Timestamps2D component responsive [bigger]!
             transition: 'all 0.3s ease',

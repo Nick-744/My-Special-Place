@@ -29,6 +29,7 @@ const Event = forwardRef(({
 		document.body.style.cursor = 'pointer'
 
 		globalVar.setEventHoveringContext(eventIndex)
+		globalVar.setPanelsVisibility(false)
 	}
 
 	const handlePointerOut = () => {
@@ -36,6 +37,7 @@ const Event = forwardRef(({
 		document.body.style.cursor = 'default'
 
 		globalVar.setEventHoveringContext(-1) // Default
+		globalVar.setPanelsVisibility(true)
 	}
 
 	/* --- Open modal with event details --- */
@@ -98,7 +100,7 @@ const Event = forwardRef(({
 		// Adjust opacity of all events when 1 is hovered
 		iconsRefArray.current.forEach((tempRef, i) => {
 			const shouldDim     = globalVar.eventHoveringContext !== -1 && i !== globalVar.eventHoveringContext
-			let   targetOpacity = shouldDim ? 0.15 : 1
+			let   targetOpacity = shouldDim ? 0.2 : 1
 
 			// === SPECIAL WAY === //
 			if (tempRef.current.material.color.r === tempRef.current.material.color.b &&

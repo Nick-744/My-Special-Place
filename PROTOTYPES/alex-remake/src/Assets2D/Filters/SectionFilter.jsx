@@ -1,11 +1,16 @@
+import { originalColor, panelsOpacityEventHovering } from '../../MyConfig'
+
+import { globalVarContext } from '../../Context/GlobalContext'
+import { useState, useEffect, useContext } from 'react'
 import { eventsData } from '../../InfoData/EventsData'
-import { originalColor } from '../../MyConfig'
 import { Button, Paper } from '@mui/material'
-import { useState, useEffect } from 'react'
 import * as THREE from 'three'
 
 const SectionFilter = ({ eventRefs, eventIconRefs }) => {
     const [activeSections, setActiveSections] = useState([])
+
+    // ----- Global ----- //
+    const globalVar = useContext(globalVarContext)
 
     // Extract unique sections
     const uniqueSections = [...new Set(eventsData.map(e => e.section))]
@@ -62,6 +67,7 @@ const SectionFilter = ({ eventRefs, eventIconRefs }) => {
 			gap:             1,
             borderRadius:    3,
             zIndex:          1000,
+            opacity:         globalVar.panelsVisibility ? 1 : panelsOpacityEventHovering,
 
 			// Make component responsive [bigger]!
             transition: 'all 0.3s ease',

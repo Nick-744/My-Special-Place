@@ -7,13 +7,17 @@ export const GlobalProviderComponent = ({ children }) => {
     const [eventHoveringContext, setEventHoveringContext] = useState(-1)
     const [selectedEventContext, setSelectedEventContext] = useState(null)
     const [isModalOpenContext,   setIsModalOpenContext  ] = useState(false)
+    
+    // Controls the visibility [opacity] of all panels
+    const [panelsVisibility,     setPanelsVisibility    ] = useState(true)
 
     return (
         <globalVarContext.Provider 
         value = {{
             eventHoveringContext, setEventHoveringContext,
             selectedEventContext, setSelectedEventContext,
-            isModalOpenContext,   setIsModalOpenContext
+            isModalOpenContext,   setIsModalOpenContext,
+            panelsVisibility,     setPanelsVisibility
         }}
         >
             {children}
