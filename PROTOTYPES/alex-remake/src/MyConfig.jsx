@@ -41,9 +41,9 @@ export const timestamps = [
 export const timestampsXPosition = 4 // Integer value! For 3D timestamps.
 
 // ==================== Event Configuration ====================
-export const eventYFloat     = 0.5        // Float value y [offset above wave]
-export const eventsXPosition = step * 1.5 // Offset for where is the center mass of the Grid Events!
-export const eventWaveEffect = 0.8        // Wave effect multiplier for events
+export const eventYFloat     = 0.5         // Float value y [offset above wave]
+export const eventsXPosition = step * 1.15 // Offset for where is the center mass of the Grid Events!
+export const eventWaveEffect = 0.8         // Wave effect multiplier for events
 
 export const originalColor = {
 	'Μάχες και Πολιορκίες':    '#ff0000',
@@ -56,7 +56,7 @@ export const hoveredColor  = '#ffA500'
 
 // ==================== Grid Objects Configuration ====================
 export const gObjRotationX    = -0.2 // Grid Objects [gObj] Rotation around X-axis
-export const spaceBetweenGObj = 2.2  // Space between grid objects (events in this case)
+export const spaceBetweenGObj = 2.4  // Space between grid objects (events in this case)
 export const gObjPathWidth    = 4    // Width of the path lines for grid objects
 
 // ==================== Text Configuration (in grid) ====================
