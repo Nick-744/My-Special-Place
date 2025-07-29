@@ -71,9 +71,27 @@ const TypeFilter = ({ eventRefs, eventIconRefs }) => {
 
 			// Make component responsive [bigger]!
             transition: 'all 0.3s ease',
-            '&:hover':  { transform: 'translateX(210px)' }
+            '&:hover':  { transform: 'translateX(215px)' } // Slide right so final left offset is 10px!
         }}
         >
+            {/* Show tab arrow */}
+            <div
+            style = {{
+                position:  'absolute',
+                top:       '50%',
+                right:     '-25px',
+                padding:   '0px 6px 5px 5px',
+                transform: 'translateY(-50%)',
+                color:           '#5f5f5f',
+                backgroundColor: '#fafafa',
+                borderTopRightRadius:    '7px',
+                borderBottomRightRadius: '7px',
+                fontWeight: 'bold',
+                fontSize:   '30px',
+                zIndex: 999
+            }}
+            > » </div>
+
             {uniqueTypes.map((type, idx) => {
                 const isActive = activeTypes.includes(type)
 				const color    = '#999999'
