@@ -49,7 +49,6 @@ const EventManager = ({ eventRefs, eventIconRefs }) => {
 			event      = {event}
 			position   = {eventPositionsRef.current[index]}
 
-			eventsRefArray = {eventRefs}
 			iconsRefArray  = {eventIconRefs}
 			eventIconRef   = {eventIconRefs.current[index]}
 			/>

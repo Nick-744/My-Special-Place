@@ -1,7 +1,9 @@
 import { step, spaceBetweenGObj, gObjPathWidth } from '../MyConfig'
+import { globalVarContext } from '../Context/GlobalContext'
 import { eventsData } from '../InfoData/EventsData'
+import {useContext} from 'react'
 
-// Η Ζωή του Μ. Αλεξάνδρου | Μάχες και Πολιορκίες | Ίδρυση Πόλεων
+// Η Ζωή του Μ. Αλεξάνδρου | Μάχες και Πολιορκίες | Ίδρυση Πόλεων | Πολιτισμικό αποτύπωμα
 
 // Offset each event group (section) on the X-axis to separate
 // their paths visually! This prevents overlaps and keeps each
@@ -15,9 +17,13 @@ const sectionsConstants = Object.fromEntries(
 
 // --- Helpers ---
 const getRandomX = (baseX, section) => {
+    const randomOffset = (Math.random() - 0.5) * step * gObjPathWidth / 2
+
+    if (useContext(globalVarContext).mobileViewContext) return randomOffset; // For mobile, return only the random offset!
+
     const sectionOffset = sectionsConstants[section]
 
-    return baseX + sectionOffset + (Math.random() - 0.5) * step * gObjPathWidth / 2;
+    return baseX + sectionOffset + randomOffset;
 }
 
 const usedZPositions = new Map()

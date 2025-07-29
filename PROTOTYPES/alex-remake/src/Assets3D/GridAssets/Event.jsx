@@ -8,7 +8,7 @@ import { easing } from 'maath'
 import * as THREE from 'three'
 
 const Event = forwardRef(({
-	eventIndex, event, position, eventsRefArray, iconsRefArray, eventIconRef
+	eventIndex, event, position, iconsRefArray, eventIconRef
 }, ref) => {
 	const [isHovered, setIsHovered] = useState(false)
 
@@ -107,6 +107,8 @@ const Event = forwardRef(({
 				tempRef.current.material.color.g === tempRef.current.material.color.b) targetOpacity = 0.12
 
 			easing.damp(tempRef.current.material, 'opacity', targetOpacity, 4, dt)
+			
+			easing.damp(tempRef.current.position, 'y',       targetOpacity === 0.12 ? -6 : 0, 10, dt) // Check for mobile view!!!!!!!
 		})
 	})
 

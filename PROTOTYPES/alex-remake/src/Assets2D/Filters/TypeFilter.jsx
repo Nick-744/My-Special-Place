@@ -19,12 +19,12 @@ const TypeFilter = ({ eventRefs, eventIconRefs }) => {
 
         customArrow = {({ isOpen, setIsOpen, mobile }) => (
             <FilterToggleArrow
-                isOpen     = {isOpen}
-                setIsOpen  = {setIsOpen}
-                mobile     = {mobile}
-                showAlways = {true}
-                direction  = 'horizontal'
-                position   = {{ top: '50%', right: '-25px' }}
+            isOpen     = {isOpen}
+            setIsOpen  = {setIsOpen}
+            mobile     = {mobile}
+            showAlways = {true}
+            direction  = 'horizontal'
+            position   = {{ top: '50%', right: '-25px' }}
             />
         )}
         />

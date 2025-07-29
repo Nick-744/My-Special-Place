@@ -1,11 +1,24 @@
 import { originalColor } from '../../MyConfig'
 
+import { globalVarContext } from '../../Context/GlobalContext'
 import FilterToggleArrow from './CustomArrow'
+import RotatingFilter from './CarouselFilter'
 import GenericFilter from './GenericFilter'
+import {useContext} from 'react'
 
 const SectionFilter = ({ eventRefs, eventIconRefs }) => {
+    // ----- Global ----- //
+    const globalVar = useContext(globalVarContext)
+
     return (
-        <GenericFilter
+        globalVar.mobileViewContext
+        ? <RotatingFilter
+        eventRefs      = {eventRefs}
+        eventIconRefs  = {eventIconRefs}
+        filterKey      = 'section'
+        getColor       = {(section) => originalColor[section] || '#ffff00'}
+        />
+        : <GenericFilter
         filterKey      = 'section'
         eventRefs      = {eventRefs}
         eventIconRefs  = {eventIconRefs}
@@ -19,12 +32,12 @@ const SectionFilter = ({ eventRefs, eventIconRefs }) => {
 
         customArrow = {({ isOpen, setIsOpen, mobile }) => (
             <FilterToggleArrow
-                isOpen    = {isOpen}
-                setIsOpen = {setIsOpen}
-                mobile    = {mobile}
-                // showAlways = {false}
-                direction = 'vertical'
-                position  = {{ bottom: '-51px', left: '46%' }}
+            isOpen    = {isOpen}
+            setIsOpen = {setIsOpen}
+            mobile    = {mobile}
+            // showAlways = {false}
+            direction = 'vertical'
+            position  = {{ bottom: '-51px', left: '46%' }}
             />
         )}
         />
