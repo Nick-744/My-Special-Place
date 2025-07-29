@@ -8,6 +8,7 @@ import * as THREE from 'three'
 
 const TypeFilter = ({ eventRefs, eventIconRefs }) => {
     const [activeTypes, setActiveTypes] = useState([])
+    const [isOpen,      setIsOpen     ] = useState(false)
 
     // ----- Global ----- //
     const globalVar = useContext(globalVarContext)
@@ -58,8 +59,9 @@ const TypeFilter = ({ eventRefs, eventIconRefs }) => {
         elevation = {4}
         sx        = {{
             position:        'absolute',
-            bottom:          '10px',
-            left:            '-205px',
+            bottom:          globalVar.mobileViewContext ? 'auto'   : '10px',
+            top:             globalVar.mobileViewContext ? '10px'   : 'auto',
+            left:            globalVar.mobileViewContext ? (isOpen ? '10px' : '-235px') : '-205px',
             display:         'flex',
             flexDirection:   'column',
             backgroundColor: '#fafafa',
@@ -71,7 +73,10 @@ const TypeFilter = ({ eventRefs, eventIconRefs }) => {
 
 			// Make component responsive [bigger]!
             transition: 'all 0.3s ease',
-            '&:hover':  { transform: 'translateX(215px)' } // Slide right so final left offset is 10px!
+            ...(globalVar.mobileViewContext
+                ? {}
+                : { '&:hover':  { left: '10px' } }
+            )
         }}
         >
             {/* Show tab arrow */}
@@ -88,9 +93,11 @@ const TypeFilter = ({ eventRefs, eventIconRefs }) => {
                 borderBottomRightRadius: '7px',
                 fontWeight: 'bold',
                 fontSize:   '30px',
-                zIndex: 999
+                cursor:     'pointer',
+                zIndex:     1000
             }}
-            > » </div>
+            onClick = {() => globalVar.mobileViewContext ? setIsOpen(!isOpen) : null}
+            > {isOpen ? '«' : '»'} </div>
 
             {uniqueTypes.map((type, idx) => {
                 const isActive = activeTypes.includes(type)

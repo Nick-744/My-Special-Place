@@ -38,7 +38,7 @@ export const timestamps = [
 	-360, -350, -345, -340, -338, -336, -334, -332, -330, -328, -326, -325, -324, -322,
 	-320, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 1900, 1950, 2000, 2010
 ]
-export const timestampsXPosition = 4 // Integer value! For 3D timestamps.
+export const timestampsXPosition = 5 // Integer value! For 3D timestamps.
 
 // ==================== Event Configuration ====================
 export const eventYFloat     = 0.5         // Float value y [offset above wave]

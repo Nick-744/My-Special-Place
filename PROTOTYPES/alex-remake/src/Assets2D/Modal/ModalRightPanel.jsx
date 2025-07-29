@@ -1,10 +1,15 @@
+import { globalVarContext } from '../../Context/GlobalContext'
 import { Box, Typography } from '@mui/material'
+import { useContext } from 'react'
 
 /*
 Contains the right panel of the modal that
 displays event images and captions.
 */
 const ModalRightPanel = ({ selectedEventContext }) => {
+    // ----- Global ----- //
+    const globalVar    = useContext(globalVarContext)
+    
     const borderRadius = 4
 
     return (
@@ -13,7 +18,7 @@ const ModalRightPanel = ({ selectedEventContext }) => {
             flex: 1,
             gap:  2,
             display:       'flex',
-            flexDirection: 'column',
+            flexDirection: globalVar.mobileViewContext ? 'row' : 'column',
         }}
         >
             <Box

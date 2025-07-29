@@ -8,6 +8,7 @@ import * as THREE from 'three'
 
 const SectionFilter = ({ eventRefs, eventIconRefs }) => {
     const [activeSections, setActiveSections] = useState([])
+    const [isOpen,         setIsOpen        ] = useState(false)
 
     // ----- Global ----- //
     const globalVar = useContext(globalVarContext)
@@ -58,8 +59,8 @@ const SectionFilter = ({ eventRefs, eventIconRefs }) => {
         elevation = {4}
         sx        = {{
             position:        'absolute',
-            top:             '30px',
-            left:            '30px',
+            top:             globalVar.mobileViewContext ? (isOpen ? '10px' : '-210px') : '30px',
+            left:            globalVar.mobileViewContext ? '10px' : '30px',
             display:         'flex',
             flexDirection:   'column',
             backgroundColor: '#fafafa',
@@ -71,9 +72,32 @@ const SectionFilter = ({ eventRefs, eventIconRefs }) => {
 
 			// Make component responsive [bigger]!
             transition: 'all 0.3s ease',
-            '&:hover':  { transform: 'scale(1.03)' }
+            ...(globalVar.mobileViewContext
+                ? {}
+                : { '&:hover': { transform: 'scale(1.03)' } }
+            )
         }}
         >
+            {/* Mobile ONLY toggle arrow */}
+            { globalVar.mobileViewContext && <div
+            style = {{
+                position:  'absolute',
+                bottom:    '-52px',
+                left:      '46%',
+                padding:   '0px 6px 5px 5px',
+                transform: 'translateY(-50%) rotate(90deg)',
+                color:           '#5f5f5f',
+                backgroundColor: '#fafafa',
+                borderTopRightRadius:    '7px',
+                borderBottomRightRadius: '7px',
+                fontWeight: 'bold',
+                fontSize:   '30px',
+                cursor:     'pointer',
+                zIndex:     1000
+            }}
+            onClick = {() => setIsOpen(!isOpen)}
+            > {isOpen ? '«' : '»'} </div> }
+
             {uniqueSections.map((section, idx) => {
                 const isActive = activeSections.includes(section)
 				const color    = originalColor[section] || '#ffff00'

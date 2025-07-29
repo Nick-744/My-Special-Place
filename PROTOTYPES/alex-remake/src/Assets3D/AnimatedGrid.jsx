@@ -3,9 +3,10 @@ import {
 	particlesSpeed, particleCount, bounds, gridOpacity
 } from '../MyConfig';
 
+import { globalVarContext } from '../Context/GlobalContext';
+import { useRef, useMemo, useContext } from 'react';
 import { getWaveHeight } from '../Helpers/Utils';
 import { useFrame } from '@react-three/fiber';
-import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
 
 /**
@@ -13,7 +14,6 @@ import * as THREE from 'three';
  */
 function AnimatedGrid() {
 	const gridRef  = useRef(); // Reference to grid geometry
-	// const nodesRef = useRef(); // Reference to node group
   
 	// Create static grid geometry (wireframe structure)
 	const gridGeometry = useMemo(() => {
@@ -160,6 +160,9 @@ function Particles() {
  * Main grid scene setup
  */
 function GridScenePackage({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
+	// ----- Global ----- //
+	const globalVar = useContext(globalVarContext);
+
 	return (
 		<>
 			{/* Main grid component */}
@@ -168,12 +171,12 @@ function GridScenePackage({ position = [0, 0, 0], rotation = [0, 0, 0] }) {
 			</mesh>
 			
 			{/* Particle system positioned below grid */}
-			<mesh
+			{ !globalVar.mobileViewContext && <mesh
 			position = {[position[0], position[1] - bounds.y + 10, position[2]]}
 			rotation = {rotation}
 			>
 				<Particles />
-			</mesh>
+			</mesh> }
 		</>
 	);
 }
