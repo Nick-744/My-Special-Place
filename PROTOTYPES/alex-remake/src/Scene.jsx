@@ -2,11 +2,12 @@ import { cameraFOV, cameraInitialZ, cameraHeight } from './MyConfig'
 
 import EventManager from './Assets3D/GridAssets/EventManager'
 import SectionFilter from './Assets2D/Filters/SectionFilter'
+import ItemFilter from './Assets2D/Filters/ItemFilter'
 import GridScenePackage from './Assets3D/AnimatedGrid'
-import { eventsData } from './InfoData/EventsData'
 import EventModal from './Assets2D/Modal/EventModal'
 import BackgroundImage from './Assets2D/BGImage2D'
 import Timestamps2D from './Assets2D/Timestamps2D'
+import { eventsData } from './InfoData/EventsData'
 // import Timestamps from './GridAssets/Timestamps'
 import Camera3D from './Assets3D/CameraControl'
 import React, { useState, useRef } from 'react'
@@ -48,7 +49,10 @@ const Scene = () => {
 			cameraZPositionState    = {cameraZPositionState}
 			setCameraZPositionState = {setCameraZPositionState}
 			/>
+
+			{ /* --- Filters --- */ }
 			<SectionFilter eventRefs = {eventRefs} eventIconRefs = {eventIconRefs} />
+			<ItemFilter eventRefs = {eventRefs} eventIconRefs = {eventIconRefs} />
 		</div>
 	);
 }
