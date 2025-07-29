@@ -141,7 +141,7 @@ const Event = forwardRef(({
 			color      = {getColor()}
 			anchorX    = 'center'
 			anchorY    = 'top'
-			maxWidth   = {step * 3.4}
+			maxWidth   = {step * 3.5}
 			visible	   = {false}
 			>
 				{event.title['gr']}
