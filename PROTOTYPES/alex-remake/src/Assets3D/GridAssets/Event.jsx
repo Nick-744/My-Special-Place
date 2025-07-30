@@ -2,6 +2,7 @@ import { step, originalColor, hoveredColor, gObjRotationX, textColor } from '../
 
 import { forwardRef, useRef, useState, useContext } from 'react'
 import { globalVarContext } from '../../Context/GlobalContext'
+import { eventsData } from '../../InfoData/EventsData'
 import { Text, useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { easing } from 'maath'
@@ -87,7 +88,7 @@ const Event = forwardRef(({
 			dt
 		)
 		
-		// Show/Hide title and event's timestamp
+		// Show/Hide title, location and event's timestamp
 		easing.damp(titleRef.current,         'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
 		easing.damp(eventTimeRef.current,     'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
 		easing.damp(eventLocationRef.current, 'fillOpacity', isHovered ? 1. : 0., 0.1, dt)
@@ -99,24 +100,21 @@ const Event = forwardRef(({
 
 		iconsRefArray.current.forEach((tempRef, i) => {
 			// Adjust opacity of all events when 1 is hovered
-			const shouldDim     = globalVar.eventHoveringContext !== -1 && i !== globalVar.eventHoveringContext
-			let   targetOpacity = shouldDim ? 0.15 : 1
+			const shouldDim     = globalVar.eventHoveringContext !== -1 && i !== globalVar.eventHoveringContext // Dim non-hovered events!
+			const tempFilters   = globalVar.activeFiltersContext
+			let   targetOpacity = shouldDim
+			? 0.15
+			: (tempFilters.section.includes(eventsData[i].section) && tempFilters.type.includes(eventsData[i].type)
+				? 1 : 0.12) // Section & Type filtering animation
 
-			// === SPECIAL WAY === //
-			let   eventMobileFlag = false
-			const temp = (tempRef.current.material.color.r === tempRef.current.material.color.b &&
-						  tempRef.current.material.color.g === tempRef.current.material.color.b)
-			if (temp) {
-				targetOpacity   = 0.12
-				eventMobileFlag = globalVar.mobileViewContext && temp
-			}
-
-			// Smoothly adjust opacity of events that are not
-			// enabled - Section & Type filters! // === SPECIAL WAY === //
 			easing.damp(tempRef.current.material, 'opacity', targetOpacity, 4, dt)
-			
-			// Mobileview out of view events positioning handling // === SPECIAL WAY === //
-			easing.damp(tempRef.current.position, 'y', !eventMobileFlag ? 0 : 12, 12, dt)
+
+			// Move non-active icons up when filtering in mobile view!!!
+			easing.damp(
+				tempRef.current.position, 'y',
+				globalVar.mobileViewContext && !tempFilters.section.includes(eventsData[i].section) ? 20 : 0,
+				10, dt
+			)
 		})
 	})
 

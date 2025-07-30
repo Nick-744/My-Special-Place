@@ -1,7 +1,6 @@
 export const eventsData = [
 
 
-
   {
     ID: "2.1",
     title: { gr: "Η Μάχη της Χαιρώνειας", en: "Battle of Chaeronea" },
@@ -1154,4 +1153,6 @@ export const eventsData = [
     type: "Χαρακτικά",
     referrals: "https://www.nationalgeographic.com/culture/article/alexander-the-great",
   },
+
+  
 ];

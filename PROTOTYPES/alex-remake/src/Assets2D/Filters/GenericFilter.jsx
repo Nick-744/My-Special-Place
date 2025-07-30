@@ -40,13 +40,14 @@ const GenericFilter = ({
             if (!ref?.current) return;
 
             const event             = eventsData[i]
-            const iconColor         = eventIconRefs.current[i].current.material.color
+            const tempIconRef       = eventIconRefs.current[i].current
             const matchesAllFilters = Object.entries(activeFiltersContext).every(
                 ([key, values]) => values.includes(event[key])
             )
 
-            if (!matchesAllFilters) iconColor.set(0xffffff) // === SPECIAL WAY === //
-            else                    iconColor.set(getColor(event[filterKey], event))
+            // Color effect! // === SPECIAL WAY MEME === //
+            if (!matchesAllFilters) tempIconRef.material.color.set(0xffffff)
+            else                    tempIconRef.material.color.set(getColor(event[filterKey], event))
 
             ref.current.traverse((child) => {
                 child.raycast = matchesAllFilters ? THREE.Mesh.prototype.raycast : () => {}

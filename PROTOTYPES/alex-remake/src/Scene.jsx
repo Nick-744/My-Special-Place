@@ -33,7 +33,7 @@ const Scene = () => {
 
 	return (
 		<div id = 'canvas-container' className = 'w3-animate-opacity'>
-			{/* <Stats /> */}
+			<Stats />
 			
 			{ /* --- 3D Elements --- */ }
 			<Canvas camera = {{ fov: cameraFOV, position: [0, cameraHeight, cameraInitialZ] }}>

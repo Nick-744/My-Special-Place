@@ -2,11 +2,11 @@
 export const size        = 300              // Grid size (units)
 export const divisions   = 350              // Number of grid divisions
 export const step        = size / divisions // Step size for grid nodes
-export const scaleEffect = 0.020            // Wave amplitude multiplier - [Utils.jsx] **
+export const scaleEffect = 0.015            // Wave amplitude multiplier - [Utils.jsx] **
 export const cameraPos   = [0, 100, 0]      // Fake initial camera position for grid effect!!!
 export const nodeDensity = 3                // Node spacing
 export const wireframeColor = '#00aaff'   // Wireframe color
-export const gridOpacity    = 0.065         // Opacity of the grid lines
+export const gridOpacity    = 0.050         // Opacity of the grid lines
 
 export const particlesSize  = 0.2  // Particle size
 export const particlesSpeed = 0.03 // Particle movement speed
@@ -21,7 +21,7 @@ export const bounds = {
 
 // ==================== Camera Control Configuration ====================
 // Προσοχή! Ο αριθμητής πρέπει να είναι μεταξύ του 0 και του divisions
-export const minZPosition = Math.ceil(step * 60 / 2)                 // Minimum visible Z position limit
+export const minZPosition = Math.ceil(step * 80 / 2)                 // Minimum visible Z position limit
 export const maxZPosition = Math.ceil(step * ((divisions - 22) / 2)) // Maximum visible Z position limit
 
 export const cameraInitialZ  = Math.ceil(step * (divisions / 2)) // Initial Z position for the camera
@@ -38,7 +38,7 @@ export const timestamps = [
 	-360, -350, -345, -340, -338, -336, -334, -332, -330, -328, -326, -325, -324, -322,
 	-320, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 1900, 1950, 2000, 2010
 ]
-export const timestampsXPosition = 5 // Integer value! For 3D timestamps.
+export const timestampsXPosition = 1.5 // Integer value! For 3D timestamps.
 
 // ==================== Event Configuration ====================
 export const eventYFloat     = 0.5         // Float value y [offset above wave]
