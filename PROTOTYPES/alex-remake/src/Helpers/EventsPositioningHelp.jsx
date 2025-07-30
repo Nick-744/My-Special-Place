@@ -16,10 +16,10 @@ const sectionsConstants = Object.fromEntries(
 )
 
 // --- Helpers ---
-const getRandomX = (baseX, section) => {
+const getRandomX = (baseX, section, mobileViewContext) => {
     const randomOffset = (Math.random() - 0.5) * step * gObjPathWidth / 2
 
-    if (useContext(globalVarContext).mobileViewContext) return randomOffset; // For mobile, return only the random offset!
+    if (mobileViewContext) return randomOffset; // For mobile, return only the random offset!
 
     const sectionOffset = sectionsConstants[section]
 
@@ -38,17 +38,17 @@ const usedZPositions = new Map()
  * 
  * @returns {number} A non-overlapping X position.
  */
-export function getNonOverlappingX(z, baseX, section) {
+export function getNonOverlappingX(z, baseX, section, mobileViewContext) {
     const currentKey = `${z}-${section}`
 
-    let   returnX    = getRandomX(baseX, section)
+    let   returnX    = getRandomX(baseX, section, mobileViewContext)
     if (usedZPositions.has(currentKey)) {
         const existingX = usedZPositions.get(currentKey)
         let   distance  = Math.abs(existingX - returnX)
 
         // O(n!) implementation...
         while (distance < step * gObjPathWidth / 5) {
-            returnX  = getRandomX(baseX, section)
+            returnX  = getRandomX(baseX, section, mobileViewContext)
             distance = Math.abs(existingX - returnX)
         }
 

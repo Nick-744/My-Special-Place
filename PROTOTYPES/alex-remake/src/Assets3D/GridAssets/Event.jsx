@@ -97,18 +97,26 @@ const Event = forwardRef(({
 		eventTimeRef.current.visible     = eventTimeRef.current.fillOpacity     > 0.01
 		eventLocationRef.current.visible = eventLocationRef.current.fillOpacity > 0.01
 
-		// Adjust opacity of all events when 1 is hovered
 		iconsRefArray.current.forEach((tempRef, i) => {
+			// Adjust opacity of all events when 1 is hovered
 			const shouldDim     = globalVar.eventHoveringContext !== -1 && i !== globalVar.eventHoveringContext
 			let   targetOpacity = shouldDim ? 0.15 : 1
 
 			// === SPECIAL WAY === //
-			if (tempRef.current.material.color.r === tempRef.current.material.color.b &&
-				tempRef.current.material.color.g === tempRef.current.material.color.b) targetOpacity = 0.12
+			let   eventMobileFlag = false
+			const temp = (tempRef.current.material.color.r === tempRef.current.material.color.b &&
+						  tempRef.current.material.color.g === tempRef.current.material.color.b)
+			if (temp) {
+				targetOpacity   = 0.12
+				eventMobileFlag = globalVar.mobileViewContext && temp
+			}
 
+			// Smoothly adjust opacity of events that are not
+			// enabled - Section & Type filters! // === SPECIAL WAY === //
 			easing.damp(tempRef.current.material, 'opacity', targetOpacity, 4, dt)
 			
-			easing.damp(tempRef.current.position, 'y',       targetOpacity === 0.12 ? -6 : 0, 10, dt) // Check for mobile view!!!!!!!
+			// Mobileview out of view events positioning handling // === SPECIAL WAY === //
+			easing.damp(tempRef.current.position, 'y', !eventMobileFlag ? 0 : 12, 12, dt)
 		})
 	})
 

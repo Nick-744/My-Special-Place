@@ -2,7 +2,6 @@ import { originalColor } from '../../MyConfig'
 
 import { globalVarContext } from '../../Context/GlobalContext'
 import FilterToggleArrow from './CustomArrow'
-import RotatingFilter from './CarouselFilter'
 import GenericFilter from './GenericFilter'
 import {useContext} from 'react'
 
@@ -11,14 +10,7 @@ const SectionFilter = ({ eventRefs, eventIconRefs }) => {
     const globalVar = useContext(globalVarContext)
 
     return (
-        globalVar.mobileViewContext
-        ? <RotatingFilter
-        eventRefs      = {eventRefs}
-        eventIconRefs  = {eventIconRefs}
-        filterKey      = 'section'
-        getColor       = {(section) => originalColor[section] || '#ffff00'}
-        />
-        : <GenericFilter
+        <GenericFilter
         filterKey      = 'section'
         eventRefs      = {eventRefs}
         eventIconRefs  = {eventIconRefs}
@@ -40,6 +32,9 @@ const SectionFilter = ({ eventRefs, eventIconRefs }) => {
             position  = {{ bottom: '-51px', left: '46%' }}
             />
         )}
+
+        // Only 1 section can be active at a time in mobile view!
+        onlyOneActive = {globalVar.mobileViewContext}
         />
     );
 }

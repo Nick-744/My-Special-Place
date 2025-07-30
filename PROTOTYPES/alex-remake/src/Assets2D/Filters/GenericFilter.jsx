@@ -11,64 +11,83 @@ const GenericFilter = ({
     getColor,       // (value, event) => color string
     positionConfig, // Mobile/Desktop styles injection
     customArrow,    // Custom arrow render (optional)
+    onlyOneActive = false, // If true, only 1 group can be active at a time!
 }) => {
-    const [activeItems, setActiveItems] = useState([])
-    const [isOpen,      setIsOpen     ] = useState(false)
-    const globalVar = useContext(globalVarContext) /* --- GLOBAL --- */
+    // ----- Global ----- //
+    const globalVar = useContext(globalVarContext)
     const paperRef  = useRef(null)
 
-    // Extract unique sections
+    const [isOpen, setIsOpen] = useState(false)
+
+    const { activeFiltersContext, setActiveFiltersContext } = globalVar
+    const activeItems                                       = activeFiltersContext[filterKey]
+
+    // Extract unique values for this filter
     const uniqueItems = [...new Set(eventsData.map(e => e[filterKey]))]
 
-    // Initialize: all sections visible
-    useEffect(() => { setActiveItems(uniqueItems) }, [])
+    // Initialize filter values
+    useEffect(() => {
+        if (onlyOneActive)
+            // Fallback to index 0 if undefined!
+            setActiveFiltersContext(prev => ({...prev, [filterKey]: [uniqueItems[1] || uniqueItems[0]]}))
+        else
+            setActiveFiltersContext(prev => ({...prev, [filterKey]: uniqueItems}))
+    }, [])
 
-    // Apply visibility changes
+    // Update visibility based on *all* active filters
     useEffect(() => {
         eventRefs.current.forEach((ref, i) => {
-            if (!ref?.current) return; // Skip if ref is not set!
+            if (!ref?.current) return;
 
-            const event      = eventsData[i]
-            const item       = event[filterKey]
-            const shouldShow = activeItems.includes(item)
+            const event             = eventsData[i]
+            const iconColor         = eventIconRefs.current[i].current.material.color
+            const matchesAllFilters = Object.entries(activeFiltersContext).every(
+                ([key, values]) => values.includes(event[key])
+            )
 
-            // Visibility control | === SPECIAL WAY === //
-            if (!shouldShow) eventIconRefs.current[i].current.material.color.set(0xffffff) // Set to white for effect!
-            else             eventIconRefs.current[i].current.material.color.set(getColor(item, event))
+            if (!matchesAllFilters) iconColor.set(0xffffff) // === SPECIAL WAY === //
+            else                    iconColor.set(getColor(event[filterKey], event))
 
-            // --- Disable pointer interaction when hidden ---
             ref.current.traverse((child) => {
-                child.raycast = shouldShow ? THREE.Mesh.prototype.raycast : () => {}
+                child.raycast = matchesAllFilters ? THREE.Mesh.prototype.raycast : () => {}
             })
         })
-    }, [activeItems, eventRefs])
+    }, [activeFiltersContext, eventRefs])
 
     useEffect(() => {
         if (!globalVar.mobileViewContext || !isOpen) return;
 
         const handleClick = (e) => {
-            if (paperRef.current && !paperRef.current.contains(e.target))
-                setIsOpen(false)
+            if (paperRef.current && !paperRef.current.contains(e.target)) setIsOpen(false)
         }
-
         document.addEventListener('mousedown', handleClick)
-        return () => document.removeEventListener('mousedown', handleClick)
+
+        return () => document.removeEventListener('mousedown', handleClick);
     }, [isOpen, globalVar.mobileViewContext])
 
-    // Toggle item visibility
+    // Toggle item - Global setter
     const toggleItem = (item) => {
-        setActiveItems(prev =>
-            prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
-            /*  First, it checks if the current item already exists in the previous state
-            using [prev.includes(item)]. If the item is found, it means the user is
-            trying to deactivate it, so the function uses [prev.filter(i => i !== item)]
-            to create a new array with that item removed. The filter method keeps all
-            elements except the 1 that matches the item being toggled off.
+        setActiveFiltersContext(prev => {
+            const current = prev[filterKey]
+            const updated = onlyOneActive
+                ? [item]
+                : current.includes(item)
+                    ? current.filter(i => i !== item)
+                    : [...current, item]
 
-                If the item is not currently active, the function takes the opposite
-            approach using the spread operator [[...prev, item]] to create a new array
-            containing all previously active items plus the new 1! */
-        )
+            return {...prev, [filterKey]: updated};
+        })
+
+        /*  This logic toggles the selected item in the global filter state:
+
+            - If the item is already active (included in the current array),
+            it gets removed using [filter(i => i !== item)].
+
+            - If the item is not active, it's added to the list using [...current, item].
+
+            - If onlyOneActive is true, it skips toggling and just sets the array to [item],
+            ensuring that only one option can be active at a time.
+        */
     }
 
     return (

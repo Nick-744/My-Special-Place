@@ -6,7 +6,7 @@ export const scaleEffect = 0.020            // Wave amplitude multiplier - [Util
 export const cameraPos   = [0, 100, 0]      // Fake initial camera position for grid effect!!!
 export const nodeDensity = 3                // Node spacing
 export const wireframeColor = '#00aaff'   // Wireframe color
-export const gridOpacity    = 0.1           // Opacity of the grid lines
+export const gridOpacity    = 0.065         // Opacity of the grid lines
 
 export const particlesSize  = 0.2  // Particle size
 export const particlesSpeed = 0.03 // Particle movement speed

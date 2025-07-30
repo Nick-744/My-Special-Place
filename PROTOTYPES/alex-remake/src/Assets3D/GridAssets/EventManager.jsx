@@ -3,12 +3,16 @@ import { eventYFloat, eventsXPosition, eventWaveEffect } from '../../MyConfig'
 import { getWaveHeight, calculateEventZPosition } from '../../Helpers/Utils'
 import { getNonOverlappingX } from '../../Helpers/EventsPositioningHelp'
 
+import { globalVarContext } from '../../Context/GlobalContext'
 import { eventsData } from '../../InfoData/EventsData'
 import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
+import { useRef, useContext } from 'react'
 import Event from './Event'
 
 const EventManager = ({ eventRefs, eventIconRefs }) => {
+	// ----- Global ----- //
+	const globalVar = useContext(globalVarContext)
+
 	// Animation loop - update event positions with wave effect
 	useFrame((state) => {
 		const time = state.clock.elapsedTime
@@ -25,19 +29,22 @@ const EventManager = ({ eventRefs, eventIconRefs }) => {
 	})
 
 	// Calculate position for each event based on timestamp
-	const eventPositionsRef = useRef(
-		// Use useRef to persist event positions across renders.
-		// Without this, positions get recalculated and break due
-		// to shared state in eventRefs!
-		eventsData.map((event, _) => {
+	const eventPositionsRef = useRef(null)
+	// Use useRef to persist event positions across renders.
+	// Without this, positions get recalculated and break due
+	// to shared state in eventRefs!
+	if (!eventPositionsRef.current) {
+		eventPositionsRef.current = eventsData.map((event, _) => {
 			// Position based on the event's timestamp value
 			const z = calculateEventZPosition(event.startDate)
-			const x = getNonOverlappingX(z, eventsXPosition, event.section)
-			const y = 0 // Y will be updated by wave animation
+			const x = getNonOverlappingX(
+				z, eventsXPosition, event.section, globalVar.mobileViewContext
+			)
+			const y = eventYFloat // Y will be updated by wave animation
 			
 			return [x, y, z];
 		})
-	)
+	}
 
 	// Create individual event components
 	function createEvent(event, index) {

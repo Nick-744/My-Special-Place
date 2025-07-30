@@ -19,7 +19,7 @@ import { globalVarContext } from './Context/GlobalContext'
 import { eventsData } from './InfoData/EventsData'
 import { Canvas } from '@react-three/fiber'
 
-import { OrbitControls, Stats } from '@react-three/drei'
+import { Stats } from '@react-three/drei'
 
 const Scene = () => {
 	const [cameraZPositionState, setCameraZPositionState] = useState(cameraInitialZ)
@@ -38,7 +38,6 @@ const Scene = () => {
 			{ /* --- 3D Elements --- */ }
 			<Canvas camera = {{ fov: cameraFOV, position: [0, cameraHeight, cameraInitialZ] }}>
 
-				{/* <OrbitControls /> */}
 				<Camera3D
 				cameraZPositionState    = {cameraZPositionState}
 				setCameraZPositionState = {setCameraZPositionState}
