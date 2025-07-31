@@ -1,6 +1,6 @@
 import { timestamps, panelsOpacityEventHovering } from '../MyConfig'
 
-import { useRef, useLayoutEffect, useState, useEffect, useContext } from 'react'
+import { useRef, useLayoutEffect, useState, useEffect, useContext, useMemo } from 'react'
 import { globalVarContext } from '../Context/GlobalContext'
 import { calculateEventZPosition } from '../Helpers/Utils'
 import { Box, Typography, Paper } from '@mui/material'
@@ -18,10 +18,15 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 	const globalVar = useContext(globalVarContext)
 	const { activeFiltersContext } = globalVar
 
-	// Show in the UI only the years that have events in the current section!
-	const currentTimestamps = eventsData
-		.filter(event => activeFiltersContext.section.includes(event.section))
-		.map(event => event.startDate)
+	/*  Show in the UI only the years that have events in the current section!
+
+		The useMemo hook ensures this potentially expensive computation only runs when the
+	filter criteria actually change, preventing unnecessary re-calculations on every render. */
+	const currentTimestamps = useMemo(() => {
+		return eventsData
+			.filter(event => activeFiltersContext.section.includes(event.section))
+			.map(event => event.startDate);
+	}, [activeFiltersContext.section])
 	const sorted = [...timestamps].sort((a, b) => a - b)
 	
 	const contentRef           = useRef(null)
@@ -104,6 +109,8 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 					let clampedYear
 					if (centeredYear < minYear) clampedYear = sorted.find(y => y >= minYear)
 					else                        clampedYear = [...sorted].reverse().find(y => y <= maxYear)
+					
+					if (clampedYear === -350) clampedYear = -360 // --- SPECIAL CASE --- //
 
 					const newIndex = sorted.indexOf(clampedYear)
 					const labelEl  = labels[newIndex]
@@ -155,6 +162,37 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 			container.removeEventListener('scroll', handleScroll)
 			if (scrollStopTimeout) clearTimeout(scrollStopTimeout)
 		};
+	}, [currentTimestamps])
+
+
+
+	// Animate the camera to the start position of the current active section!
+	useEffect(() => {
+		if (!currentTimestamps.length || !contentRef.current || !scrollContainerRef.current) return;
+
+		const minYear   = Math.min(...currentTimestamps)
+		let clampedYear = sorted.find(y => y >= minYear) || sorted[0]
+		if (clampedYear === -350) clampedYear = -360 // --- SPECIAL CASE --- //
+
+		const newIndex = sorted.indexOf(clampedYear)
+		if (newIndex === -1) return;
+
+		const labels  = contentRef.current.children
+		const labelEl = labels[newIndex]
+		if (!labelEl) return;
+
+		const labelCenter    = labelEl.offsetLeft + labelEl.offsetWidth / 2
+		const containerWidth = scrollContainerRef.current.offsetWidth
+		const targetScroll   = labelCenter - containerWidth / 2
+
+		scrollContainerRef.current.scrollTo({
+			left:     Math.max(0, targetScroll),
+			behavior: 'smooth'
+		})
+
+		const newZ = calculateEventZPosition(clampedYear)
+		setCameraZPositionState(newZ + FOVconstant - 0.1)
+		lastCenteredIndexRef.current = newIndex
 	}, [currentTimestamps])
 
 
