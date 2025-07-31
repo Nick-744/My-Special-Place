@@ -1,38 +1,34 @@
-import { globalVarContext } from '../../Context/GlobalContext'
 import { Box, Typography } from '@mui/material'
-import { useContext } from 'react'
 
 /*
 Contains the right panel of the modal that
 displays event images and captions.
 */
 const ModalRightPanel = ({ selectedEventContext }) => {
-    // ----- Global ----- //
-    const globalVar    = useContext(globalVarContext)
-    
     const borderRadius = 4
 
     return (
         <Box
         sx = {{
             flex: 1,
-            gap:  2,
+            gap:  { xs: 1.5, md: 2 },
             display:       'flex',
-            flexDirection: globalVar.mobileViewContext ? 'row' : 'column',
+            flexDirection: { xs: 'row', md: 'column' }
         }}
         >
+            {/* Image Box */}
             <Box
             sx = {{
-                height:         250,
+                height:         { xs: 150, sm: 200, md: 250 },
                 width:          '100%',
-                minWidth:       200,
-                maxWidth:       300,
+                minWidth:       { xs: 120, sm: 180, md: 200 },
+                maxWidth:       { xs: 180, sm: 250, md: 300 },
                 display:        'flex',
                 alignItems:     'center',
                 justifyContent: 'center',
                 background:     '#e0e0e0',
                 borderRadius:   borderRadius,
-                overflow:       'hidden',
+                overflow:       'hidden'
             }}
             >
                 {selectedEventContext.image ? (
@@ -46,13 +42,17 @@ const ModalRightPanel = ({ selectedEventContext }) => {
                         objectFit:      'cover',
                         objectPosition: 'top',
                         borderRadius:   borderRadius,
-                        background:     '#e0e0e0',
+                        background:     '#e0e0e0'
                     }}
                     />
                 ) : (
                     <Typography
                     variant = 'body2'
-                    sx      = {{ textAlign: 'center', paddingTop: 5 }}
+                    sx      = {{
+                        textAlign:  'center',
+                        paddingTop: { xs: 2, md: 5 },
+                        fontSize:   { xs: '0.75rem', md: '0.875rem' }
+                    }}
                     >
                         Δεν υπάρχει εικόνα διαθέσιμη.
                     </Typography>
@@ -66,7 +66,8 @@ const ModalRightPanel = ({ selectedEventContext }) => {
                 textAlign: 'left',
                 color:     '#000000',
                 fontStyle: 'italic',
-                mt: 1,
+                mt:        { xs: 0.5, md: 1 },
+                fontSize:  { xs: '0.75rem', md: '0.875rem' }
             }}
             >
                 {selectedEventContext.imageDescription?.gr || 'Χωρίς περιγραφή εικόνας.'}

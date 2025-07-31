@@ -20,7 +20,6 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 	
 	const contentRef           = useRef(null)
 	const scrollContainerRef   = useRef(null)
-	const scrollTimeoutRef     = useRef(null)
 	const lastCenteredIndexRef = useRef(-1)
 	const [contentWidth, setContentWidth] = useState(0)
 	const [selectorLeft, setSelectorLeft] = useState(0)
@@ -60,64 +59,48 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 		}
 	}, [cameraZPositionState, contentWidth])
 
-	// Handle scroll events to snap to closest label!
+	// Handle the blue box to be always visible!
 	useEffect(() => {
+		const container = scrollContainerRef.current
+		const labels    = contentRef.current?.children
+		if (!container || !labels?.length) return;
+
+		let scrollStopTimeout = null
+
 		const handleScroll = () => {
-			if (!scrollContainerRef.current || !contentRef.current) return;
+			if (scrollStopTimeout) clearTimeout(scrollStopTimeout)
 
-			// Clear any previous snap timeout
-			if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current)
+			// Wait until scrolling has stopped for 150ms
+			scrollStopTimeout = setTimeout(() => {
+				const containerCenter = container.scrollLeft + container.offsetWidth / 2
 
-			const container       = scrollContainerRef.current
-			const labels          = Array.from(contentRef.current.children)
-			const containerCenter = container.scrollLeft + container.offsetWidth / 2
+				let closest = { index: 0, distance: Infinity }
+				Array.from(labels).forEach((labelEl, index) => {
+					const labelCenter = labelEl.offsetLeft + labelEl.offsetWidth / 2
+					const distance    = Math.abs(containerCenter - labelCenter)
+					if (distance < closest.distance) {
+						closest = { index, distance }
+					}
+				})
 
-			let closest = { index: 0, distance: Infinity }
+				const newIndex = closest.index
+				if (lastCenteredIndexRef.current !== newIndex) {
+					lastCenteredIndexRef.current = newIndex
 
-			labels.forEach((labelEl, index) => {
-				const labelCenter = labelEl.offsetLeft + labelEl.offsetWidth / 2
-				const distance    = Math.abs(containerCenter - labelCenter)
-				if (distance < closest.distance) closest = { index, distance }
-			})
-
-			const newCenteredIndex = closest.index
-
-			// Only update if index actually changed
-			if (lastCenteredIndexRef.current !== newCenteredIndex) {
-				lastCenteredIndexRef.current = newCenteredIndex
-
-				const centeredYear = sorted[newCenteredIndex]
-				const newZ         = calculateEventZPosition(centeredYear)
-
-				setCameraZPositionState(newZ + FOVconstant - 0.1)
-			}
-
-			// Debounced snap to center after user stops scrolling
-			scrollTimeoutRef.current = setTimeout(() => {
-				const targetLabel = labels[closest.index]
-				if (!targetLabel) return;
-
-				const targetCenter = targetLabel.offsetLeft + targetLabel.offsetWidth / 2
-				const scrollTo     = targetCenter - container.offsetWidth / 2
-
-				container.scrollTo({ left: scrollTo, behavior: 'smooth' })
-			}, 150) // Snap Xms after last scroll
+					const centeredYear = sorted[newIndex]
+					const newZ         = calculateEventZPosition(centeredYear)
+					setCameraZPositionState(newZ + FOVconstant - 0.1)
+				}
+			}, 300)
 		}
 
-		const ref = scrollContainerRef.current
-		if (ref) ref.addEventListener('scroll', handleScroll, { passive: true })
+		container.addEventListener('scroll', handleScroll, { passive: true })
 
 		return () => {
-			if (ref)                      ref.removeEventListener('scroll', handleScroll)
-			if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current)
+			container.removeEventListener('scroll', handleScroll)
+			if (scrollStopTimeout) clearTimeout(scrollStopTimeout)
 		};
-	}, [sorted, contentRef.current])
-
-	// Handle timestamp click
-	const handleTimestampClick = (year) => {
-		const targetZPosition = calculateEventZPosition(year)
-		setCameraZPositionState(targetZPosition + FOVconstant - 0.1)
-	}
+	}, [sorted])
 
 	return (
 		<Box
@@ -129,7 +112,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 			width:     '85%',
 			maxWidth:  '600px',
 			height:    '80px',
-			zIndex:    1000,
+			zIndex:    1000
 		}}
 		>
 			<Paper
@@ -154,7 +137,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 				'&::-webkit-scrollbar-thumb': {
 					backgroundColor: 'rgba(0, 170, 255, 0.3)',
 					borderRadius:    '3px',
-				},
+				}
 			}}
 			>
 				<Box
@@ -163,8 +146,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 					display:    'flex',
 					alignItems: 'center',
 					gap:        4,
-					paddingX:   2,
-					paddingX:   '50px', // So the first and last labels can be selected!
+					paddingX:   '35px', // So the first and last labels can be selected!
 					minWidth:   'max-content'
 				}}
 				>
@@ -198,7 +180,6 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 								<Typography
 								key     = {index}
 								variant = 'body2'
-								// onClick = {() => handleTimestampClick(year)}
 								sx      = {{
 									textAlign:  'center',
 									fontSize:   isSelected ? '18px' : '14px',

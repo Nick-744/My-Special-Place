@@ -80,10 +80,10 @@ const EventModal = () => {
                     >
                         <Card
                         sx = {{
-                            width:     { xs: '90%', md: '70%' },
-                            maxWidth:  800,
-                            maxHeight: 500,
-                            height:    { xs: '90%', md: '70%' },
+                            width:     { xs: '95%', sm: '90%', md: '70%' },
+                            height:    { xs: '85%', sm: '90%', md: '70%' },
+                            maxWidth: { xs: '100%', sm: 500, md: 800 },
+                            maxHeight: { xs: '100%', sm: 400, md: 500 },
                             borderRadius:  8,
                             bgcolor:       '#f5f5f5',
                             overflow:      'hidden',
@@ -102,7 +102,10 @@ const EventModal = () => {
                                 borderBottom:   '1px solid #ddd'
                             }}
                             >
-                                <Typography variant = 'h6' sx = {{ fontWeight: 'bold' }}>
+                                <Typography
+                                variant = 'h6'
+                                sx      = {{ fontWeight: 'bold', fontSize: { xs: '1rem', md: '1.25rem' } }}
+                                >
                                     {selectedEventContext.title?.gr}
                                 </Typography>
 
@@ -115,8 +118,8 @@ const EventModal = () => {
                             <Box
                             sx = {{
                                 flex: 1,
-                                p:    3,
-                                gap:  3,
+                                p:    { xs: 1.5, md: 3 },
+                                gap:  { xs: 2, md: 3 },
                                 overflowY: 'auto',
                                 display:   'flex',
                                 flexDirection: { xs: 'column', md: 'row' },
