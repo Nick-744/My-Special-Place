@@ -36,7 +36,7 @@ export const cameraZoomSpeed = 1.2 // Speed of zooming with mouse wheel
 // ==================== Timestamps Configuration ====================
 export const timestamps = [
 	-360, -350, -345, -340, -338, -336, -334, -332, -330, -328, -326, -325, -324, -322,
-	-320, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 1900, 1950, 2000, 2010
+	-320, 100, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 1900, 1950, 2000, 2010
 ]
 export const timestampsXPosition = 1.5 // Integer value! For 3D timestamps.
 
@@ -57,7 +57,7 @@ export const hoveredColor  = '#ffA500'
 // ==================== Grid Objects Configuration ====================
 export const gObjRotationX    = -0.2 // Grid Objects [gObj] Rotation around X-axis
 export const spaceBetweenGObj = 2.4  // Space between grid objects (events in this case)
-export const gObjPathWidth    = 4    // Width of the path lines for grid objects
+export const gObjPathWidth    = 3.8  // Width of the path lines for grid objects
 
 // ==================== Text Configuration (in grid) ====================
 export const textColor = '#888888'

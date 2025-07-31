@@ -148,7 +148,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 		const minYear   = Math.min(...currentTimestamps)
 		let clampedYear = sorted.find(y => y >= minYear) || sorted[0]
 		if (clampedYear === -350) clampedYear = -360 // --- SPECIAL CASE --- //
-		// No special handling needed for 2000, as it never appears as the first year in any section.
+		if (clampedYear === 2000) clampedYear = 2010 // --- SPECIAL CASE --- //
 
 		const newIndex = sorted.indexOf(clampedYear)
 		if (newIndex === -1) return;

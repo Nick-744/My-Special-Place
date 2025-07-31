@@ -144,12 +144,12 @@ const Event = forwardRef(({
 			<Text
 			ref 	   = {titleRef}
 			position   = {[0, +step * 0.6, 0]}
-			fontSize   = {step * 0.18}
+			fontSize   = {step * (globalVar.mobileViewContext ? 0.1 : 0.18)}
 			fontWeight = {1000}
 			color      = {getColor()}
 			anchorX    = 'center'
 			anchorY    = 'top'
-			maxWidth   = {step * 3.5}
+			maxWidth   = {step * (globalVar.mobileViewContext ? 1.9 : 3.5)}
 			visible	   = {false}
 			>
 				{event.title['gr']}
@@ -159,7 +159,7 @@ const Event = forwardRef(({
 			<Text
 			ref 	 = {eventTimeRef}
 			position = {[0, -step * 0.5, 0]}
-			fontSize = {step * 0.12}
+			fontSize = {step * (globalVar.mobileViewContext ? 0.08 : 0.12)} // Same as location
 			color    = {textColor}
 			anchorX  = 'center'
 			anchorY  = 'bottom'
@@ -174,7 +174,7 @@ const Event = forwardRef(({
 			<Text
 			ref 	 = {eventLocationRef}
 			position = {[0, -step * 0.65, 0]}
-			fontSize = {step * 0.12}
+			fontSize = {step * (globalVar.mobileViewContext ? 0.08 : 0.12)} // Same as timestamp
 			color    = {textColor}
 			anchorX  = 'center'
 			anchorY  = 'bottom'
