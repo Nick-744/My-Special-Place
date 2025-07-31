@@ -7,8 +7,8 @@ import { Box, Typography, Paper } from '@mui/material'
 import { eventsData } from '../InfoData/EventsData'
 
 const formatLabel = (year) => {
-	if (year < 0) return `${Math.abs(year)} π.Χ.`
-	if (year > 0) return `${year} μ.Χ.`
+	if (year < 0) return `${Math.abs(year)} π.Χ.`;
+	if (year > 0) return `${year} μ.Χ.`;
 
 	return '0';
 }
@@ -19,11 +19,9 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 	const { activeFiltersContext } = globalVar
 
 	// Show in the UI only the years that have events in the current section!
-	let currentTimestamps = []
-	eventsData.forEach(event => {
-		if (activeFiltersContext.section.includes(event.section))
-			currentTimestamps.push(event.startDate)
-	})
+	const currentTimestamps = eventsData
+		.filter(event => activeFiltersContext.section.includes(event.section))
+		.map(event => event.startDate)
 	const sorted = [...timestamps].sort((a, b) => a - b)
 	
 	const contentRef           = useRef(null)
@@ -66,6 +64,8 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 		}
 	}, [cameraZPositionState, contentWidth])
 
+
+
 	/* Reverse synchronization of the timeline system - where user interactions with the 2D timeline
 	control the 3D camera position. It creates a scroll event listener that translates horizontal
 	scrolling into 3D camera movement, completing the bidirectional connection between the
@@ -76,29 +76,74 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 		if (!container || !labels?.length) return;
 
 		let scrollStopTimeout = null
-
+		const minYear         = Math.min(...currentTimestamps)
+		const maxYear         = Math.max(...currentTimestamps)
 		const handleScroll = () => {
 			if (scrollStopTimeout) clearTimeout(scrollStopTimeout)
 
-			// Wait until scrolling has stopped for 150ms
 			scrollStopTimeout = setTimeout(() => {
 				const containerCenter = container.scrollLeft + container.offsetWidth / 2
 
-				let closest = { index: 0, distance: Infinity }
+				let closest = { index: -1, distance: Infinity }
 				Array.from(labels).forEach((labelEl, index) => {
 					const labelCenter = labelEl.offsetLeft + labelEl.offsetWidth / 2
 					const distance    = Math.abs(containerCenter - labelCenter)
-					if (distance < closest.distance) {
-						closest = { index, distance }
-					}
+
+					if (distance < closest.distance) closest = { index, distance }
 				})
 
-				const newIndex = closest.index
+				let newIndex = closest.index
+				if (newIndex === -1) return;
+
+				let centeredYear = sorted[newIndex]
+
+				/* Boundary clamping mechanism that handles situations where the user has scrolled
+				to a timeline position that falls outside the valid range of available data. */
+				if (centeredYear < minYear || centeredYear > maxYear) {
+					// Find closest clamped year that exists in sorted[]
+					let clampedYear
+					if (centeredYear < minYear) clampedYear = sorted.find(y => y >= minYear)
+					else                        clampedYear = [...sorted].reverse().find(y => y <= maxYear)
+
+					const newIndex = sorted.indexOf(clampedYear)
+					const labelEl  = labels[newIndex]
+					if (labelEl) {
+						const labelCenter  = labelEl.offsetLeft + labelEl.offsetWidth / 2
+						const targetScroll = labelCenter - container.offsetWidth / 2
+
+						container.scrollTo({
+							left:     Math.max(0, targetScroll),
+							behavior: 'smooth'
+						})
+					}
+
+					const newZ = calculateEventZPosition(clampedYear)
+					setCameraZPositionState(newZ + FOVconstant - 0.1)
+					lastCenteredIndexRef.current = newIndex
+
+					return;
+				}
+
+				/*  Don't run updates unless index actually changed. In more detail:
+				
+					Change detection and synchronization system that only triggers UI
+				updates when the user has actually moved to a different timeline position. */
 				if (lastCenteredIndexRef.current !== newIndex) {
 					lastCenteredIndexRef.current = newIndex
 
-					const centeredYear = sorted[newIndex]
-					const newZ         = calculateEventZPosition(centeredYear)
+					// Snap scroll to corrected year
+					const labelEl = labels[newIndex]
+					if (labelEl) {
+						const labelCenter  = labelEl.offsetLeft + labelEl.offsetWidth / 2
+						const targetScroll = labelCenter - container.offsetWidth / 2
+
+						container.scrollTo({
+							left:     Math.max(0, targetScroll),
+							behavior: 'smooth'
+						})
+					}
+
+					const newZ = calculateEventZPosition(centeredYear)
 					setCameraZPositionState(newZ + FOVconstant - 0.1)
 				}
 			}, 300)
@@ -110,7 +155,19 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 			container.removeEventListener('scroll', handleScroll)
 			if (scrollStopTimeout) clearTimeout(scrollStopTimeout)
 		};
-	}, [sorted])
+	}, [currentTimestamps])
+
+
+
+	/* Proximity-based selection algorithm that finds the timestamp
+	closest to the current camera position in 3D space */
+	let closestIndex = 0
+	timestamps.forEach((y, i) => {
+		const diff = Math.abs(cameraZPositionState - calculateEventZPosition(y))
+		if (diff <= FOVconstant) closestIndex = i
+	})
+
+
 
 	return (
 		<Box
@@ -161,13 +218,6 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 				}}
 				>
 					{sorted.map((year, index) => {
-						// Simple distance calculation for visual effects
-						let closestIndex = 0
-						timestamps.forEach((y, i) => {
-							const diff = Math.abs(cameraZPositionState - calculateEventZPosition(y))
-							if (diff <= FOVconstant) closestIndex = i
-						})
-						
 						const isSelected = index === closestIndex
 						
 						return (
