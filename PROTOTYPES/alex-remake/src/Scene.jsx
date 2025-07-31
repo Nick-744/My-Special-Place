@@ -2,7 +2,8 @@ import { cameraFOV, cameraInitialZ, cameraHeight } from './MyConfig'
 
 // 3D Elements
 import EventManager from './Assets3D/GridAssets/EventManager'
-import Timestamps from './Assets3D/GridAssets/Timestamps'
+// import Timestamps from './Assets3D/GridAssets/Timestamps'
+import Timestamps2DMobile from './Assets2D/TimeMobile'
 import GridScenePackage from './Assets3D/AnimatedGrid'
 import Camera3D from './Assets3D/CameraControl'
 
@@ -19,8 +20,6 @@ import { globalVarContext } from './Context/GlobalContext'
 import { eventsData } from './InfoData/EventsData'
 import { Canvas } from '@react-three/fiber'
 
-import { Stats } from '@react-three/drei'
-
 const Scene = () => {
 	const [cameraZPositionState, setCameraZPositionState] = useState(cameraInitialZ)
 
@@ -33,8 +32,6 @@ const Scene = () => {
 
 	return (
 		<div id = 'canvas-container' className = 'w3-animate-opacity'>
-			<Stats />
-			
 			{ /* --- 3D Elements --- */ }
 			<Canvas camera = {{ fov: cameraFOV, position: [0, cameraHeight, cameraInitialZ] }}>
 
@@ -44,7 +41,6 @@ const Scene = () => {
 				/>
 
 				<GridScenePackage />
-					{ globalVar.mobileViewContext && <Timestamps /> }
 					<EventManager eventRefs = {eventRefs} eventIconRefs = {eventIconRefs} />
 
 			</Canvas>
@@ -53,7 +49,14 @@ const Scene = () => {
 			<BackgroundImage />
 			
 			<EventModal />
-			{ !globalVar.mobileViewContext && <Timestamps2D
+			
+			{ /* --- Timestamps --- */ }
+			{ globalVar.mobileViewContext
+			? <Timestamps2DMobile
+			cameraZPositionState    = {cameraZPositionState}
+			setCameraZPositionState = {setCameraZPositionState}
+			/>
+			: <Timestamps2D
 			cameraZPositionState    = {cameraZPositionState}
 			setCameraZPositionState = {setCameraZPositionState}
 			/> }

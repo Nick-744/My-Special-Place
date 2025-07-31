@@ -32,7 +32,7 @@ const Timestamps2D = ({ cameraZPositionState, setCameraZPositionState }) => {
     }, [contentRef.current])
 
     // --- Arrow position calculation/handling ---
-    const FOVconstant = 9.2 // This is the threshold for the arrow to appear, based on the FOV!
+    const FOVconstant = 9.0 // This is the threshold for the arrow to appear, based on the FOV!
     useEffect(() => {
         let closestIndex = 0
         

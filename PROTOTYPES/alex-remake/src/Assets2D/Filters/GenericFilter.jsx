@@ -20,7 +20,7 @@ const GenericFilter = ({
     const [isOpen, setIsOpen] = useState(false)
 
     const { activeFiltersContext, setActiveFiltersContext } = globalVar
-    const activeItems                                       = activeFiltersContext[filterKey]
+    const activeItems = activeFiltersContext[filterKey]
 
     // Extract unique values for this filter
     const uniqueItems = [...new Set(eventsData.map(e => e[filterKey]))]
@@ -87,7 +87,7 @@ const GenericFilter = ({
             - If the item is not active, it's added to the list using [...current, item].
 
             - If onlyOneActive is true, it skips toggling and just sets the array to [item],
-            ensuring that only one option can be active at a time.
+            ensuring that only 1 option can be active at a time!
         */
     }
 
