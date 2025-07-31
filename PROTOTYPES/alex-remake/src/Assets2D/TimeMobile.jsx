@@ -36,7 +36,9 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 	// Calculate content width on mount
 	useLayoutEffect(() => { if (contentRef.current) setContentWidth(contentRef.current.scrollWidth) }, [])
 
-	// Update selector position and auto-scroll to keep it centered
+	/* Automatic scrolling synchronization system that connects a 3D camera position to a horizontal
+	timeline interface. It runs whenever the camera's Z position or the content width changes,
+	creating a seamless link between 3D navigation and 2D UI elements. */
 	useEffect(() => {
 		let closestIndex = 0
 		
@@ -64,7 +66,10 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 		}
 	}, [cameraZPositionState, contentWidth])
 
-	// Handle the blue box to be always visible!
+	/* Reverse synchronization of the timeline system - where user interactions with the 2D timeline
+	control the 3D camera position. It creates a scroll event listener that translates horizontal
+	scrolling into 3D camera movement, completing the bidirectional connection between the
+	timeline interface and 3D navigation. */
 	useEffect(() => {
 		const container = scrollContainerRef.current
 		const labels    = contentRef.current?.children
