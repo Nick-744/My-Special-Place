@@ -4,6 +4,7 @@ import { useRef, useLayoutEffect, useState, useEffect, useContext } from 'react'
 import { globalVarContext } from '../Context/GlobalContext'
 import { calculateEventZPosition } from '../Helpers/Utils'
 import { Box, Typography, Paper } from '@mui/material'
+import { eventsData } from '../InfoData/EventsData'
 
 const formatLabel = (year) => {
 	if (year < 0) return `${Math.abs(year)} π.Χ.`
@@ -13,16 +14,22 @@ const formatLabel = (year) => {
 }
 
 const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) => {
-	const sorted = [...timestamps].sort((a, b) => a - b)
-
 	// ----- Global ----- //
 	const globalVar = useContext(globalVarContext)
+	const { activeFiltersContext } = globalVar
+
+	// Show in the UI only the years that have events in the current section!
+	let currentTimestamps = []
+	eventsData.forEach(event => {
+		if (activeFiltersContext.section.includes(event.section))
+			currentTimestamps.push(event.startDate)
+	})
+	const sorted = [...timestamps].sort((a, b) => a - b)
 	
 	const contentRef           = useRef(null)
 	const scrollContainerRef   = useRef(null)
 	const lastCenteredIndexRef = useRef(-1)
 	const [contentWidth, setContentWidth] = useState(0)
-	const [selectorLeft, setSelectorLeft] = useState(0)
 	
 	const FOVconstant = 10.8
 
@@ -43,8 +50,6 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 		const labelWidth       = contentWidth / timestamps.length
 		// Position selector at center of corresponding label
 		const selectorPosition = closestIndex * labelWidth + (labelWidth / 2) - 50 // -50 for half selector width
-		
-		setSelectorLeft(selectorPosition)
 
 		// Auto-scroll to keep the blue box in center of view
 		if (scrollContainerRef.current && contentWidth > 0) {
