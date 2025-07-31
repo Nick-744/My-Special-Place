@@ -18,8 +18,10 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 	// ----- Global ----- //
 	const globalVar = useContext(globalVarContext)
 	
-	const contentRef         = useRef(null)
-	const scrollContainerRef = useRef(null)
+	const contentRef           = useRef(null)
+	const scrollContainerRef   = useRef(null)
+	const scrollTimeoutRef     = useRef(null)
+	const lastCenteredIndexRef = useRef(-1)
 	const [contentWidth, setContentWidth] = useState(0)
 	const [selectorLeft, setSelectorLeft] = useState(0)
 	
@@ -57,6 +59,59 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 			})
 		}
 	}, [cameraZPositionState, contentWidth])
+
+	// Handle scroll events to snap to closest label!
+	useEffect(() => {
+		const handleScroll = () => {
+			if (!scrollContainerRef.current || !contentRef.current) return;
+
+			// Clear any previous snap timeout
+			if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current)
+
+			const container       = scrollContainerRef.current
+			const labels          = Array.from(contentRef.current.children)
+			const containerCenter = container.scrollLeft + container.offsetWidth / 2
+
+			let closest = { index: 0, distance: Infinity }
+
+			labels.forEach((labelEl, index) => {
+				const labelCenter = labelEl.offsetLeft + labelEl.offsetWidth / 2
+				const distance    = Math.abs(containerCenter - labelCenter)
+				if (distance < closest.distance) closest = { index, distance }
+			})
+
+			const newCenteredIndex = closest.index
+
+			// Only update if index actually changed
+			if (lastCenteredIndexRef.current !== newCenteredIndex) {
+				lastCenteredIndexRef.current = newCenteredIndex
+
+				const centeredYear = sorted[newCenteredIndex]
+				const newZ         = calculateEventZPosition(centeredYear)
+
+				setCameraZPositionState(newZ + FOVconstant - 0.1)
+			}
+
+			// Debounced snap to center after user stops scrolling
+			scrollTimeoutRef.current = setTimeout(() => {
+				const targetLabel = labels[closest.index]
+				if (!targetLabel) return;
+
+				const targetCenter = targetLabel.offsetLeft + targetLabel.offsetWidth / 2
+				const scrollTo     = targetCenter - container.offsetWidth / 2
+
+				container.scrollTo({ left: scrollTo, behavior: 'smooth' })
+			}, 150) // Snap Xms after last scroll
+		}
+
+		const ref = scrollContainerRef.current
+		if (ref) ref.addEventListener('scroll', handleScroll, { passive: true })
+
+		return () => {
+			if (ref)                      ref.removeEventListener('scroll', handleScroll)
+			if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current)
+		};
+	}, [sorted, contentRef.current])
 
 	// Handle timestamp click
 	const handleTimestampClick = (year) => {
@@ -109,7 +164,8 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 					alignItems: 'center',
 					gap:        4,
 					paddingX:   2,
-					minWidth:   'max-content',
+					paddingX:   '50px', // So the first and last labels can be selected!
+					minWidth:   'max-content'
 				}}
 				>
 					{sorted.map((year, index) => {
@@ -136,13 +192,13 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 								backgroundColor: isSelected ? 'rgba(0, 170, 255, 0.08)'         : 'transparent',
 								border:          isSelected ? '2px solid #00aaff'               : 'none',
 								boxShadow:       isSelected ? '0 0 10px rgba(0, 170, 255, 0.2)' : 'none',
-								transition:      'all 0.2s ease',
+								transition:      'all 0.2s ease'
 							}}
 							>
 								<Typography
 								key     = {index}
 								variant = 'body2'
-								onClick = {() => handleTimestampClick(year)}
+								// onClick = {() => handleTimestampClick(year)}
 								sx      = {{
 									textAlign:  'center',
 									fontSize:   isSelected ? '18px' : '14px',
@@ -153,7 +209,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 									transition: 'all 0.2s ease',
 									'&:active': {
 										backgroundColor: '#bbdefb',
-										transform:       'scale(0.9)',
+										transform:       'scale(0.9)'
 									}
 								}}
 								>
