@@ -15,7 +15,7 @@ const formatLabel = (year) => {
 
 const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) => {
 	// ----- Global ----- //
-	const globalVar = useContext(globalVarContext)
+	const globalVar                = useContext(globalVarContext)
 	const { activeFiltersContext } = globalVar
 
 	/*  Show in the UI only the years that have events in the current section!
@@ -39,37 +39,11 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 	// Calculate content width on mount
 	useLayoutEffect(() => { if (contentRef.current) setContentWidth(contentRef.current.scrollWidth) }, [])
 
-	/* Automatic scrolling synchronization system that connects a 3D camera position to a horizontal
+	/* --- NOT NEEDED AFTER REVISION ---
+
+	Automatic scrolling synchronization system that connects a 3D camera position to a horizontal
 	timeline interface. It runs whenever the camera's Z position or the content width changes,
 	creating a seamless link between 3D navigation and 2D UI elements. */
-	useEffect(() => {
-		let closestIndex = 0
-		
-		timestamps.forEach((year, index) => {
-			const difference = Math.abs(cameraZPositionState - calculateEventZPosition(year))
-			if (difference > FOVconstant) return;
-			closestIndex = index
-		})
-
-		// Each label takes up contentWidth / timestamps.length space
-		const labelWidth       = contentWidth / timestamps.length
-		// Position selector at center of corresponding label
-		const selectorPosition = closestIndex * labelWidth + (labelWidth / 2) - 50 // -50 for half selector width
-
-		// Auto-scroll to keep the blue box in center of view
-		if (scrollContainerRef.current && contentWidth > 0) {
-			const containerWidth = scrollContainerRef.current.offsetWidth
-			const selectorCenter = selectorPosition + 50 // +50 for half selector width
-			const targetScroll   = selectorCenter - (containerWidth / 2)
-			
-			scrollContainerRef.current.scrollTo({
-				left:     Math.max(0, targetScroll),
-				behavior: 'smooth'
-			})
-		}
-	}, [cameraZPositionState, contentWidth])
-
-
 
 	/* Reverse synchronization of the timeline system - where user interactions with the 2D timeline
 	control the 3D camera position. It creates a scroll event listener that translates horizontal
@@ -111,6 +85,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 					else                        clampedYear = [...sorted].reverse().find(y => y <= maxYear)
 					
 					if (clampedYear === -350) clampedYear = -360 // --- SPECIAL CASE --- //
+					if (clampedYear === 2000) clampedYear = 2010 // --- SPECIAL CASE --- //
 
 					const newIndex = sorted.indexOf(clampedYear)
 					const labelEl  = labels[newIndex]
@@ -173,6 +148,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 		const minYear   = Math.min(...currentTimestamps)
 		let clampedYear = sorted.find(y => y >= minYear) || sorted[0]
 		if (clampedYear === -350) clampedYear = -360 // --- SPECIAL CASE --- //
+		// No special handling needed for 2000, as it never appears as the first year in any section.
 
 		const newIndex = sorted.indexOf(clampedYear)
 		if (newIndex === -1) return;
@@ -211,7 +187,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 		<Box
 		sx = {{
 			position:  'absolute',
-			bottom:    '30px',
+			bottom:    '20px',
 			left:      '50%',
 			transform: 'translateX(-50%)',
 			width:     '85%',

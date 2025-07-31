@@ -29,7 +29,7 @@ const SectionFilter = ({ eventRefs, eventIconRefs }) => {
             mobile    = {mobile}
             // showAlways = {false}
             direction = 'vertical'
-            position  = {{ bottom: '-51px', left: '46%' }}
+            position  = {{ bottom: '-51px', left: '45%' }}
             />
         )}
 
