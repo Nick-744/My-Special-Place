@@ -192,7 +192,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 
 			const maxScroll = Math.min(
 				content.scrollWidth - container.offsetWidth,
-				946 // How far to scroll for the hint (px)
+				600 // How far to scroll for the hint (px)
 			)
 
 			if (maxScroll > 0) {
@@ -200,7 +200,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 				container.scrollTo({ left: maxScroll, behavior: 'smooth' })
 				const timeout = setTimeout(() => {
 					container.scrollTo({ left: 0, behavior: 'smooth' })
-				}, 1250); // Wait before scrolling back!
+				}, 600); // Wait before scrolling back!
 
 				return () => clearTimeout(timeout);
 			}
@@ -263,7 +263,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 					display:    'flex',
 					alignItems: 'center',
 					gap:        4,
-					paddingX:   '35px', // So the first and last labels can be selected!
+					paddingX:   '30%', // So the first and last labels can be selected!
 					minWidth:   'max-content'
 				}}
 				>
