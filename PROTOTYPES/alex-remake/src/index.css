@@ -20,5 +20,11 @@ body {
 }
 
 .w3-animate-opacity {
-  animation:opac 5s
+  animation: opac 5s;
 } @keyframes opac{from{opacity:0} to{opacity:1}}
+
+@media (max-width: 768px) {
+  .w3-animate-opacity {
+    animation: opac 10s;
+  } @keyframes opac{from{opacity:0} to{opacity:1}}
+}

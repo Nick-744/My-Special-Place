@@ -39,16 +39,22 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 	// Calculate content width on mount
 	useLayoutEffect(() => { if (contentRef.current) setContentWidth(contentRef.current.scrollWidth) }, [])
 
-	/* --- NOT NEEDED AFTER REVISION ---
+	/*
+		--- NOT NEEDED AFTER REVISION ---
 
-	Automatic scrolling synchronization system that connects a 3D camera position to a horizontal
-	timeline interface. It runs whenever the camera's Z position or the content width changes,
-	creating a seamless link between 3D navigation and 2D UI elements. */
+			Automatic scrolling synchronization system that connects a 3D camera position to a horizontal
+		timeline interface. It runs whenever the camera's Z position or the content width changes,
+		creating a seamless link between 3D navigation and 2D UI elements.
+	*/
 
-	/* Reverse synchronization of the timeline system - where user interactions with the 2D timeline
-	control the 3D camera position. It creates a scroll event listener that translates horizontal
-	scrolling into 3D camera movement, completing the bidirectional connection between the
-	timeline interface and 3D navigation. */
+
+
+	/*
+			Reverse synchronization of the timeline system - where user interactions with the 2D timeline
+		control the 3D camera position. It creates a scroll event listener that translates horizontal
+		scrolling into 3D camera movement, completing the bidirectional connection between the
+		timeline interface and 3D navigation.
+	*/
 	useEffect(() => {
 		const container = scrollContainerRef.current
 		const labels    = contentRef.current?.children
@@ -170,6 +176,36 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 		setCameraZPositionState(newZ + FOVconstant - 0.1)
 		lastCenteredIndexRef.current = newIndex
 	}, [currentTimestamps])
+
+
+
+	// Scroll hint animation on mount
+	useEffect(() => {
+		if (!scrollContainerRef.current || !contentRef.current) return;
+
+		let   hasAnimated  = false // Only run once at mount
+		const container    = scrollContainerRef.current
+		const content      = contentRef.current
+		const timeoutDelay = setTimeout(() => {
+			if (hasAnimated) return;
+			hasAnimated = true
+
+			const maxScroll = Math.min(
+				content.scrollWidth - container.offsetWidth,
+				946 // How far to scroll for the hint (px)
+			)
+
+			if (maxScroll > 0) {
+				// Animate to the right, then back
+				container.scrollTo({ left: maxScroll, behavior: 'smooth' })
+				const timeout = setTimeout(() => {
+					container.scrollTo({ left: 0, behavior: 'smooth' })
+				}, 1250); // Wait before scrolling back!
+
+				return () => clearTimeout(timeout);
+			}
+		}, 1800) // Wait for everything to settle before animating hint!!!
+	}, [])
 
 
 
