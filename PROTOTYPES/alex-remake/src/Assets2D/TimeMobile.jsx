@@ -40,12 +40,36 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 	useLayoutEffect(() => { if (contentRef.current) setContentWidth(contentRef.current.scrollWidth) }, [])
 
 	/*
-		--- NOT NEEDED AFTER REVISION ---
-
 			Automatic scrolling synchronization system that connects a 3D camera position to a horizontal
 		timeline interface. It runs whenever the camera's Z position or the content width changes,
 		creating a seamless link between 3D navigation and 2D UI elements.
 	*/
+	useEffect(() => {
+		let closestIndex = 0
+		
+		timestamps.forEach((year, index) => {
+			const difference = Math.abs(cameraZPositionState - calculateEventZPosition(year))
+			if (difference > FOVconstant) return;
+			closestIndex = index
+		})
+
+		// Each label takes up contentWidth / timestamps.length space
+		const labelWidth       = contentWidth / timestamps.length
+		// Position selector at center of corresponding label
+		const selectorPosition = closestIndex * labelWidth + (labelWidth / 2) - 50 // -50 for half selector width
+
+		// Auto-scroll to keep the blue box in center of view
+		if (scrollContainerRef.current && contentWidth > 0) {
+			const containerWidth = scrollContainerRef.current.offsetWidth
+			const selectorCenter = selectorPosition + 50 // +50 for half selector width
+			const targetScroll   = selectorCenter - (containerWidth / 2)
+			
+			scrollContainerRef.current.scrollTo({
+				left:     Math.max(0, targetScroll),
+				behavior: 'smooth'
+			})
+		}
+	}, [cameraZPositionState, contentWidth])
 
 
 
@@ -179,36 +203,6 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 
 
 
-	// Scroll hint animation on mount
-	useEffect(() => {
-		if (!scrollContainerRef.current || !contentRef.current) return;
-
-		let   hasAnimated  = false // Only run once at mount
-		const container    = scrollContainerRef.current
-		const content      = contentRef.current
-		const timeoutDelay = setTimeout(() => {
-			if (hasAnimated) return;
-			hasAnimated = true
-
-			const maxScroll = Math.min(
-				content.scrollWidth - container.offsetWidth,
-				600 // How far to scroll for the hint (px)
-			)
-
-			if (maxScroll > 0) {
-				// Animate to the right, then back
-				container.scrollTo({ left: maxScroll, behavior: 'smooth' })
-				const timeout = setTimeout(() => {
-					container.scrollTo({ left: 0, behavior: 'smooth' })
-				}, 600); // Wait before scrolling back!
-
-				return () => clearTimeout(timeout);
-			}
-		}, 1800) // Wait for everything to settle before animating hint!!!
-	}, [])
-
-
-
 	/* Proximity-based selection algorithm that finds the timestamp
 	closest to the current camera position in 3D space */
 	let closestIndex = 0
@@ -228,7 +222,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 			transform: 'translateX(-50%)',
 			width:     '85%',
 			maxWidth:  '600px',
-			height:    '80px',
+			height:    '65px',
 			zIndex:    1000
 		}}
 		>
@@ -263,7 +257,7 @@ const Timestamps2DMobile = ({ cameraZPositionState, setCameraZPositionState }) =
 					display:    'flex',
 					alignItems: 'center',
 					gap:        4,
-					paddingX:   '30%', // So the first and last labels can be selected!
+					paddingX:   '20%', // So the first and last labels can be selected!
 					minWidth:   'max-content'
 				}}
 				>
