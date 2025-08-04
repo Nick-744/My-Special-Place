@@ -15,11 +15,10 @@ import {
     Skeleton,
     SkinnedMesh,
     Color,
-    MeshStandardMaterial,
-    SkeletonHelper
+    MeshStandardMaterial
 } from 'three'
-import { useMemo, useRef, useEffect } from 'react'
-import { useHelper } from '@react-three/drei'
+
+import { useMemo, useRef } from 'react'
 import { pages } from './UI'
 
 const pageGeometry = new BoxGeometry(
@@ -63,10 +62,36 @@ pageGeometry.setAttribute(
 
 const whiteColor = new Color('white')
 const pageMaterials = [
-  new MeshStandardMaterial({ color: whiteColor }),
-  new MeshStandardMaterial({ color: "#111"     }),
-  new MeshStandardMaterial({ color: whiteColor }),
-  new MeshStandardMaterial({ color: whiteColor })
+    new MeshStandardMaterial({ 
+        color:     whiteColor,
+        roughness: 0.8,
+        metalness: 0.1
+    }), // Right face (positive X)
+    new MeshStandardMaterial({ 
+        color:     "#111",
+        roughness: 0.9,
+        metalness: 0.0
+    }), // Left face (negative X)
+    new MeshStandardMaterial({ 
+        color:     whiteColor,
+        roughness: 0.8,
+        metalness: 0.1
+    }), // Top face (positive Y)
+    new MeshStandardMaterial({ 
+        color:     whiteColor,
+        roughness: 0.8,
+        metalness: 0.1
+    }), // Bottom face (negative Y)
+    new MeshStandardMaterial({ 
+        color: whiteColor,
+        roughness: 0.8,
+        metalness: 0.1
+    }), // Front face (positive Z)
+    new MeshStandardMaterial({ 
+        color:     whiteColor,
+        roughness: 0.8,
+        metalness: 0.1
+    })  // Back face (negative Z)
 ]
 
 const Page = ({ number, front, back, ...props }) => {
@@ -94,27 +119,17 @@ const Page = ({ number, front, back, ...props }) => {
         mesh.castShadow    = true
         mesh.receiveShadow = true
         mesh.frustumCulled = false
-        mesh.add(skeleton.bones[0]) // Add the first bone to the mesh
+        mesh.add(skeleton.bones[0]) // Add the first bone to the mesh!
         mesh.bind(skeleton)
 
         return mesh;
     }, [])
 
-    // Update the ref when the mesh is created
-    useEffect(() => {
-        if (skinnedMeshRef.current && manualSkinnedMesh)
-            skinnedMeshRef.current = manualSkinnedMesh
-    }, [manualSkinnedMesh])
-
-    useHelper(skinnedMeshRef, SkeletonHelper, 'red')
-
     return (
-        <group {...props} ref={group}>
+        <group {...props} ref = {group}>
             <primitive 
             object = {manualSkinnedMesh} 
-            ref    = {(mesh) => {
-                if (mesh) skinnedMeshRef.current = mesh
-            }}
+            ref    = {skinnedMeshRef}
             />
         </group>
     );
