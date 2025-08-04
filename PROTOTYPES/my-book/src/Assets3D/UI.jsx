@@ -1,4 +1,4 @@
-import { atom, useAtom } from 'jotai';
+import { atom, useAtom } from 'jotai'
 
 const pictures = [
   'DSC00680',
@@ -17,7 +17,7 @@ const pictures = [
   'DSC02031',
   'DSC02064',
   'DSC02069',
-];
+]
 
 export const pageAtom = atom(0);
 export const pages = [
@@ -25,21 +25,21 @@ export const pages = [
     front: 'book-cover',
     back: pictures[0],
   },
-];
+]
 for (let i = 1; i < pictures.length - 1; i += 2) {
   pages.push({
     front: pictures[i % pictures.length],
     back: pictures[(i + 1) % pictures.length],
-  });
+  })
 }
 
 pages.push({
   front: pictures[pictures.length - 1],
   back: 'book-back',
-});
+})
 
 export const UI = () => {
-  const [page, setPage] = useAtom(pageAtom);
+  const [page, setPage] = useAtom(pageAtom)
 
   return (
     <>
@@ -74,4 +74,4 @@ export const UI = () => {
       </main>
     </>
   );
-};
+}

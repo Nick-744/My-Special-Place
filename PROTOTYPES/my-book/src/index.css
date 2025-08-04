@@ -4,7 +4,7 @@
 }
 
 body {
-  background-color: black;
+  background-color: rgb(150, 215, 255);
 }
 
 #canvas-container {
@@ -20,5 +20,5 @@ body {
 }
 
 .w3-animate-opacity {
-  animation: opac 5s;
+  animation: opac 2s;
 } @keyframes opac{from{opacity:0} to{opacity:1}}

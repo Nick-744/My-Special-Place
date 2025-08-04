@@ -68,7 +68,7 @@ const pageMaterials = [
         metalness: 0.1
     }), // Right face (positive X)
     new MeshStandardMaterial({ 
-        color:     "#111",
+        color:     '#111',
         roughness: 0.9,
         metalness: 0.0
     }), // Left face (negative X)
@@ -83,13 +83,13 @@ const pageMaterials = [
         metalness: 0.1
     }), // Bottom face (negative Y)
     new MeshStandardMaterial({ 
-        color: whiteColor,
-        roughness: 0.8,
-        metalness: 0.1
+        color:     whiteColor,
+        roughness: 0.4,
+        metalness: 0.5
     }), // Front face (positive Z)
     new MeshStandardMaterial({ 
-        color:     whiteColor,
-        roughness: 0.8,
+        color:     '#111',
+        roughness: 0.4,
         metalness: 0.1
     })  // Back face (negative Z)
 ]
