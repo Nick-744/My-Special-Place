@@ -25,11 +25,11 @@ import {
     Bone
 } from 'three'
 
+import { degToRad, MathUtils } from 'three/src/math/MathUtils.js'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useCursor, useTexture } from '@react-three/drei'
-import { degToRad, MathUtils } from 'three/src/math/MathUtils.js'
+import { pageAtom, pages } from '../Assets2D/UI'
 import { useFrame } from '@react-three/fiber'
-import { pageAtom, pages } from './UI'
 import { useAtom } from 'jotai'
 import { easing } from 'maath'
 
@@ -198,7 +198,7 @@ const Page = (
             const insideCurveIntensity  = i < 12 ?
                                             Math.sin(i * 0.3) : 0
             const outsideCurveIntensity = i >= 12 ?
-                                            Math.sin(i * 0.1 - 0.1) * 0.6 : 0
+                                            Math.sin(i * 0.12 - 0.2) * 0.6 : 0
             const turningCurveIntensity =
                 Math.sin(i * Math.PI + (1 / bones.length)) * turningTime
             
@@ -227,7 +227,11 @@ const Page = (
                 Math.sin(i * Math.PI * (1 / bones.length) - 0.5) * turningTime : 0
 
             easing.dampAngle(
-                target.rotation, 'x', foldRotationAngle * foldIntensity, easingFactorFold, dt
+                target.rotation,
+                'x',
+                foldRotationAngle * foldIntensity,
+                easingFactorFold,
+                dt
             )
         }
     })

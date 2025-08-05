@@ -1,6 +1,6 @@
 import { Environment, CameraControls } from '@react-three/drei'
+import { Loader, Float } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
-import { Loader } from '@react-three/drei'
 import Book from './Assets3D/Book.jsx'
 import { Suspense } from 'react'
 
@@ -11,7 +11,7 @@ const Scene = () => {
 				indicator within the 3D scene application. */}
 			<Loader />
 
-			<Canvas camera = {{ position: [0, 0.6, 4], fov: 45 }} shadows>
+			<Canvas camera = {{ position: [0, 1.5, 4], fov: 45 }} shadows>
 				{/* Makes the loading bar working, not going 0 -> 1! */}
 				<Suspense fallback = {null}>
 					
@@ -19,7 +19,7 @@ const Scene = () => {
 						<Environment preset = 'studio' />
 						<directionalLight
 						position  = {[4, 5, 4]}
-						intensity = {0.5}
+						intensity = {2.5}
 						castShadow
 						shadow-mapSize-width  = {2048}
 						shadow-mapSize-height = {2048}
@@ -28,7 +28,14 @@ const Scene = () => {
 
 						<CameraControls />
 
-						<Book />
+						<Float
+						rotation-x        = {-Math.PI / 4}
+						floatIntensity    = {1}
+						speed             = {2}
+						rotationIntensity = {1.5}
+						>
+							<Book />
+						</Float>
 
 						{ /* Ground Plane */ }
 						<mesh
