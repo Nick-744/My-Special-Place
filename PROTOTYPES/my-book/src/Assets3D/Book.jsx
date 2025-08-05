@@ -242,15 +242,15 @@ const Page = (
 
     return (
         <group {...props} ref = {group}
-        onPointerEnter={(e) => {
+        onPointerEnter = {(e) => {
             e.stopPropagation()
             setHighlighted(true)
         }}
-        onPointerLeave={(e) => {
+        onPointerLeave = {(e) => {
             e.stopPropagation()
             setHighlighted(false)
         }}
-        onClick={(e) => {
+        onClick        = {(e) => {
             e.stopPropagation()
             setPage(opened ? number : number + 1)
             setHighlighted(false)
