@@ -1,3 +1,4 @@
+import { AppBar, Toolbar, Button, Box } from '@mui/material'
 import { atom, useAtom } from 'jotai'
 
 const pictures = [
@@ -21,9 +22,9 @@ const pictures = [
 
 export const pageAtom = atom(0)
 
-export const pages    = [{
-    front: 'book-cover',
-    back: pictures[0],
+export const pages = [{
+  front: 'book-cover',
+  back:  pictures[0]
 }]
 for (let i = 1; i < pictures.length - 1; i += 2) {
   pages.push({
@@ -40,36 +41,62 @@ export const UI = () => {
   const [page, setPage] = useAtom(pageAtom)
 
   return (
-    <>
-      <main className=' pointer-events-none select-none z-10 fixed  inset-0  flex justify-between flex-col'>
-        <div className='w-full overflow-auto pointer-events-auto flex justify-center'>
-          <div className='overflow-auto flex items-center gap-4 max-w-full p-10'>
-            {[...pages].map((_, index) => (
-              <button
-                key={index}
-                className={`border-transparent hover:border-white transition-all duration-300  px-4 py-3 rounded-full  text-lg uppercase shrink-0 border ${
-                  index === page
-                    ? 'bg-white/90 text-black'
-                    : 'bg-black/30 text-white'
-                }`}
-                onClick={() => setPage(index)}
-              >
-                {index === 0 ? 'Cover' : `Page ${index}`}
-              </button>
-            ))}
-            <button
-              className={`border-transparent hover:border-white transition-all duration-300  px-4 py-3 rounded-full  text-lg uppercase shrink-0 border ${
-                page === pages.length
-                  ? 'bg-white/90 text-black'
-                  : 'bg-black/30 text-white'
-              }`}
-              onClick={() => setPage(pages.length)}
+    <AppBar 
+    position  = 'fixed' 
+    color     = 'transparent' 
+    elevation = {0} 
+    sx        = {{ top: 0, backdropFilter: 'blur(8px)' }}
+    >
+      <Toolbar sx = {{ display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
+        <Box display = 'flex' gap = {1} py = {1}>
+
+          {[...pages].map((_, index) => (
+            <Button
+            key     = {index}
+            variant = {index === page ? 'contained' : 'outlined'}
+            color   = {index === page ? 'primary'   : 'inherit'}
+            onClick = {() => setPage(index)}
+            sx      = {{
+              textTransform: 'uppercase',
+              borderRadius:  '50px',
+              minWidth:      '100px',
+              fontWeight:    600,
+
+              backgroundColor: index === page ? 'white' : 'rgba(255,255,255,0.1)',
+              color:           index === page ? 'black' : 'white',
+
+              '&:hover': {
+                backgroundColor: index === page ? 'white' : 'rgba(255,255,255,0.3)'
+              }
+            }}
             >
-              Back Cover
-            </button>
-          </div>
-        </div>
-      </main>
-    </>
-  );
+              {index === 0 ? 'Cover' : `Page ${index}`}
+            </Button>
+          ))}
+
+          <Button
+            variant = {page === pages.length ? 'contained' : 'outlined'}
+            color   = {page === pages.length ? 'primary'   : 'inherit'}
+            onClick = {() => setPage(pages.length)}
+            sx      = {{
+              textTransform: 'uppercase',
+              borderRadius:  '50px',
+              minWidth:      '120px',
+              fontWeight:    600,
+
+              backgroundColor: page === pages.length ? 'white' : 'rgba(255,255,255,0.1)',
+              color:           page === pages.length ? 'black' : 'white',
+
+              '&:hover': {
+                backgroundColor: page === pages.length ? 'white' : 'rgba(255,255,255,0.3)'
+              }
+            }}
+          >
+            Back Cover
+          </Button>
+
+        </Box>
+      </Toolbar>
+    </AppBar>
+  )
 }
