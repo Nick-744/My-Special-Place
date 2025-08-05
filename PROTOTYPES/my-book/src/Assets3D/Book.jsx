@@ -1,32 +1,33 @@
-import {
-    PAGE_WIDTH,
-    PAGE_HEIGHT,
-    PAGE_THICKNESS,
-    PAGE_SEGMENTS,
-    SEGMENT_WIDTH,
-    easingFactor,
-    easingFactorFold,
-    insideCurveStrength,
-    outsideCurveStrength,
-    turningCurveStrength
-} from '../MyConfig'
+// ==================== Animation Configuration ==================== //
+const easingFactor         = 0.5  // Controls the speed of the easing
+const easingFactorFold     = 0.3  // Controls the speed of the easing
+const insideCurveStrength  = 0.18 // Controls the strength of the curve
+const outsideCurveStrength = 0.05 // Controls the strength of the curve
+const turningCurveStrength = 0.1  // Controls the strength of the curve
+
+// ==================== Pages Configuration ==================== //
+const PAGE_WIDTH     = 1.28
+const PAGE_HEIGHT    = 1.71 // 4:3 aspect ratio
+const PAGE_THICKNESS = 0.003
+const PAGE_SEGMENTS  = 50
+const SEGMENT_WIDTH  = PAGE_WIDTH / PAGE_SEGMENTS
 
 import {
-    BoxGeometry,
-    Vector3,
+    Float32BufferAttribute,    
     Uint16BufferAttribute,
-    Float32BufferAttribute,
-    Bone,
-    Skeleton,
-    SkinnedMesh,
-    Color,
     MeshStandardMaterial,
-    SRGBColorSpace
+    SRGBColorSpace,
+    BoxGeometry,
+    SkinnedMesh,
+    Skeleton,
+    Vector3,
+    Color,
+    Bone
 } from 'three'
 
-import { degToRad } from 'three/src/math/MathUtils.js'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useTexture } from '@react-three/drei'
+import { useCursor, useTexture } from '@react-three/drei'
+import { degToRad, MathUtils } from 'three/src/math/MathUtils.js'
 import { useFrame } from '@react-three/fiber'
 import { pageAtom, pages } from './UI'
 import { useAtom } from 'jotai'
@@ -75,24 +76,13 @@ pageGeometry.setAttribute(
 
 // Set the material for the book pages
 // The front and back faces will be added in the Page component!
-const whiteColor = new Color('white')
+const whiteColor    = new Color('white')
+const emissiveColor = new Color('orange')
 const pageMaterials = [
-    new MeshStandardMaterial({ 
-        color:     whiteColor,
-        roughness: 0.1
-    }), // Right face (positive X)
-    new MeshStandardMaterial({ 
-        color:     '#111',
-        roughness: 0.1
-    }), // Left face (negative X)
-    new MeshStandardMaterial({ 
-        color:     whiteColor,
-        roughness: 0.1
-    }), // Top face (positive Y)
-    new MeshStandardMaterial({ 
-        color:     whiteColor,
-        roughness: 0.1
-    }) // Bottom face (negative Y)
+    new MeshStandardMaterial({ color: whiteColor }), // Right face
+    new MeshStandardMaterial({ color: '#111'     }), // Left face
+    new MeshStandardMaterial({ color: whiteColor }), // Top face
+    new MeshStandardMaterial({ color: whiteColor })  // Bottom face
 
     // See Page component for front & back materials!
 ]
@@ -127,16 +117,16 @@ const Page = (
     const manualSkinnedMesh = useMemo(() => {
         const bones = []
         for (let i = 0; i <= PAGE_SEGMENTS; i++) {
-            let bone  = new Bone()
-            bone.name = `bone_${i}` // Add names for debugging!
+            let bone = new Bone()
             bones.push(bone)
 
-            if (i === 0) bone.position.set(0, 0, 0)
-            else {
-                bone.position.set(SEGMENT_WIDTH, 0, 0)
-                // Attach the new bone to the previous one
-                bones[i - 1].add(bone)
-            }
+            if (i === 0)
+                bone.position.x = 0
+            else
+                bone.position.x = SEGMENT_WIDTH
+            
+            if (i > 0) 
+                bones[i - 1].add(bone) // Attach the new bone to the previous one!
         }
         
         const skeleton     = new Skeleton(bones)
@@ -149,7 +139,10 @@ const Page = (
                 ...(number === 0
                     ? {roughnessMap: pictureRoughness}
                     : {roughness:    0.1}
-                )
+                ),
+
+                emissive:          emissiveColor,
+                emissiveIntensity: 0
             }), // Front face material
             new MeshStandardMaterial({ 
                 color: whiteColor,
@@ -157,7 +150,10 @@ const Page = (
                 ...(number === pages.length - 1
                     ? {roughnessMap: pictureRoughness}
                     : {roughness:    0.1}
-                )
+                ),
+
+                emissive:          emissiveColor,
+                emissiveIntensity: 0
             }) // Back face material
         ]
 
@@ -175,6 +171,15 @@ const Page = (
     useFrame((_, dt) => {
         if (!skinnedMeshRef.current) return;
 
+        // Make the book pages glow when hovered!
+        const emissiveIntensity = highlighted ? 0.2 : 0
+        skinnedMeshRef.current.material[4].emissiveIntensity =
+            skinnedMeshRef.current.material[5].emissiveIntensity = MathUtils.lerp(
+                skinnedMeshRef.current.material[4].emissiveIntensity,
+                emissiveIntensity,
+                0.1
+            )
+
         if (lastOpened.current !== opened) {
             turnedAt.current   = + new Date()
             lastOpened.current = opened
@@ -190,10 +195,10 @@ const Page = (
         for (let i = 0; i < bones.length; i++) {
             const target = i === 0 ? group.current : bones[i]
 
-            const insideCurveIntensity  = i < 8 ?
-                                            Math.cos(i * 0.2) : 0
-            const outsideCurveIntensity = i >= 8 ?
-                                            Math.sin(i * 0.12 + 1.1) : 0
+            const insideCurveIntensity  = i < 12 ?
+                                            Math.sin(i * 0.3) : 0
+            const outsideCurveIntensity = i >= 12 ?
+                                            Math.sin(i * 0.1 - 0.1) * 0.6 : 0
             const turningCurveIntensity =
                 Math.sin(i * Math.PI + (1 / bones.length)) * turningTime
             
@@ -227,8 +232,26 @@ const Page = (
         }
     })
 
+    const [_, setPage] = useAtom(pageAtom)
+    const [highlighted, setHighlighted] = useState(false)
+    useCursor(highlighted)
+
     return (
-        <group {...props} ref = {group}>
+        <group {...props} ref = {group}
+        onPointerEnter={(e) => {
+            e.stopPropagation()
+            setHighlighted(true)
+        }}
+        onPointerLeave={(e) => {
+            e.stopPropagation()
+            setHighlighted(false)
+        }}
+        onClick={(e) => {
+            e.stopPropagation()
+            setPage(opened ? number : number + 1)
+            setHighlighted(false)
+        }}
+        >
             <primitive 
             object     = {manualSkinnedMesh} 
             ref        = {skinnedMeshRef}
