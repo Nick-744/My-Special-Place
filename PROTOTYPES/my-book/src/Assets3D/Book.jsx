@@ -1,3 +1,12 @@
+import { degToRad, MathUtils } from 'three/src/math/MathUtils.js'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { pageAtom, pages } from '../Assets2D/UI'
+import { createTextPageMesh } from './TextPage'
+import { useCursor } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+import { useAtom } from 'jotai'
+import { easing } from 'maath'
+
 // ==================== Animation Configuration ==================== //
 const easingFactor         = 0.5  // Controls the speed of the easing
 const easingFactorFold     = 0.3  // Controls the speed of the easing
@@ -6,166 +15,27 @@ const outsideCurveStrength = 0.05 // Controls the strength of the curve
 const turningCurveStrength = 0.1  // Controls the strength of the curve
 
 // ==================== Pages Configuration ==================== //
-const PAGE_WIDTH     = 1.28
-const PAGE_HEIGHT    = 1.71 // 4:3 aspect ratio
 const PAGE_THICKNESS = 0.003
-const PAGE_SEGMENTS  = 50
-const SEGMENT_WIDTH  = PAGE_WIDTH / PAGE_SEGMENTS
-
-import {
-    Float32BufferAttribute,    
-    Uint16BufferAttribute,
-    MeshStandardMaterial,
-    SRGBColorSpace,
-    BoxGeometry,
-    SkinnedMesh,
-    Skeleton,
-    Vector3,
-    Color,
-    Bone
-} from 'three'
-
-import { degToRad, MathUtils } from 'three/src/math/MathUtils.js'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useCursor, useTexture } from '@react-three/drei'
-import { pageAtom, pages } from '../Assets2D/UI'
-import { useFrame } from '@react-three/fiber'
-import { useAtom } from 'jotai'
-import { easing } from 'maath'
-
-const pageGeometry = new BoxGeometry(
-    PAGE_WIDTH,
-    PAGE_HEIGHT,
-    PAGE_THICKNESS,
-    PAGE_SEGMENTS,
-    2
-)
-
-pageGeometry.translate(PAGE_WIDTH / 2, 0, 0)
-
-const position    = pageGeometry.attributes.position
-const vertex      = new Vector3()
-const skinIndexes = []
-const skinWeights = []
-
-// Calculate skinIndex and skinWeight for each vertex
-for (let i = 0; i < position.count; i++) {
-    // ALL VERTICES
-    vertex.fromBufferAttribute(position, i) // Get the vertex position
-    const x = vertex.x // Get the x position of the vertex
-
-    // Calculate the skin index based on the x position
-    const skinIndex  = Math.max(0, Math.floor(x / SEGMENT_WIDTH))
-    // Calculate the skin weight based on the x position
-    let   skinWeight = (x % SEGMENT_WIDTH) / SEGMENT_WIDTH
-
-    skinIndexes.push(skinIndex,      skinIndex + 1, 0, 0)
-    skinWeights.push(1 - skinWeight, skinWeight,    0, 0)
-}
-
-// Set the skinIndex and skinWeight attributes for the geometry.
-// This is used for skeletal animation...
-pageGeometry.setAttribute(
-    'skinIndex',
-    new Uint16BufferAttribute(skinIndexes, 4)
-)
-pageGeometry.setAttribute(
-    'skinWeight',
-    new Float32BufferAttribute(skinWeights, 4)
-)
-
-// Set the material for the book pages
-// The front and back faces will be added in the Page component!
-const whiteColor    = new Color('white')
-const emissiveColor = new Color('orange')
-const pageMaterials = [
-    new MeshStandardMaterial({ color: whiteColor }), // Right face
-    new MeshStandardMaterial({ color: '#111'     }), // Left face
-    new MeshStandardMaterial({ color: whiteColor }), // Top face
-    new MeshStandardMaterial({ color: whiteColor })  // Bottom face
-
-    // See Page component for front & back materials!
-]
-
-// Preload all textures for the pages
-pages.forEach((page) => {
-    useTexture.preload(`/textures/${page.front}.jpg`)
-    useTexture.preload(`/textures/${page.back}.jpg`)
-    useTexture.preload('/textures/book-cover-roughness.jpg')
-})
 
 const Page = (
-    { number, front, back, page, opened, bookClosed,...props }
+    { number, front, back, page, opened, bookClosed, ...props }
 ) => {
-    const [picture, pictureBack, pictureRoughness] = useTexture([
-        `/textures/${front}.jpg`,
-        `/textures/${back}.jpg`,
-        ...(number === 0 || number === pages.length - 1
-        ? ['/textures/book-cover-roughness.jpg']
-        : [])
-    ])
-    // Set the color space for the textures:
-    picture.colorSpace = pictureBack.colorSpace = SRGBColorSpace
-
     const group          = useRef()
     const skinnedMeshRef = useRef()
     const turnedAt       = useRef(0)
     const lastOpened     = useRef(opened)
 
-    /* Skeletal animation system for rendering realistic
-    book pages that can bend and curve naturally */
-    const manualSkinnedMesh = useMemo(() => {
-        const bones = []
-        for (let i = 0; i <= PAGE_SEGMENTS; i++) {
-            let bone = new Bone()
-            bones.push(bone)
+    // Create the text page mesh using useMemo
+    const textPageData = useMemo(() => {
+        return createTextPageMesh(
+            front || `Page ${number * 2 + 1}`, 
+            back  || `Page ${number * 2 + 2}`
+        );
+    }, [front, back, number])
 
-            if (i === 0)
-                bone.position.x = 0
-            else
-                bone.position.x = SEGMENT_WIDTH
-            
-            if (i > 0) 
-                bones[i - 1].add(bone) // Attach the new bone to the previous one!
-        }
-        
-        const skeleton     = new Skeleton(bones)
-
-        const materials    = [
-            ...pageMaterials,
-            new MeshStandardMaterial({
-                color: whiteColor,
-                map:   picture,
-                ...(number === 0
-                    ? {roughnessMap: pictureRoughness}
-                    : {roughness:    0.1}
-                ),
-
-                emissive:          emissiveColor,
-                emissiveIntensity: 0
-            }), // Front face material
-            new MeshStandardMaterial({ 
-                color: whiteColor,
-                map:   pictureBack,
-                ...(number === pages.length - 1
-                    ? {roughnessMap: pictureRoughness}
-                    : {roughness:    0.1}
-                ),
-
-                emissive:          emissiveColor,
-                emissiveIntensity: 0
-            }) // Back face material
-        ]
-
-        const mesh         = new SkinnedMesh(pageGeometry, materials)
-        mesh.castShadow    = true
-        mesh.receiveShadow = true
-        mesh.frustumCulled = false
-        mesh.add(skeleton.bones[0]) // Add the first bone to the mesh!
-        mesh.bind(skeleton)
-
-        return mesh;
-    }, [])
+    const [_, setPage] = useAtom(pageAtom)
+    const [highlighted, setHighlighted] = useState(false)
+    useCursor(highlighted)
 
     // ----- Update the bones in the skinned mesh every frame ----- //
     useFrame((_, dt) => {
@@ -236,28 +106,24 @@ const Page = (
         }
     })
 
-    const [_, setPage] = useAtom(pageAtom)
-    const [highlighted, setHighlighted] = useState(false)
-    useCursor(highlighted)
-
     return (
         <group {...props} ref = {group}
-        onPointerEnter={(e) => {
+        onPointerEnter = {(e) => {
             e.stopPropagation()
             setHighlighted(true)
         }}
-        onPointerLeave={(e) => {
+        onPointerLeave = {(e) => {
             e.stopPropagation()
             setHighlighted(false)
         }}
-        onClick={(e) => {
+        onClick = {(e) => {
             e.stopPropagation()
             setPage(opened ? number : number + 1)
             setHighlighted(false)
         }}
         >
             <primitive 
-            object     = {manualSkinnedMesh} 
+            object     = {textPageData.mesh}
             ref        = {skinnedMeshRef}
             position-z = {
                 -number * PAGE_THICKNESS + page * PAGE_THICKNESS
@@ -281,7 +147,7 @@ const Book = ({ ...props }) => {
         const goToPage = () => {
             setDelayedPage((delayedPage) => {
                 if (page === delayedPage) return delayedPage;
-                else 
+                else
                     timeout = setTimeout(() => {
                         goToPage()
                     }, Math.abs(page - delayedPage) > 2 ? 50 : 150)
