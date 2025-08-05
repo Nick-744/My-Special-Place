@@ -3,7 +3,12 @@ import {
     PAGE_HEIGHT,
     PAGE_THICKNESS,
     PAGE_SEGMENTS,
-    SEGMENT_WIDTH
+    SEGMENT_WIDTH,
+    easingFactor,
+    easingFactorFold,
+    insideCurveStrength,
+    outsideCurveStrength,
+    turningCurveStrength
 } from '../MyConfig'
 
 import {
@@ -20,11 +25,12 @@ import {
 } from 'three'
 
 import { degToRad } from 'three/src/math/MathUtils.js'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTexture } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { useMemo, useRef } from 'react'
 import { pageAtom, pages } from './UI'
 import { useAtom } from 'jotai'
+import { easing } from 'maath'
 
 const pageGeometry = new BoxGeometry(
     PAGE_WIDTH,
@@ -88,7 +94,7 @@ const pageMaterials = [
         roughness: 0.1
     }) // Bottom face (negative Y)
 
-    // See Page component for front and back materials!
+    // See Page component for front & back materials!
 ]
 
 // Preload all textures for the pages
@@ -98,7 +104,9 @@ pages.forEach((page) => {
     useTexture.preload('/textures/book-cover-roughness.jpg')
 })
 
-const Page = ({ number, front, back, page, ...props }) => {
+const Page = (
+    { number, front, back, page, opened, bookClosed,...props }
+) => {
     const [picture, pictureBack, pictureRoughness] = useTexture([
         `/textures/${front}.jpg`,
         `/textures/${back}.jpg`,
@@ -111,6 +119,8 @@ const Page = ({ number, front, back, page, ...props }) => {
 
     const group          = useRef()
     const skinnedMeshRef = useRef()
+    const turnedAt       = useRef(0)
+    const lastOpened     = useRef(opened)
 
     /* Skeletal animation system for rendering realistic
     book pages that can bend and curve naturally */
@@ -161,10 +171,60 @@ const Page = ({ number, front, back, page, ...props }) => {
         return mesh;
     }, [])
 
-    useFrame(() => {
+    // ----- Update the bones in the skinned mesh every frame ----- //
+    useFrame((_, dt) => {
         if (!skinnedMeshRef.current) return;
 
+        if (lastOpened.current !== opened) {
+            turnedAt.current   = + new Date()
+            lastOpened.current = opened
+        }
+        let turningTime = Math.min(400, new Date() - turnedAt.current) / 400
+        turningTime     = Math.sin(turningTime * Math.PI)
+
+        let targetRotation = opened ? -Math.PI / 2 : Math.PI / 2
+        if (!bookClosed)
+            targetRotation += degToRad(number * 0.8)
+
         const bones = skinnedMeshRef.current.skeleton.bones
+        for (let i = 0; i < bones.length; i++) {
+            const target = i === 0 ? group.current : bones[i]
+
+            const insideCurveIntensity  = i < 8 ?
+                                            Math.cos(i * 0.2) : 0
+            const outsideCurveIntensity = i >= 8 ?
+                                            Math.sin(i * 0.12 + 1.1) : 0
+            const turningCurveIntensity =
+                Math.sin(i * Math.PI + (1 / bones.length)) * turningTime
+            
+            let rotationAngle =
+                insideCurveStrength  * insideCurveIntensity  * targetRotation -
+                outsideCurveStrength * outsideCurveIntensity * targetRotation +
+                turningCurveStrength * turningCurveIntensity * targetRotation
+
+            let foldRotationAngle = degToRad(Math.sign(targetRotation) * 2)
+            
+            if (bookClosed)
+                if (i === 0) {
+                    rotationAngle     = targetRotation
+                    foldRotationAngle = 0
+                }
+                else {
+                    rotationAngle     = 0
+                    foldRotationAngle = 0
+                }
+
+            easing.dampAngle(
+                target.rotation, 'y', rotationAngle, easingFactor, dt
+            )
+
+            const foldIntensity = i > 8 ?
+                Math.sin(i * Math.PI * (1 / bones.length) - 0.5) * turningTime : 0
+
+            easing.dampAngle(
+                target.rotation, 'x', foldRotationAngle * foldIntensity, easingFactorFold, dt
+            )
+        }
     })
 
     return (
@@ -182,14 +242,41 @@ const Page = ({ number, front, back, page, ...props }) => {
 
 const Book = ({ ...props }) => {
     const [page] = useAtom(pageAtom)
+    const [delayedPage, setDelayedPage] = useState(page)
+
+    /* Progressive page-turning animation system that smoothly transitions
+    between pages in a book interface. Rather than jumping directly from
+    one page to another, it creates a realistic page-by-page progression
+    that mimics how users would naturally flip through a physical book! */
+    useEffect(() => {
+        let timeout
+
+        const goToPage = () => {
+            setDelayedPage((delayedPage) => {
+                if (page === delayedPage) return delayedPage;
+                else 
+                    timeout = setTimeout(() => {
+                        goToPage()
+                    }, Math.abs(page - delayedPage) > 2 ? 50 : 150)
+
+                    if (page > delayedPage) return delayedPage + 1;
+                    if (page < delayedPage) return delayedPage - 1;
+            })
+        }
+
+        goToPage()
+        return () => { clearTimeout(timeout) };
+    }, [page])
 
     return (
-        <group {...props}>
+        <group {...props} rotation-y = {-Math.PI / 2}>
             {[...pages].map((pageData, index) => (
                 <Page
-                key    = {index}
-                page   = {page}
-                number = {index}
+                key        = {index}
+                page       = {delayedPage}
+                number     = {index}
+                opened     = {delayedPage > index}
+                bookClosed = {delayedPage === 0 || delayedPage === pages.length}
                 {...pageData}
                 />
             ))}
