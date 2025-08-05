@@ -171,8 +171,8 @@ const createTextureFromContent = (content, width = 800, height = 1000) => {
     // Split text into lines and render
     const lines      = textContent.split('\n')
     const lineHeight = 40
-    const margin     = 40
-    let y            = margin + 20
+    const margin     = 100
+    let y            = margin + 200
     
     lines.forEach((line, index) => {
         if (line.trim()) {
