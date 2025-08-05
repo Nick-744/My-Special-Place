@@ -255,10 +255,10 @@ export const createTextPageMesh = (frontContent, backContent) => {
     const emissiveColor = new Color('orange')
     
     const materials = [
-        new MeshStandardMaterial({ color: whiteColor }), // Right
-        new MeshStandardMaterial({ color: '#111'     }), // Left
-        new MeshStandardMaterial({ color: whiteColor }), // Top
-        new MeshStandardMaterial({ color: whiteColor }), // Bottom
+        new MeshStandardMaterial({ color: whiteColor, roughness: 1 }), // Right
+        new MeshStandardMaterial({ color: '#111',     roughness: 1 }), // Left
+        new MeshStandardMaterial({ color: whiteColor, roughness: 1 }), // Top
+        new MeshStandardMaterial({ color: whiteColor, roughness: 1 }), // Bottom
         new MeshStandardMaterial({ 
             map:   frontTexture,
             color: whiteColor,
