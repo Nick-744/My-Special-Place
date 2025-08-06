@@ -61,7 +61,7 @@ const ModalImage = ({ imageSrc, open, onClose }) => {
                         sx = {{
                             width:     { xs: '95%', sm: '80%', md: '60%' },
                             maxWidth:  { xs: '100%', sm: 500, md: 800 },
-                            maxHeight: { xs: '100%', sm: 400, md: 600 },
+                            maxHeight: { xs: '100%', sm: 300, md: 600 },
                             borderRadius:  8,
                             bgcolor:       '#f5f5f5',
                             overflow:      'hidden',
