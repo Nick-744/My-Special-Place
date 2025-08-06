@@ -18,3 +18,7 @@ body {
   
   overflow: hidden;
 }
+
+.w3-animate-opacity {
+  animation: opac 5s;
+} @keyframes opac{from{opacity:0} to{opacity:1}}
