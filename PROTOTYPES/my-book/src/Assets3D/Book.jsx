@@ -1,9 +1,10 @@
 import { degToRad, MathUtils } from 'three/src/math/MathUtils.js'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { pageAtom, pages } from '../Assets2D/UI'
+import { pages } from '../InfoData/PagesContent'
 import { createTextPageMesh } from './TextPage'
 import { useCursor } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
+import { pageAtom } from '../Assets2D/UI'
 import { useAtom } from 'jotai'
 import { easing } from 'maath'
 
