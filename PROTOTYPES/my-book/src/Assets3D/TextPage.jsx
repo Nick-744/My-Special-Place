@@ -139,8 +139,8 @@ const extractTableText = (tableElement) => {
     return tableText;
 }
 
-// Function to render text content to canvas texture
-const createTextureFromContent = (content, width = 1200, height = 1500) => {
+// Function to render text content to canvas texture with image support
+const createTextureFromContent = async (content, width = 1200, height = 1500) => {
     const canvas  = document.createElement('canvas')
     canvas.width  = width
     canvas.height = height
@@ -161,14 +161,18 @@ const createTextureFromContent = (content, width = 1200, height = 1500) => {
     for (let i = 0; i < 200; i++) 
         ctx.fillRect(Math.random() * width, Math.random() * height, 1, 1)
     
-    // Extract text from React content
+    // Extract both text & images from React content
     let textContent = ''
+    let images      = []
+    
     if (typeof content === 'string')
         textContent = content
-    else if (React.isValidElement(content)) 
-        textContent = extractTextFromReactElement(content)
-    else 
-        textContent = 'Page Content'
+    else if (React.isValidElement(content)) {
+        const result = extractContentWithImages(content)
+        textContent  = result.text
+        images       = result.images
+    }
+    else textContent = 'Page Content'
     
     // Set up text rendering with high contrast
     ctx.fillStyle = '#000000' // Pure black for maximum contrast
@@ -180,23 +184,24 @@ const createTextureFromContent = (content, width = 1200, height = 1500) => {
     const margin     = 120
     let y            = margin + 150
     
+    // Render text first!
     lines.forEach((line, _) => {
         if (line.trim()) {
             // Check if it's a header (all caps)
             if (line === line.toUpperCase() && line.length > 3) {
-                ctx.font      = 'bold 48px "Times New Roman", serif'
+                ctx.font      = 'bold 55px "Times New Roman", serif'
                 ctx.fillStyle = '#000000'
             }
             else if (line.startsWith('•')) {
-                ctx.font      = 'bold 32px "Times New Roman", serif'
+                ctx.font      = 'bold 45px "Times New Roman", serif'
                 ctx.fillStyle = '#000000'
             }
             else if (line.startsWith('CODE')) {
-                ctx.font      = 'bold 32px "Courier New", monospace'
+                ctx.font      = 'bold 45px "Courier New", monospace'
                 ctx.fillStyle = '#000000'
             }
             else {
-                ctx.font      = 'bold 32px "Times New Roman", serif'
+                ctx.font      = 'bold 45px "Times New Roman", serif'
                 ctx.fillStyle = '#000000'
             }
             
@@ -230,6 +235,48 @@ const createTextureFromContent = (content, width = 1200, height = 1500) => {
         }
     })
     
+    // Load and draw images
+    for (const imageInfo of images) {
+        try {
+            const img       = new Image()
+            img.crossOrigin = 'anonymous'
+            
+            // Try loading the image with a timeout
+            await Promise.race([
+                new Promise((resolve, reject) => {
+                    img.onload  = resolve
+                    img.onerror = reject
+                    img.src     = imageInfo.src
+                }),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Image load timeout')), 5000)
+                )
+            ])
+            
+            // Calculate image position and size
+            const maxWidth    = width - (margin * 2)
+            const maxHeight   = 200
+            const aspectRatio = img.width / img.height
+            
+            let drawWidth  = Math.min(maxWidth, img.width)
+            let drawHeight = drawWidth / aspectRatio
+            
+            if (drawHeight > maxHeight) {
+                drawHeight = maxHeight
+                drawWidth  = drawHeight * aspectRatio
+            }
+            
+            const x = margin + (maxWidth - drawWidth) / 2
+            
+            // Draw image at current y position
+            ctx.drawImage(img, x, y, drawWidth, drawHeight)
+            y += drawHeight + 20 // Add some spacing after image
+        }
+        catch (error) {
+            console.warn('Failed to load image:', imageInfo.src, error.message)
+        }
+    }
+    
     // Create texture with better filtering
     const texture           = new CanvasTexture(canvas)
     texture.generateMipmaps = false
@@ -238,8 +285,80 @@ const createTextureFromContent = (content, width = 1200, height = 1500) => {
     return texture;
 }
 
-// Pure function to create the complete text page (no hooks)
-export const createTextPageMesh = (frontContent, backContent) => {
+// --- Function to extract both text & images --- //
+const extractContentWithImages = (element) => {
+    const result = { text: '', images: [] }
+    
+    const traverse = (el) => {
+        if (typeof el === 'string') {
+            result.text += el
+
+            return;
+        }
+        if (typeof el === 'number') {
+            result.text += el.toString()
+
+            return;
+        }
+        if (!el || !el.props) return;
+        
+        // Handle images
+        if (el.type === 'img') {
+            result.images.push({
+                src: el.props.src,
+                alt: el.props.alt || ''
+            })
+            result.text += '\n[IMAGE]\n'
+
+            return;
+        }
+        
+        // Handle other elements
+        if (el.type === 'h1' || el.type === 'h2' || el.type === 'h3' || el.type === 'h4')
+            result.text += '\n' + extractTextFromChildren(el.props.children).toUpperCase() + '\n'
+        else if (el.type === 'p') {
+            result.text += '\n'
+            traverseChildren(el.props.children)
+            result.text += '\n'
+        }
+        else if (el.type === 'ul' || el.type === 'ol') {
+            result.text += '\n'
+            if (el.props.children) {
+                const items = Array.isArray(el.props.children) ? el.props.children : [el.props.children]
+                items.forEach((item) => {
+                    if (item && item.type === 'li') {
+                        result.text += '• '
+                        traverseChildren(item.props.children)
+                        result.text += '\n'
+                    }
+                })
+            }
+            result.text += '\n'
+        }
+        else if (el.type === 'blockquote') {
+            result.text += '\n"'
+            traverseChildren(el.props.children)
+            result.text += '"\n'
+        }
+        else traverseChildren(el.props.children)
+    }
+    
+    const traverseChildren = (children) => {
+        if (!children) return;
+        
+        if (Array.isArray(children))
+            children.forEach(child => traverse(child))
+        else
+            traverse(children)
+    }
+    
+    traverse(element)
+
+    return result;
+}
+
+// Update the createTextPageMesh function to handle async texture creation
+export const createTextPageMesh = async (frontContent, backContent) => {
     const geometry = createTextPageGeometry()
     
     /* Skeletal animation system for rendering realistic
@@ -257,9 +376,9 @@ export const createTextPageMesh = (frontContent, backContent) => {
     
     const skeleton = new Skeleton(bones)
     
-    // Create textures from content
-    const frontTexture = createTextureFromContent(frontContent)
-    const backTexture  = createTextureFromContent(backContent)
+    // Create textures from content (async)
+    const frontTexture = await createTextureFromContent(frontContent)
+    const backTexture  = await createTextureFromContent(backContent)
     
     const whiteColor = new Color('#ffffff')
     
@@ -303,7 +422,7 @@ export const createTextPageMesh = (frontContent, backContent) => {
     ]
     
     const mesh         = new SkinnedMesh(geometry, materials)
-    mesh.castShadow    = true // Disable shadow casting for text pages
+    mesh.castShadow    = true  // Disable shadow casting for text pages
     mesh.receiveShadow = false // Disable shadow receiving for text pages
     mesh.frustumCulled = false
     mesh.add(skeleton.bones[0])

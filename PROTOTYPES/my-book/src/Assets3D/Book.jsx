@@ -26,16 +26,29 @@ const Page = (
     const turnedAt       = useRef(0)
     const lastOpened     = useRef(opened)
 
-    // Create the text page mesh using useMemo
-    const textPageData = useMemo(() => {
-        return createTextPageMesh(
-            front || `Page ${number * 2 + 1}`, 
-            back  || `Page ${number * 2 + 2}`
-        );
+    const [_, setPage] = useAtom(pageAtom)
+    const [textPageData, setTextPageData] = useState(null)
+    const [highlighted, setHighlighted]   = useState(false)
+    
+    // Load page data effect - always called
+    useEffect(() => {
+        const loadPageData = async () => {
+            try {
+                const data = await createTextPageMesh(
+                    front || `Page ${number * 2 + 1}`, 
+                    back  || `Page ${number * 2 + 2}`
+                )
+                setTextPageData(data)
+            }
+            catch (error) {
+                console.error('Failed to create page mesh:', error)
+            }
+        }
+        
+        loadPageData()
     }, [front, back, number])
 
-    const [_, setPage] = useAtom(pageAtom)
-    const [highlighted, setHighlighted] = useState(false)
+    // All other hooks must come before any conditional returns!
     useCursor(highlighted)
 
     // ----- Update the bones in the skinned mesh every frame ----- //
@@ -119,6 +132,9 @@ const Page = (
             )
         }
     })
+
+    // CONDITIONAL RETURN COMES AFTER ALL HOOKS
+    if (!textPageData) return <group {...props} /> // Return empty group while loading!
 
     return (
         <group {...props} ref = {group}

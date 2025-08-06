@@ -40,8 +40,8 @@ const Scene = () => {
 						<Float
 						rotation-x        = {-Math.PI / 5}
 						floatIntensity    = {1}
-						speed             = {2}
-						rotationIntensity = {1.5}
+						speed             = {1.6}
+						rotationIntensity = {1}
 						>
 							<Book />
 						</Float>
