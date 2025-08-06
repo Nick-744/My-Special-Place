@@ -13,8 +13,8 @@ import {
 } from 'three'
 
 // ==================== Pages Configuration ==================== //
-const PAGE_WIDTH     = 1.28
-const PAGE_HEIGHT    = 1.71
+const PAGE_WIDTH     = 0.853
+const PAGE_HEIGHT    = 1.14
 const PAGE_THICKNESS = 0.003
 const PAGE_SEGMENTS  = 50
 const SEGMENT_WIDTH  = PAGE_WIDTH / PAGE_SEGMENTS
