@@ -424,7 +424,8 @@ export const createTextPageMesh = async (frontContent, backContent) => {
     const frontResult = await createTextureFromContent(frontContent)
     const backResult  = await createTextureFromContent(backContent)
     
-    const whiteColor = new Color('#ffffff')
+    const whiteColor  = new Color('#ffffff')
+    const orangeColor = new Color('orange')
     
     const materials = [
         new MeshStandardMaterial({ 
@@ -452,7 +453,7 @@ export const createTextPageMesh = async (frontContent, backContent) => {
             color: whiteColor,
             roughness: 0.8,
             metalness: 0.0,
-            emissive: new Color(0x000000),
+            emissive: orangeColor,
             emissiveIntensity: 0
         }), // Front
         new MeshStandardMaterial({ 
@@ -460,7 +461,7 @@ export const createTextPageMesh = async (frontContent, backContent) => {
             color: whiteColor,
             roughness: 0.8,
             metalness: 0.0,
-            emissive: new Color(0x000000),
+            emissive: orangeColor,
             emissiveIntensity: 0
         }) // Back
     ]

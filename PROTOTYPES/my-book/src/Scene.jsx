@@ -11,7 +11,7 @@ const Scene = () => {
 				indicator within the 3D scene application. */}
 			<Loader />
 
-			<Canvas camera = {{ position: [0, 1.5, 3], fov: 45 }} shadows>
+			<Canvas camera = {{ position: [0, 0.5, 1.8], fov: 40 }} shadows>
 				{/* Makes the loading bar working, not going 0 -> 1! */}
 				<Suspense fallback = {null}>
 					
@@ -34,17 +34,9 @@ const Scene = () => {
 						castShadow = {false}
 						/>
 
-						<CameraControls />
+						{/* <CameraControls /> */}
 
-						{/* Make the book float randomly in the air */}
-						<Float
-						rotation-x        = {-Math.PI / 5}
-						floatIntensity    = {1}
-						speed             = {1.6}
-						rotationIntensity = {1}
-						>
-							<Book />
-						</Float>
+						<Book position-y = {-0.1}/>
 
 						{ /* Ground Plane */ }
 						<mesh
