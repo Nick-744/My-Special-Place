@@ -255,7 +255,7 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
             
             // Calculate image position and size
             const maxWidth    = width - (margin * 2)
-            const maxHeight   = 200
+            const maxHeight   = 600
             const aspectRatio = img.width / img.height
             
             let drawWidth  = Math.min(maxWidth, img.width)
@@ -308,7 +308,6 @@ const extractContentWithImages = (element) => {
                 src: el.props.src,
                 alt: el.props.alt || ''
             })
-            result.text += '\n[IMAGE]\n'
 
             return;
         }
