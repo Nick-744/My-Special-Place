@@ -18,9 +18,11 @@ const turningCurveStrength = 0.1  // Controls the strength of the curve
 // ==================== Pages Configuration ==================== //
 const PAGE_THICKNESS = 0.003
 
-const Page = (
-    { number, front, back, page, opened, bookClosed, ...props }
-) => {
+const Page = ({
+    number, front, back, page, opened, bookClosed,
+    setModalImageSrc, setModalOpen,
+    ...props
+}) => {
     const group          = useRef()
     const skinnedMeshRef = useRef()
     const turnedAt       = useRef(0)
@@ -81,7 +83,8 @@ const Page = (
                 : textPageData.frontClickableAreas
             
             // Convert UV coordinates to canvas coordinates
-            const canvasWidth  = 1200
+            // YOU HAVE TO ADJUST THESE VALUES BASED ON YOUR CANVAS SIZE!
+            const canvasWidth  = 800 // ~ Half of the page width...
             const canvasHeight = 1500
             const canvasX      = uv.x * canvasWidth
             const canvasY      = (1 - uv.y) * canvasHeight // Flip Y coordinate
@@ -104,8 +107,9 @@ const Page = (
         
         if (area) {
             if (area.type === 'image') {
-                // Handle image click - open in new tab/modal
-                window.open(area.src, '_blank')
+                // Open modal with image
+                setModalImageSrc(area.src)
+                setModalOpen(true)
 
                 return true;
             }
@@ -226,7 +230,7 @@ const Page = (
     );
 }
 
-const Book = ({ ...props }) => {
+const Book = ({ setModalImageSrc, setModalOpen, ...props }) => {
     const [page] = useAtom(pageAtom)
     const [delayedPage, setDelayedPage] = useState(page)
 
@@ -264,6 +268,10 @@ const Book = ({ ...props }) => {
                 number     = {index}
                 opened     = {delayedPage > index}
                 bookClosed = {delayedPage === 0 || delayedPage === pages.length}
+
+                setModalImageSrc = {setModalImageSrc}
+                setModalOpen     = {setModalOpen}
+
                 {...pageData}
                 />
             ))}

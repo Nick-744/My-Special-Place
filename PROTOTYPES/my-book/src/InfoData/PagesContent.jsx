@@ -17,7 +17,7 @@ export const pages = [
         </p>
 
         <p>
-          Visit my website (https://www.google.com/)
+          Google it! (https://www.google.com/)
         </p>
       </Box>
     ),

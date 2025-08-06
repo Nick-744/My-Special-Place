@@ -1,20 +1,24 @@
-import { Environment, CameraControls } from '@react-three/drei'
-import { Loader, Float } from '@react-three/drei'
+import { Environment, Loader } from '@react-three/drei'
+import ModalImage from './Assets2D/ModalImage.jsx'
 import { Canvas } from '@react-three/fiber'
+import { Suspense, useState } from 'react'
 import Book from './Assets3D/Book.jsx'
-import { Suspense } from 'react'
 
 const Scene = () => {
+	// State for modal image
+	const [modalImageSrc, setModalImageSrc] = useState(null)
+	const [modalOpen, setModalOpen]         = useState(false)
+
 	return (
 		<div id = 'canvas-container' className = 'w3-animate-opacity'>
 			{/* React component element that renders a loading
 				indicator within the 3D scene application. */}
 			<Loader />
 
-			<Canvas camera = {{ position: [0, 0.2, 1.8], fov: 45 }} shadows>
-				{/* Makes the loading bar working, not going 0 -> 1! */}
-				<Suspense fallback = {null}>
-					
+			{/* Makes the loading bar working, not going 0 -> 1! */}
+			<Suspense fallback = {null}>
+				
+				<Canvas camera = {{ position: [0, 0.2, 1.8], fov: 45 }} shadows>
 					<group position-y = {0}>
 						{/* Environment lighting and shadows */}
 						<Environment preset = 'dawn' intensity = {0.6} />
@@ -36,7 +40,11 @@ const Scene = () => {
 
 						{/* <CameraControls /> */}
 
-						<Book position-y = {-0.1}/>
+						<Book
+						position-y       = {-0.08}
+						setModalImageSrc = {setModalImageSrc}
+						setModalOpen     = {setModalOpen}
+						/>
 
 						{ /* Ground Plane */ }
 						<mesh
@@ -48,9 +56,15 @@ const Scene = () => {
 							<shadowMaterial transparent opacity = {0.2} />
 						</mesh>
 					</group>
+				</Canvas>
 
-				</Suspense>
-			</Canvas>
+				<ModalImage
+				imageSrc = {modalImageSrc}
+				open     = {modalOpen}
+				onClose  = {() => setModalOpen(false)}
+				/>
+
+			</Suspense>
 		</div>
 	);
 }
