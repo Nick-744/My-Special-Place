@@ -41,14 +41,27 @@ const Page = (
     useFrame((_, dt) => {
         if (!skinnedMeshRef.current) return;
 
-        // Make the book pages glow when hovered!
-        const emissiveIntensity = highlighted ? 0.2 : 0
-        skinnedMeshRef.current.material[4].emissiveIntensity =
-            skinnedMeshRef.current.material[5].emissiveIntensity = MathUtils.lerp(
-                skinnedMeshRef.current.material[4].emissiveIntensity,
+        // Subtle glow effect that doesn't interfere with text readability!!!
+        const emissiveIntensity = highlighted ? 0.05 : 0 // Reduced intensity
+        
+        // Only apply glow to non-text materials (materials 0-3).
+        // Leave text materials (4-5) unchanged to preserve crispness...
+        if (skinnedMeshRef.current.material[0]) {
+            skinnedMeshRef.current.material[0].emissiveIntensity = 
+            skinnedMeshRef.current.material[1].emissiveIntensity =
+            skinnedMeshRef.current.material[2].emissiveIntensity =
+            skinnedMeshRef.current.material[3].emissiveIntensity = MathUtils.lerp(
+                skinnedMeshRef.current.material[0].emissiveIntensity || 0,
                 emissiveIntensity,
                 0.1
             )
+        }
+        
+        // Keep text materials (4-5) always at 0 emissive intensity for crispness!
+        if (skinnedMeshRef.current.material[4])
+            skinnedMeshRef.current.material[4].emissiveIntensity = 0
+        if (skinnedMeshRef.current.material[5])
+            skinnedMeshRef.current.material[5].emissiveIntensity = 0
 
         if (lastOpened.current !== opened) {
             turnedAt.current   = + new Date()

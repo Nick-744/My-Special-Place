@@ -140,19 +140,25 @@ const extractTableText = (tableElement) => {
 }
 
 // Function to render text content to canvas texture
-const createTextureFromContent = (content, width = 800, height = 1000) => {
+const createTextureFromContent = (content, width = 1200, height = 1500) => {
     const canvas  = document.createElement('canvas')
     canvas.width  = width
     canvas.height = height
     const ctx     = canvas.getContext('2d')
     
-    // Create white background with subtle paper texture
-    ctx.fillStyle = '#fefefe'
+    // Enable better text rendering
+    ctx.textAlign             = 'left'
+    ctx.textBaseline          = 'top'
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
+    
+    // Create bright white background for maximum contrast!
+    ctx.fillStyle = '#ffffff'
     ctx.fillRect(0, 0, width, height)
     
-    // Add subtle paper grain
-    ctx.fillStyle = '#f8f8f8'
-    for (let i = 0; i < 500; i++) 
+    // Add very subtle paper texture...
+    ctx.fillStyle = '#fbfbfb'
+    for (let i = 0; i < 200; i++) 
         ctx.fillRect(Math.random() * width, Math.random() * height, 1, 1)
     
     // Extract text from React content
@@ -164,34 +170,34 @@ const createTextureFromContent = (content, width = 800, height = 1000) => {
     else 
         textContent = 'Page Content'
     
-    // Set up text rendering
-    ctx.fillStyle = '#000' // Always pure black for best contrast
-    ctx.font      = '50px "Times New Roman", serif'
+    // Set up text rendering with high contrast
+    ctx.fillStyle = '#000000' // Pure black for maximum contrast
+    ctx.font      = 'bold 38px "Times New Roman", serif'
     
     // Split text into lines and render
     const lines      = textContent.split('\n')
-    const lineHeight = 40
-    const margin     = 100
-    let y            = margin + 200
+    const lineHeight = 48
+    const margin     = 120
+    let y            = margin + 150
     
-    lines.forEach((line, index) => {
+    lines.forEach((line, _) => {
         if (line.trim()) {
             // Check if it's a header (all caps)
             if (line === line.toUpperCase() && line.length > 3) {
-                ctx.font      = 'bold 40px "Times New Roman", serif'
-                ctx.fillStyle = '#000'
+                ctx.font      = 'bold 48px "Times New Roman", serif'
+                ctx.fillStyle = '#000000'
             }
             else if (line.startsWith('•')) {
-                ctx.font      = '25px "Times New Roman", serif'
-                ctx.fillStyle = '#000'
+                ctx.font      = 'bold 32px "Times New Roman", serif'
+                ctx.fillStyle = '#000000'
             }
             else if (line.startsWith('CODE')) {
-                ctx.font      = '25px "Courier New", monospace'
-                ctx.fillStyle = '#000'
+                ctx.font      = 'bold 32px "Courier New", monospace'
+                ctx.fillStyle = '#000000'
             }
             else {
-                ctx.font      = '25px "Times New Roman", serif'
-                ctx.fillStyle = '#000'
+                ctx.font      = 'bold 32px "Times New Roman", serif'
+                ctx.fillStyle = '#000000'
             }
             
             // Word wrap
@@ -224,7 +230,12 @@ const createTextureFromContent = (content, width = 800, height = 1000) => {
         }
     })
     
-    return new CanvasTexture(canvas);
+    // Create texture with better filtering
+    const texture           = new CanvasTexture(canvas)
+    texture.generateMipmaps = false
+    texture.minFilter       = texture.magFilter = 1006 // LinearFilter
+    
+    return texture;
 }
 
 // Pure function to create the complete text page (no hooks)
@@ -250,32 +261,50 @@ export const createTextPageMesh = (frontContent, backContent) => {
     const frontTexture = createTextureFromContent(frontContent)
     const backTexture  = createTextureFromContent(backContent)
     
-    // Create materials
-    const whiteColor    = new Color('white')
-    const emissiveColor = new Color('orange')
+    const whiteColor = new Color('#ffffff')
     
     const materials = [
-        new MeshStandardMaterial({ color: whiteColor, roughness: 1 }), // Right
-        new MeshStandardMaterial({ color: '#111',     roughness: 1 }), // Left
-        new MeshStandardMaterial({ color: whiteColor, roughness: 1 }), // Top
-        new MeshStandardMaterial({ color: whiteColor, roughness: 1 }), // Bottom
+        new MeshStandardMaterial({ 
+            color:     whiteColor, 
+            roughness: 0.9,
+            metalness: 0.0
+        }), // Right
+        new MeshStandardMaterial({ 
+            color:     '#111', 
+            roughness: 0.9,
+            metalness: 0.0
+        }), // Left
+        new MeshStandardMaterial({ 
+            color:     whiteColor, 
+            roughness: 0.9,
+            metalness: 0.0
+        }), // Top
+        new MeshStandardMaterial({ 
+            color:     whiteColor, 
+            roughness: 0.9,
+            metalness: 0.0
+        }), // Bottom
         new MeshStandardMaterial({ 
             map:   frontTexture,
             color: whiteColor,
-            emissive:          emissiveColor,
+            roughness: 0.8,
+            metalness: 0.0,
+            emissive: new Color(0x000000),
             emissiveIntensity: 0
         }), // Front
         new MeshStandardMaterial({ 
             map:   backTexture,
             color: whiteColor,
-            emissive:          emissiveColor,
+            roughness: 0.8,
+            metalness: 0.0,
+            emissive: new Color(0x000000),
             emissiveIntensity: 0
         }) // Back
     ]
     
     const mesh         = new SkinnedMesh(geometry, materials)
-    mesh.castShadow    = true
-    mesh.receiveShadow = true
+    mesh.castShadow    = true // Disable shadow casting for text pages
+    mesh.receiveShadow = false // Disable shadow receiving for text pages
     mesh.frustumCulled = false
     mesh.add(skeleton.bones[0])
     mesh.bind(skeleton)
