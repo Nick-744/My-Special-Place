@@ -1,8 +1,7 @@
-import { degToRad, MathUtils } from 'three/src/math/MathUtils.js'
+import { degToRad } from 'three/src/math/MathUtils.js'
 import { useEffect, useRef, useState } from 'react'
 import { pages } from '../InfoData/PagesContent'
 import { createTextPageMesh } from './TextPage'
-import { useCursor } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { Vector2, Raycaster } from 'three'
 import { pageAtom } from '../Assets2D/UI'
@@ -29,7 +28,6 @@ const Page = (
 
     const [_, setPage] = useAtom(pageAtom)
     const [textPageData, setTextPageData] = useState(null)
-    const [highlighted, setHighlighted]   = useState(false)
     
     // Load page data effect - always called
     useEffect(() => {
@@ -49,12 +47,9 @@ const Page = (
         loadPageData()
     }, [front, back, number])
 
-    // All other hooks must come before any conditional returns!
-    useCursor(highlighted)
-
-    // Function to handle clicks on clickable areas
-    const handleClickableAreaClick = (event) => {
-        if (!textPageData || !skinnedMeshRef.current) return false;
+    // Function to check if point is within clickable areas
+    const checkClickableArea = (event) => {
+        if (!textPageData || !skinnedMeshRef.current) return null;
 
         // Use existing raycaster from event or fallback to manual raycaster setup!
         let intersects
@@ -75,7 +70,7 @@ const Page = (
             const intersection = intersects[0]
             const uv           = intersection.uv
             
-            if (!uv) return false;
+            if (!uv) return null;
             
             // Determine which side was clicked (front or back)
             const faceIndex  = intersection.face.materialIndex
@@ -91,52 +86,53 @@ const Page = (
             const canvasX      = uv.x * canvasWidth
             const canvasY      = (1 - uv.y) * canvasHeight // Flip Y coordinate
             
-            // Check if click is within any clickable area
+            // Check if point is within any clickable area
             for (const area of clickableAreas) {
                 if (canvasX >= area.x && 
                     canvasX <= area.x + area.width &&
                     canvasY >= area.y && 
-                    canvasY <= area.y + area.height) {
-                    
-                    if (area.type === 'image') {
-                        // Handle image click - open in new tab/modal
-                        window.open(area.src, '_blank')
+                    canvasY <= area.y + area.height) return area;
+            }
+        }
+        
+        return null;
+    }
 
-                        return true;
-                    }
-                    else if (area.type === 'link') {
-                        // Handle link click - open URL in new tab
-                        window.open(area.url, '_blank')
+    // Function to handle clicks on clickable areas
+    const handleClickableAreaClick = (event) => {
+        const area = checkClickableArea(event);
+        
+        if (area) {
+            if (area.type === 'image') {
+                // Handle image click - open in new tab/modal
+                window.open(area.src, '_blank')
 
-                        return true;
-                    }
-                }
+                return true;
+            }
+            else if (area.type === 'link') {
+                // Handle link click - open URL in new tab
+                window.open(area.url, '_blank')
+
+                return true;
             }
         }
         
         return false;
     }
 
+    // Function to handle pointer enter/leave for cursor changes
+    const handlePointerMove = (event) => {
+        const area = checkClickableArea(event)
+        
+        if (area) document.body.style.cursor = 'pointer'
+        else      document.body.style.cursor = 'auto'
+    }
+
+    const handlePointerLeave = () => { document.body.style.cursor = 'auto' }
+
     // ----- Update the bones in the skinned mesh every frame ----- //
     useFrame((_, dt) => {
         if (!skinnedMeshRef.current) return;
-
-        // // Subtle glow effect that doesn't interfere with text readability!!!
-        // const emissiveIntensity = highlighted ? 0.5 : 0 // Reduced intensity
-        
-        // // Apply emissive intensity to all materials in the skinned mesh
-        // if (skinnedMeshRef.current.material[0]) {
-        //     skinnedMeshRef.current.material[0].emissiveIntensity = 
-        //     skinnedMeshRef.current.material[1].emissiveIntensity =
-        //     skinnedMeshRef.current.material[2].emissiveIntensity =
-        //     skinnedMeshRef.current.material[3].emissiveIntensity =
-        //     skinnedMeshRef.current.material[4].emissiveIntensity = 
-        //     skinnedMeshRef.current.material[5].emissiveIntensity = MathUtils.lerp(
-        //         skinnedMeshRef.current.material[0].emissiveIntensity || 0,
-        //         emissiveIntensity,
-        //         0.1
-        //     )
-        // }
 
         if (lastOpened.current !== opened) {
             turnedAt.current   = + new Date()
@@ -199,27 +195,24 @@ const Page = (
 
     return (
         <group {...props} ref = {group}
-        onPointerEnter = {(e) => {
+        onPointerEnter = {(e) => { e.stopPropagation() }}
+        onPointerLeave = {(e) => { 
             e.stopPropagation()
-            setHighlighted(true)
+            handlePointerLeave()
         }}
-        onPointerLeave = {(e) => {
+        onPointerMove = {(e) => {
             e.stopPropagation()
-            setHighlighted(false)
+            handlePointerMove(e)
         }}
         onClick = {(e) => {
             e.stopPropagation()
             
             // --- First check if click was on a clickable area --- //
-            if (handleClickableAreaClick(e)) {
-                setHighlighted(false)
-
-                return; // Don't turn page if we clicked on an image/link
-            }
+            if (handleClickableAreaClick(e))
+                return; // Don't turn page if we clicked on an image/link!
             
             // Otherwise, turn the page...
             setPage(opened ? number : number + 1)
-            setHighlighted(false)
         }}
         >
             <primitive 

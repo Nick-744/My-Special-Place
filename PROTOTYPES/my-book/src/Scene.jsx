@@ -11,7 +11,7 @@ const Scene = () => {
 				indicator within the 3D scene application. */}
 			<Loader />
 
-			<Canvas camera = {{ position: [0, 0.5, 1.8], fov: 40 }} shadows>
+			<Canvas camera = {{ position: [0, 0.2, 1.8], fov: 45 }} shadows>
 				{/* Makes the loading bar working, not going 0 -> 1! */}
 				<Suspense fallback = {null}>
 					
@@ -20,7 +20,7 @@ const Scene = () => {
 						<Environment preset = 'dawn' intensity = {0.6} />
 						<ambientLight intensity = {0.4} />
 						<directionalLight
-						position  = {[2, 8, 5]}
+						position  = {[3, 2.5, 5]}
 						intensity = {0.3}
 						color     = '#ffffff'
 						castShadow
