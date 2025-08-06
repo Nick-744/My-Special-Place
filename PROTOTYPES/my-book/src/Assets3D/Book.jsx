@@ -1,9 +1,10 @@
 import { degToRad, MathUtils } from 'three/src/math/MathUtils.js'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { pages } from '../InfoData/PagesContent'
 import { createTextPageMesh } from './TextPage'
 import { useCursor } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
+import { Vector2, Raycaster } from 'three'
 import { pageAtom } from '../Assets2D/UI'
 import { useAtom } from 'jotai'
 import { easing } from 'maath'
@@ -50,6 +51,71 @@ const Page = (
 
     // All other hooks must come before any conditional returns!
     useCursor(highlighted)
+
+    // Function to handle clicks on clickable areas
+    const handleClickableAreaClick = (event) => {
+        if (!textPageData || !skinnedMeshRef.current) return false;
+
+        // Get the intersection point on the mesh
+        const raycaster = new Raycaster()
+        const mouse     = new Vector2()
+        
+        // Convert mouse position to normalized device coordinates
+        const rect = event.target.getBoundingClientRect()
+        mouse.x    = +((event.clientX - rect.left) / rect.width) * 2 - 1
+        mouse.y    = -((event.clientY - rect.top) / rect.height) * 2 + 1
+        
+        // Set up raycaster
+        raycaster.setFromCamera(mouse, event.camera)
+        
+        // Check intersection with the page mesh
+        const intersects = raycaster.intersectObject(skinnedMeshRef.current, false)
+        
+        if (intersects.length > 0) {
+            const intersection = intersects[0]
+            const uv = intersection.uv
+            
+            if (!uv) return false;
+            
+            // Determine which side was clicked (front or back)
+            const faceIndex  = intersection.face.materialIndex
+            const isBackSide = faceIndex === 5 // Back material index
+            
+            const clickableAreas = isBackSide
+                ? textPageData.backClickableAreas
+                : textPageData.frontClickableAreas
+            
+            // Convert UV coordinates to canvas coordinates
+            const canvasWidth  = 1200
+            const canvasHeight = 1500
+            const canvasX      = uv.x * canvasWidth
+            const canvasY      = (1 - uv.y) * canvasHeight // Flip Y coordinate
+            
+            // Check if click is within any clickable area
+            for (const area of clickableAreas) {
+                if (canvasX >= area.x && 
+                    canvasX <= area.x + area.width &&
+                    canvasY >= area.y && 
+                    canvasY <= area.y + area.height) {
+                    
+                    if (area.type === 'image') {
+                        // Handle image click - open in new tab/modal
+                        window.open(area.src, '_blank')
+
+                        return true;
+                    }
+                    else if (area.type === 'link') {
+                        // Handle link click - open URL in new tab
+                        window.open(area.url, '_blank')
+
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
 
     // ----- Update the bones in the skinned mesh every frame ----- //
     useFrame((_, dt) => {
@@ -134,7 +200,7 @@ const Page = (
     })
 
     // CONDITIONAL RETURN COMES AFTER ALL HOOKS
-    if (!textPageData) return <group {...props} /> // Return empty group while loading!
+    if (!textPageData) return <group {...props} />; // Return empty group while loading!
 
     return (
         <group {...props} ref = {group}
@@ -148,6 +214,15 @@ const Page = (
         }}
         onClick = {(e) => {
             e.stopPropagation()
+            
+            // --- First check if click was on a clickable area --- //
+            if (handleClickableAreaClick(e)) {
+                setHighlighted(false)
+
+                return; // Don't turn page if we clicked on an image/link
+            }
+            
+            // Otherwise, turn the page...
             setPage(opened ? number : number + 1)
             setHighlighted(false)
         }}

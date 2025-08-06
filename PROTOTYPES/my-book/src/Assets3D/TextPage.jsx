@@ -162,8 +162,9 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
         ctx.fillRect(Math.random() * width, Math.random() * height, 1, 1)
     
     // Extract both text & images from React content
-    let textContent = ''
-    let images      = []
+    let textContent    = ''
+    let images         = []
+    let clickableAreas = [] // Track clickable areas
     
     if (typeof content === 'string')
         textContent = content
@@ -184,7 +185,7 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
     const margin     = 120
     let y            = margin + 150
     
-    // Render text first!
+    // Render text first and track links!
     lines.forEach((line, _) => {
         if (line.trim()) {
             // Check if it's a header (all caps)
@@ -205,23 +206,55 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
                 ctx.fillStyle = '#000000'
             }
             
-            // Word wrap
-            const words     = line.split(' ')
-            let currentLine = ''
-            
-            words.forEach(word => {
-                const testLine = currentLine + word + ' '
-                const metrics  = ctx.measureText(testLine)
+            // Check for links in the line
+            const linkMatch = line.match(/(.+?)\s*\((.+?)\)$/)
+            if (linkMatch && linkMatch[2].startsWith('http')) {
+                // This is a link - render with underline and track area
+                const linkText = linkMatch[1].trim()
+                const linkUrl  = linkMatch[2]
                 
-                if (metrics.width > width - (margin * 2) && currentLine !== '') {
-                    ctx.fillText(currentLine, margin, y)
-                    currentLine = word + ' '
-                    y          += lineHeight
-                }
-                else currentLine = testLine
-            })
-            
-            if (currentLine) ctx.fillText(currentLine, margin, y)
+                ctx.fillStyle = '#0c155c' // Blue color for links
+                ctx.fillText(linkText, margin, y)
+                
+                // Add underline
+                const textWidth = ctx.measureText(linkText).width
+                ctx.strokeStyle = '#0c155c'
+                ctx.lineWidth   = 2
+                ctx.beginPath()
+                ctx.moveTo(margin, y + 50)
+                ctx.lineTo(margin + textWidth, y + 50)
+                ctx.stroke()
+                
+                // Track clickable area
+                clickableAreas.push({
+                    type: 'link',
+                    url:  linkUrl,
+                    x: margin,
+                    y: y,
+                    width:  textWidth,
+                    height: 60
+                })
+                
+                ctx.fillStyle = '#000000' // Reset color
+            } else {
+                // Regular text - word wrap
+                const words     = line.split(' ')
+                let currentLine = ''
+                
+                words.forEach(word => {
+                    const testLine = currentLine + word + ' '
+                    const metrics  = ctx.measureText(testLine)
+                    
+                    if (metrics.width > width - (margin * 2) && currentLine !== '') {
+                        ctx.fillText(currentLine, margin, y)
+                        currentLine = word + ' '
+                        y          += lineHeight
+                    }
+                    else currentLine = testLine
+                })
+                
+                if (currentLine) ctx.fillText(currentLine, margin, y)
+            }
             
             y += lineHeight
         }
@@ -270,6 +303,18 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
             
             // Draw image at current y position
             ctx.drawImage(img, x, y, drawWidth, drawHeight)
+            
+            // Track clickable area for image
+            clickableAreas.push({
+                type: 'image',
+                src:  imageInfo.src,
+                alt:  imageInfo.alt,
+                x: x,
+                y: y,
+                width:  drawWidth,
+                height: drawHeight
+            })
+            
             y += drawHeight + 20 // Add some spacing after image
         }
         catch (error) {
@@ -282,7 +327,7 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
     texture.generateMipmaps = false
     texture.minFilter       = texture.magFilter = 1006 // LinearFilter
     
-    return texture;
+    return { texture, clickableAreas };
 }
 
 // --- Function to extract both text & images --- //
@@ -376,8 +421,8 @@ export const createTextPageMesh = async (frontContent, backContent) => {
     const skeleton = new Skeleton(bones)
     
     // Create textures from content (async)
-    const frontTexture = await createTextureFromContent(frontContent)
-    const backTexture  = await createTextureFromContent(backContent)
+    const frontResult = await createTextureFromContent(frontContent)
+    const backResult  = await createTextureFromContent(backContent)
     
     const whiteColor = new Color('#ffffff')
     
@@ -403,7 +448,7 @@ export const createTextPageMesh = async (frontContent, backContent) => {
             metalness: 0.0
         }), // Bottom
         new MeshStandardMaterial({ 
-            map:   frontTexture,
+            map:   frontResult.texture,
             color: whiteColor,
             roughness: 0.8,
             metalness: 0.0,
@@ -411,7 +456,7 @@ export const createTextPageMesh = async (frontContent, backContent) => {
             emissiveIntensity: 0
         }), // Front
         new MeshStandardMaterial({ 
-            map:   backTexture,
+            map:   backResult.texture,
             color: whiteColor,
             roughness: 0.8,
             metalness: 0.0,
@@ -427,5 +472,10 @@ export const createTextPageMesh = async (frontContent, backContent) => {
     mesh.add(skeleton.bones[0])
     mesh.bind(skeleton)
     
-    return { mesh, skeleton };
+    return { 
+        mesh, 
+        skeleton, 
+        frontClickableAreas: frontResult.clickableAreas,
+        backClickableAreas:  backResult.clickableAreas
+    };
 }
