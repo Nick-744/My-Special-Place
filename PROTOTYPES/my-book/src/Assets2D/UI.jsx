@@ -1,70 +1,124 @@
-import { AppBar, Toolbar, Button, Box } from '@mui/material'
+import {
+	IconButton,
+	Typography,
+	Tooltip,
+	Button,
+	Slider, 
+	Box
+} from '@mui/material'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import TextFieldsIcon from '@mui/icons-material/TextFields'
 import { pages } from '../InfoData/PagesContent'
 import { atom, useAtom } from 'jotai'
 
 // Atom to manage the current page state:
 export const pageAtom = atom(0)
 
-export const UI = () => {
-  const [page, setPage] = useAtom(pageAtom)
+const UI = ({ onShowTextOverlay, currentLeftContent, currentRightContent }) => {
+	const [page, setPage] = useAtom(pageAtom)
 
-  return (
-    <AppBar 
-    position  = 'fixed' 
-    color     = 'transparent' 
-    elevation = {0} 
-    sx        = {{ top: 0, backdropFilter: 'blur(8px)' }}
-    >
-      <Toolbar sx = {{ display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
-        <Box display = 'flex' gap = {1} py = {1}>
+	const handlePrevious  = () => setPage(Math.max(0, page - 1))
+	const handleNext      = () => setPage(Math.min(pages.length, page + 1))
 
-          {[...pages].map((_, index) => (
-            <Button
-            key     = {index}
-            variant = {index === page ? 'contained' : 'outlined'}
-            color   = {index === page ? 'primary'   : 'inherit'}
-            onClick = {() => setPage(index)}
-            sx      = {{
-              textTransform: 'uppercase',
-              borderRadius:  '50px',
-              minWidth:      '100px',
-              fontWeight:    600,
+	const hasTextContent  = (currentLeftContent || currentRightContent)
 
-              backgroundColor: index === page ? 'white' : 'rgba(255,255,255,0.1)',
-              color:           index === page ? 'black' : 'white',
+	return (
+		<>
+			{/* Navigation Controls */}
+			<Box
+			position   = 'fixed'
+			bottom     = {25}
+			right      = {25}
+			display    = 'flex'
+			gap        = {2}
+			alignItems = 'center'
+			bgcolor    = 'rgba(255, 255, 255, 0.9)'
+			borderRadius   = {3}
+			p = {2}
+			boxShadow = '0 8px 32px rgba(0, 0, 0, 0.12)'
+			>
+				<Tooltip title = 'Previous Page' placement = 'top'>
+					<IconButton 
+					onClick  = {handlePrevious}
+					disabled = {page === 0}
+					sx       = {{
+						bgcolor:   page === 0 ? 'transparent' : 'primary.main',
+						color:     page === 0 ? 'text.disabled' : 'white',
+						'&:hover': { bgcolor: page === 0 ? 'transparent' : 'primary.dark' }
+					}}
+					>
+						<ChevronLeftIcon />
+					</IconButton>
+				</Tooltip>
 
-              '&:hover': {
-                backgroundColor: index === page ? 'white' : 'rgba(255,255,255,0.3)'
-              }
-            }}
-            >
-              {index === 0 ? 'Cover' : `Page ${index}`}
-            </Button>
-          ))}
+				<Box
+				display       = 'flex'
+				flexDirection = 'column'
+				alignItems    = 'center'
+				sx            = {{ minWidth: 200 }}
+				>
+					<Typography variant = 'body2' color = 'text.secondary' mb = {1}>
+						Page {page} of {pages.length}
+					</Typography>
 
-          <Button
-            variant = {page === pages.length ? 'contained' : 'outlined'}
-            color   = {page === pages.length ? 'primary'   : 'inherit'}
-            onClick = {() => setPage(pages.length)}
-            sx      = {{
-              textTransform: 'uppercase',
-              borderRadius:  '50px',
-              minWidth:      '120px',
-              fontWeight:    600,
+					<Slider
+					value    = {page}
+					onChange = {(_, newValue) => setPage(newValue)}
+					min      = {0}
+					max      = {pages.length}
+					step     = {1}
+					sx       = {{ width: '100%' }}
+					/>
+				</Box>
 
-              backgroundColor: page === pages.length ? 'white' : 'rgba(255,255,255,0.1)',
-              color:           page === pages.length ? 'black' : 'white',
+				<Tooltip title = 'Next Page' placement = 'top'>
+					<IconButton 
+					onClick  = {handleNext}
+					disabled = {page === pages.length}
+					sx       = {{
+						bgcolor:   page === pages.length ? 'transparent' : 'primary.main',
+						color:     page === pages.length ? 'text.disabled' : 'white',
+						'&:hover': {
+							bgcolor: page === pages.length ? 'transparent' : 'primary.dark',
+						}
+					}}
+					>
+						<ChevronRightIcon />
+					</IconButton>
+				</Tooltip>
+			</Box>
 
-              '&:hover': {
-                backgroundColor: page === pages.length ? 'white' : 'rgba(255,255,255,0.3)'
-              }
-            }}
-          >
-            Back Cover
-          </Button>
-
-        </Box>
-      </Toolbar>
-    </AppBar>
-  )
+			{/* Text Overlay Button */}
+			{hasTextContent && (
+				<Tooltip title = 'View Text Only' placement = 'left'>
+					<Button
+					variant = 'contained'
+					onClick = {onShowTextOverlay}
+					sx      = {{
+						position: 'fixed',
+						top:  20,
+						left: 20,
+						minWidth: 'auto',
+						width:  56,
+						height: 56,
+						borderRadius:    '50%',
+						backgroundColor: 'rgba(25, 118, 210, 0.9)',
+						backdropFilter:  'blur(10px)',
+						boxShadow:       '0 8px 32px rgba(0, 0, 0, 0.12)',
+						'&:hover': {
+							backgroundColor: 'rgba(25, 118, 210, 1)',
+							transform:       'scale(1.05)',
+						},
+						transition: 'all 0.3s ease-in-out'
+					}}
+					>
+						<TextFieldsIcon sx = {{ color: 'white' }} />
+					</Button>
+				</Tooltip>
+			)}
+		</>
+	);
 }
+
+export default UI;

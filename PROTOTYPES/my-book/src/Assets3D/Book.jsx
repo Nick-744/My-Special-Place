@@ -230,9 +230,37 @@ const Page = ({
     );
 }
 
-const Book = ({ setModalImageSrc, setModalOpen, ...props }) => {
+const Book = ({ setModalImageSrc, setModalOpen, onCurrentPageChange, ...props }) => {
     const [page] = useAtom(pageAtom)
     const [delayedPage, setDelayedPage] = useState(page)
+
+    // Notify parent about current page content changes!
+    useEffect(() => {
+        if (onCurrentPageChange) {
+            // Determine which pages are currently visible
+            let leftContent  = null
+            let rightContent = null
+
+            // Book is closed, show cover
+            if (delayedPage === 0)
+                rightContent = pages[0]?.front
+            // Book is fully open, show back cover
+            else if (delayedPage === pages.length)
+                leftContent = pages[pages.length - 1]?.back
+            // Book is open to a specific page
+            else {
+                const currentPageIndex = delayedPage - 1
+                
+                if (currentPageIndex >= 0 && currentPageIndex < pages.length)
+                    leftContent = pages[currentPageIndex]?.back
+                
+                if (currentPageIndex + 1 >= 0 && currentPageIndex + 1 < pages.length)
+                    rightContent = pages[currentPageIndex + 1]?.front
+            }
+
+            onCurrentPageChange(leftContent, rightContent)
+        }
+    }, [delayedPage, onCurrentPageChange])
 
     /* Progressive page-turning animation system that smoothly transitions
     between pages in a book interface. Rather than jumping directly from

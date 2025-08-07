@@ -1,15 +1,29 @@
-import { Loader, CameraControls } from '@react-three/drei'
+import TextOverlay from './Assets2D/TextOverlay.jsx'
 import ModalImage from './Assets2D/ModalImage.jsx'
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useState } from 'react'
+import { Loader } from '@react-three/drei'
 import Book from './Assets3D/Book.jsx'
-import { UI } from './Assets2D/UI'
+import UI from './Assets2D/UI'
 
 const Scene = () => {
 	// State for modal image
 	const [modalImageSrc, setModalImageSrc] = useState(null)
 	const [modalOpen, setModalOpen]         = useState(false)
 
+    // State for text overlay
+	const [textOverlayOpen, setTextOverlayOpen]         = useState(false)
+	const [currentLeftContent, setCurrentLeftContent]   = useState(null)
+	const [currentRightContent, setCurrentRightContent] = useState(null)
+	
+	const handleCurrentPageChange = (leftContent, rightContent) => {
+		setCurrentLeftContent(leftContent)
+        setCurrentRightContent(rightContent)
+    }
+
+    const handleShowTextOverlay  = () => { setTextOverlayOpen(true) }
+    const handleCloseTextOverlay = () => { setTextOverlayOpen(false) }
+	
 	return (
 		<div id = 'canvas-container' className = 'w3-animate-opacity'>
 			{/* React component element that renders a loading
@@ -42,9 +56,10 @@ const Scene = () => {
 						{/* <CameraControls /> */}
 
 						<Book
-						position-y       = {-0.08}
-						setModalImageSrc = {setModalImageSrc}
-						setModalOpen     = {setModalOpen}
+						position-y          = {-0.08}
+						setModalImageSrc    = {setModalImageSrc}
+						setModalOpen        = {setModalOpen}
+						onCurrentPageChange = {handleCurrentPageChange}
 						/>
 
 						{ /* Ground Plane */ }
@@ -60,12 +75,23 @@ const Scene = () => {
 				</Canvas>
 
 				{ /* --- 2D Elements / UI --- */ }
-				<UI />
+				<UI 
+				onShowTextOverlay   = {handleShowTextOverlay}
+				currentLeftContent  = {currentLeftContent}
+				currentRightContent = {currentRightContent}
+				/>
 
 				<ModalImage
 				imageSrc = {modalImageSrc}
 				open     = {modalOpen}
 				onClose  = {() => setModalOpen(false)}
+				/>
+
+				<TextOverlay
+				leftContent  = {currentLeftContent}
+				rightContent = {currentRightContent}
+				open         = {textOverlayOpen}
+				onClose      = {handleCloseTextOverlay}
 				/>
 
 			</Suspense>
