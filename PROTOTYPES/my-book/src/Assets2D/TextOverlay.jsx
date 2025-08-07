@@ -104,6 +104,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
         }
     }
 
+    // Show a message when there's nothing to display!
     const nothingToDisplay = !leftText && !rightText
 
     return (
