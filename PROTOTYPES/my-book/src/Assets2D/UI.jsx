@@ -28,8 +28,8 @@ const UI = ({ onShowTextOverlay, currentLeftContent, currentRightContent }) => {
 			{/* Navigation Controls */}
 			<Box
 			position   = 'fixed'
-			bottom     = {25}
-			right      = {25}
+			bottom     = {20}
+			right      = {20}
 			display    = 'flex'
 			gap        = {2}
 			alignItems = 'center'
@@ -97,8 +97,8 @@ const UI = ({ onShowTextOverlay, currentLeftContent, currentRightContent }) => {
 					onClick = {onShowTextOverlay}
 					sx      = {{
 						position: 'fixed',
-						top:  20,
-						left: 20,
+						top:  30,
+						left: 30,
 						minWidth: 'auto',
 						width:  56,
 						height: 56,

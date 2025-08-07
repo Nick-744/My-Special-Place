@@ -40,7 +40,7 @@ const Scene = () => {
 						<ambientLight intensity = {1} />
 						<directionalLight
 						position  = {[2, 1.5, 3]}
-						intensity = {2.5}
+						intensity = {2}
 						color     = '#ffffff'
 						castShadow
 						shadow-mapSize-width  = {2048}
@@ -56,7 +56,7 @@ const Scene = () => {
 						{/* <CameraControls /> */}
 
 						<Book
-						position-y          = {-0.08}
+						rotation-x          = {-Math.PI / 30}
 						setModalImageSrc    = {setModalImageSrc}
 						setModalOpen        = {setModalOpen}
 						onCurrentPageChange = {handleCurrentPageChange}
