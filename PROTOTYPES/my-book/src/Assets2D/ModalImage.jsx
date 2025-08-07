@@ -97,18 +97,18 @@ const ModalImage = ({ imageSrc, open, onClose }) => {
                             }}
                             >
                                 <img
-                                    src   = {imageSrc}
-                                    alt   = 'Modal'
-                                    style = {{
-                                        maxWidth:     '100%',
-                                        maxHeight:    '100%',
-                                        width:        'auto',
-                                        height:       'auto',
-                                        objectFit:    'contain',
-                                        borderRadius: 4,
-                                        background:   '#e0e0e0',
-                                        display:      'block'
-                                    }}
+                                src   = {imageSrc}
+                                alt   = 'Modal'
+                                style = {{
+                                    maxWidth:     '100%',
+                                    maxHeight:    '100%',
+                                    width:        'auto',
+                                    height:       'auto',
+                                    objectFit:    'contain',
+                                    borderRadius: 4,
+                                    background:   '#e0e0e0',
+                                    display:      'block'
+                                }}
                                 />
                             </Box>
                         </Card>
