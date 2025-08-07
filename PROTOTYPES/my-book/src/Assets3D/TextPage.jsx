@@ -89,8 +89,10 @@ const extractTextFromReactElement = (element) => {
     else if (element.type === 'ul' || element.type === 'ol') {
         text += '\n'
         if (element.props.children) {
-            const items = Array.isArray(element.props.children) ? element.props.children : [element.props.children]
-            items.forEach((item, index) => {
+            const items = Array.isArray(element.props.children)
+                            ? element.props.children
+                            : [element.props.children]
+            items.forEach((item, _) => {
                 if (item && item.type === 'li')
                     text += `• ${extractTextFromChildren(item.props.children)}\n`
             })
@@ -134,10 +136,14 @@ const extractTableText = (tableElement) => {
     let tableText = ''
     
     if (tableElement.props.children) {
-        const rows = Array.isArray(tableElement.props.children) ? tableElement.props.children : [tableElement.props.children]
+        const rows = Array.isArray(tableElement.props.children)
+                        ? tableElement.props.children
+                        : [tableElement.props.children]
         rows.forEach(row => {
             if (row && row.type === 'tr' && row.props.children) {
-                const cells     = Array.isArray(row.props.children) ? row.props.children : [row.props.children]
+                const cells     = Array.isArray(row.props.children)
+                                    ? row.props.children
+                                    : [row.props.children]
                 const cellTexts = cells.map(cell => extractTextFromChildren(cell.props.children))
                 tableText      += cellTexts.join(' | ') + '\n'
             }
