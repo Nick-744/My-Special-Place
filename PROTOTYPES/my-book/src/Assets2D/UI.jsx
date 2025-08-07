@@ -34,7 +34,7 @@ const UI = ({ onShowTextOverlay, currentLeftContent, currentRightContent }) => {
 			gap        = {2}
 			alignItems = 'center'
 			bgcolor    = 'rgba(255, 255, 255, 0.9)'
-			borderRadius   = {3}
+			borderRadius   = {4}
 			p = {2}
 			boxShadow = '0 8px 32px rgba(0, 0, 0, 0.12)'
 			>

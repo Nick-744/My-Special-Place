@@ -26,7 +26,9 @@ const ModalImage = ({ imageSrc, open, onClose }) => {
         >
             <Box
             sx = {{
-                backgroundColor: showContent ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0)',
+                backgroundColor: showContent
+                                    ? 'rgba(0, 0, 0, 0.6)'
+                                    : 'rgba(0, 0, 0, 0)',
                 backdropFilter:  showContent ? 'blur(4px)' : 'blur(0px)',
                 transition:      'backdrop-filter 800ms, background-color 800ms',
                 display:         'flex',
@@ -62,7 +64,7 @@ const ModalImage = ({ imageSrc, open, onClose }) => {
                             width:    { xs: '95%', sm: '80%', md: '60%' },
                             maxWidth: { xs: '100%', sm: 500, md: 800 },
                             height:   '90%',
-                            borderRadius:  8,
+                            borderRadius:  6,
                             bgcolor:       '#f5f5f5',
                             overflow:      'hidden',
                             display:       'flex',
