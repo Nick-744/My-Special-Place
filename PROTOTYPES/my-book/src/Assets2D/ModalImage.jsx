@@ -59,9 +59,9 @@ const ModalImage = ({ imageSrc, open, onClose }) => {
                     >
                         <Card
                         sx = {{
-                            width:     { xs: '95%', sm: '80%', md: '60%' },
-                            maxWidth:  { xs: '100%', sm: 500, md: 800 },
-                            maxHeight: { xs: '100%', sm: 300, md: 600 },
+                            width:    { xs: '95%', sm: '80%', md: '60%' },
+                            maxWidth: { xs: '100%', sm: 500, md: 800 },
+                            height:   '90%',
                             borderRadius:  8,
                             bgcolor:       '#f5f5f5',
                             overflow:      'hidden',

@@ -1,8 +1,9 @@
-import { Environment, Loader } from '@react-three/drei'
+import { Loader, CameraControls } from '@react-three/drei'
 import ModalImage from './Assets2D/ModalImage.jsx'
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useState } from 'react'
 import Book from './Assets3D/Book.jsx'
+import { UI } from './Assets2D/UI'
 
 const Scene = () => {
 	// State for modal image
@@ -18,14 +19,14 @@ const Scene = () => {
 			{/* Makes the loading bar working, not going 0 -> 1! */}
 			<Suspense fallback = {null}>
 				
+				{ /* --- 3D Elements --- */ }
 				<Canvas camera = {{ position: [0, 0.2, 1.8], fov: 45 }} shadows>
 					<group position-y = {0}>
-						{/* Environment lighting and shadows */}
-						<Environment preset = 'dawn' intensity = {0.6} />
-						<ambientLight intensity = {0.4} />
+						{/* Lighting and shadows */}
+						<ambientLight intensity = {1} />
 						<directionalLight
-						position  = {[3, 2.5, 5]}
-						intensity = {0.3}
+						position  = {[2, 1.5, 3]}
+						intensity = {2.5}
 						color     = '#ffffff'
 						castShadow
 						shadow-mapSize-width  = {2048}
@@ -33,7 +34,7 @@ const Scene = () => {
 						/>
 						<directionalLight
 						position   = {[-2, 4, 3]}
-						intensity  = {0.2}
+						intensity  = {0.5}
 						color      = '#f0f8ff'
 						castShadow = {false}
 						/>
@@ -57,6 +58,9 @@ const Scene = () => {
 						</mesh>
 					</group>
 				</Canvas>
+
+				{ /* --- 2D Elements / UI --- */ }
+				<UI />
 
 				<ModalImage
 				imageSrc = {modalImageSrc}

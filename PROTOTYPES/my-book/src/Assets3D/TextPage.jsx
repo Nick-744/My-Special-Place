@@ -1,4 +1,3 @@
-import React from 'react'
 import { 
     Float32BufferAttribute,
     Uint16BufferAttribute,
@@ -12,12 +11,21 @@ import {
     Bone
 } from 'three'
 
+import { TextureLoader, DefaultLoadingManager } from 'three'
+import React from 'react'
+
 // ==================== Pages Configuration ==================== //
 const PAGE_WIDTH     = 0.853
 const PAGE_HEIGHT    = 1.14
 const PAGE_THICKNESS = 0.003
 const PAGE_SEGMENTS  = 50
 const SEGMENT_WIDTH  = PAGE_WIDTH / PAGE_SEGMENTS
+
+// --- Add margin configuration --- //
+const MARGIN_TOP    = 0
+const MARGIN_BOTTOM = 60
+const MARGIN_LEFT   = 130
+const MARGIN_RIGHT  = 130
 
 // Create geometry for the text page
 const createTextPageGeometry = () => {
@@ -182,8 +190,10 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
     // Split text into lines and render
     const lines      = textContent.split('\n')
     const lineHeight = 48
-    const margin     = 120
-    let y            = margin + 150
+    let y            = MARGIN_TOP + 150 // Use top margin instead of fixed margin
+    
+    // Calculate available width for text wrapping
+    const availableWidth = width - MARGIN_LEFT - MARGIN_RIGHT
     
     // Render text first and track links!
     lines.forEach((line, _) => {
@@ -214,30 +224,31 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
                 const linkUrl  = linkMatch[2]
                 
                 ctx.fillStyle = '#0c155c' // Blue color for links
-                ctx.fillText(linkText, margin, y)
+                ctx.fillText(linkText, MARGIN_LEFT, y) // Use left margin
                 
                 // Add underline
                 const textWidth = ctx.measureText(linkText).width
                 ctx.strokeStyle = '#0c155c'
                 ctx.lineWidth   = 2
                 ctx.beginPath()
-                ctx.moveTo(margin, y + 50)
-                ctx.lineTo(margin + textWidth, y + 50)
+                ctx.moveTo(MARGIN_LEFT, y + 50)
+                ctx.lineTo(MARGIN_LEFT + textWidth, y + 50)
                 ctx.stroke()
                 
                 // Track clickable area
                 clickableAreas.push({
                     type: 'link',
                     url:  linkUrl,
-                    x: margin,
+                    x: MARGIN_LEFT,
                     y: y,
                     width:  textWidth,
                     height: 60
                 })
                 
                 ctx.fillStyle = '#000000' // Reset color
-            } else {
-                // Regular text - word wrap
+            }
+            else {
+                // Regular text - word wrap with proper margins
                 const words     = line.split(' ')
                 let currentLine = ''
                 
@@ -245,24 +256,24 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
                     const testLine = currentLine + word + ' '
                     const metrics  = ctx.measureText(testLine)
                     
-                    if (metrics.width > width - (margin * 2) && currentLine !== '') {
-                        ctx.fillText(currentLine, margin, y)
+                    if (metrics.width > availableWidth && currentLine !== '') {
+                        ctx.fillText(currentLine, MARGIN_LEFT, y)
                         currentLine = word + ' '
                         y          += lineHeight
                     }
                     else currentLine = testLine
                 })
                 
-                if (currentLine) ctx.fillText(currentLine, margin, y)
+                if (currentLine) ctx.fillText(currentLine, MARGIN_LEFT, y)
             }
             
             y += lineHeight
         }
         else y += lineHeight / 2 // Smaller gap for empty lines
         
-        // Prevent overflow
-        if (y > height - margin) {
-            ctx.fillText('...', margin, y)
+        // Prevent overflow using bottom margin
+        if (y > height - MARGIN_BOTTOM) {
+            ctx.fillText('...', MARGIN_LEFT, y)
 
             return;
         }
@@ -271,35 +282,46 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
     // Load and draw images
     for (const imageInfo of images) {
         try {
-            const img       = new Image()
-            img.crossOrigin = 'anonymous'
-            
-            // Try loading the image with a timeout
-            await Promise.race([
-                new Promise((resolve, reject) => {
-                    img.onload  = resolve
-                    img.onerror = reject
-                    img.src     = imageInfo.src
-                }),
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Image load timeout')), 5000)
+            // Use TextureLoader so Drei's Loader tracks progress!
+            const loader  = new TextureLoader(DefaultLoadingManager)
+            const texture = await new Promise((resolve, reject) => {
+                loader.load(
+                    imageInfo.src,
+                    resolve,
+                    undefined,
+                    reject
                 )
-            ])
+            })
+
+            const img = texture.image
             
-            // Calculate image position and size
-            const maxWidth    = width - (margin * 2)
-            const maxHeight   = 600
-            const aspectRatio = img.width / img.height
-            
-            let drawWidth  = Math.min(maxWidth, img.width)
-            let drawHeight = drawWidth / aspectRatio
-            
-            if (drawHeight > maxHeight) {
-                drawHeight = maxHeight
-                drawWidth  = drawHeight * aspectRatio
+            // --- Read style from imageInfo!!! --- //
+            const style     = imageInfo.style || {}
+            const maxWidth  = style.maxWidth  ?? availableWidth // Use available width
+            const maxHeight = style.maxHeight ?? 900
+            let drawWidth, drawHeight
+
+            if (style.width && typeof style.width === 'number') {
+                drawWidth = style.width
+                drawHeight = drawWidth / (img.width / img.height)
+            }
+            else if (style.height && typeof style.height === 'number') {
+                drawHeight = style.height
+                drawWidth  = drawHeight * (img.width / img.height)
+            }
+            else {
+                // Default: fit to maxWidth/maxHeight, keep aspect
+                const aspectRatio = img.width / img.height
+                drawWidth         = Math.min(maxWidth, img.width)
+                drawHeight        = drawWidth / aspectRatio
+                if (drawHeight > maxHeight) {
+                    drawHeight = maxHeight
+                    drawWidth  = drawHeight * aspectRatio
+                }
             }
             
-            const x = margin + (maxWidth - drawWidth) / 2
+            // Center image within available width
+            const x = MARGIN_LEFT + (availableWidth - drawWidth) / 2
             
             // Draw image at current y position
             ctx.drawImage(img, x, y, drawWidth, drawHeight)
@@ -350,8 +372,9 @@ const extractContentWithImages = (element) => {
         // Handle images
         if (el.type === 'img') {
             result.images.push({
-                src: el.props.src,
-                alt: el.props.alt || ''
+                src:   el.props.src,
+                alt:   el.props.alt || '',
+                style: el.props.style || {}
             })
 
             return;

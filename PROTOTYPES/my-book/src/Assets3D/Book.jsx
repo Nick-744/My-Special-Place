@@ -146,8 +146,8 @@ const Page = ({
         turningTime     = Math.sin(turningTime * Math.PI)
 
         let targetRotation = opened ? -Math.PI / 2 : Math.PI / 2
-        if (!bookClosed)
-            targetRotation += degToRad(number * 0.8)
+        
+        if (!bookClosed) targetRotation += degToRad(number * 0.9)
 
         const bones = skinnedMeshRef.current.skeleton.bones
         for (let i = 0; i < bones.length; i++) {
@@ -156,7 +156,7 @@ const Page = ({
             const insideCurveIntensity  = i < 12 ?
                                             Math.sin(i * 0.3) : 0
             const outsideCurveIntensity = i >= 12 ?
-                                            Math.sin(i * 0.12 - 0.2) * 0.6 : 0
+                                            Math.sin(i * 0.12 - 0.2) * 0.5 : 0
             const turningCurveIntensity =
                 Math.sin(i * Math.PI + (1 / bones.length)) * turningTime
             
