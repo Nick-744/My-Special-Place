@@ -54,7 +54,6 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
             text += '\n'
         }
         else if (element.type === 'blockquote') text += '\n"' + extractChildren(children) + '"\n'
-        else if (element.type === 'code')       text += '\nCODE: ' + extractChildren(children) + '\n'
         else if (element.type === 'strong')     text += extractChildren(children).toUpperCase()
         else if (element.type === 'img') {
             // Extract alt text from images
@@ -240,7 +239,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                         onClick = {
                                             () => speaking
                                                     ? handleStopSpeech()
-                                                    : handleSpeak(leftText)
+                                                    : handleSpeak(rightText)
                                         }
                                         sx      = {{
                                             bgcolor:   speaking

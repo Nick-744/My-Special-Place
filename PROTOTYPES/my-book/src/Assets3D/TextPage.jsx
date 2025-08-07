@@ -101,10 +101,6 @@ const extractTextFromReactElement = (element) => {
     }
     else if (element.type === 'blockquote')
         text += '\n"' + extractTextFromChildren(element.props.children) + '"\n'
-    else if (element.type === 'code')
-        text += '\nCODE: ' + extractTextFromChildren(element.props.children) + '\n'
-    else if (element.type === 'pre')
-        text += '\nCODE BLOCK:\n' + extractTextFromChildren(element.props.children) + '\n'
     else if (element.type === 'strong')
         text += extractTextFromChildren(element.props.children).toUpperCase()
     else if (element.type === 'a')
@@ -206,19 +202,15 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
         if (line.trim()) {
             // Check if it's a header (all caps)
             if (line === line.toUpperCase() && line.length > 3) {
-                ctx.font      = 'bold 55px "Times New Roman", serif'
+                ctx.font      = 'bold 55px "Arial", serif'
                 ctx.fillStyle = '#000000'
             }
             else if (line.startsWith('•')) {
-                ctx.font      = 'bold 45px "Times New Roman", serif'
-                ctx.fillStyle = '#000000'
-            }
-            else if (line.startsWith('CODE')) {
-                ctx.font      = 'bold 45px "Courier New", monospace'
+                ctx.font      = 'bold 45px "Arial", serif'
                 ctx.fillStyle = '#000000'
             }
             else {
-                ctx.font      = 'bold 45px "Times New Roman", serif'
+                ctx.font      = 'bold 45px "Arial", serif'
                 ctx.fillStyle = '#000000'
             }
             
@@ -235,7 +227,7 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
                 // Add underline
                 const textWidth = ctx.measureText(linkText).width
                 ctx.strokeStyle = '#0c155c'
-                ctx.lineWidth   = 2
+                ctx.lineWidth   = 5
                 ctx.beginPath()
                 ctx.moveTo(MARGIN_LEFT, y + 50)
                 ctx.lineTo(MARGIN_LEFT + textWidth, y + 50)

@@ -53,20 +53,15 @@ const Page = ({
     const checkClickableArea = (event) => {
         if (!textPageData || !skinnedMeshRef.current) return null;
 
-        // Use existing raycaster from event or fallback to manual raycaster setup!
-        let intersects
-        if (event.raycaster)
-            intersects = event.raycaster.intersectObject(skinnedMeshRef.current, false)
-        else {
-            // Fallback: create our own raycaster
-            const raycaster = new Raycaster()
-            const mouse     = new Vector2()
-            
-            // Use event.point for normalized coordinates
-            mouse.copy(event.point)
-            raycaster.setFromCamera(mouse, event.camera)
-            intersects = raycaster.intersectObject(skinnedMeshRef.current, false)
-        }
+        // Use manual raycaster setup!
+        let   intersects
+        const raycaster = new Raycaster()
+        const mouse     = new Vector2()
+        
+        // Use event.point for normalized coordinates
+        mouse.copy(event.point)
+        raycaster.setFromCamera(mouse, event.camera)
+        intersects = raycaster.intersectObject(skinnedMeshRef.current, false)
         
         if (intersects.length > 0) {
             const intersection = intersects[0]
@@ -86,9 +81,12 @@ const Page = ({
             // YOU HAVE TO ADJUST THESE VALUES BASED ON YOUR CANVAS SIZE!
             const canvasWidth  = 800  // ~ Half of the page width...
             const canvasHeight = 1370 // Account for book's y position!
-            const canvasX      = uv.x * canvasWidth
-            const canvasY      = (1 - uv.y) * canvasHeight // Flip Y coordinate
-            
+
+            const canvasX = isBackSide ? (1 - uv.x) * canvasWidth : uv.x * canvasWidth
+            const canvasY = (1 - uv.y) * canvasHeight // Flip Y coordinate
+
+            if (uv.y < 0.22 || uv.y > 0.78) return null; // Ignore Top/Bottom areas!
+
             // Check if point is within any clickable area
             for (const area of clickableAreas) {
                 if (canvasX >= area.x && 
