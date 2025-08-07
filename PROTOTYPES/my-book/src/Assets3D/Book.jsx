@@ -84,8 +84,8 @@ const Page = ({
             
             // Convert UV coordinates to canvas coordinates
             // YOU HAVE TO ADJUST THESE VALUES BASED ON YOUR CANVAS SIZE!
-            const canvasWidth  = 800 // ~ Half of the page width...
-            const canvasHeight = 1500
+            const canvasWidth  = 800  // ~ Half of the page width...
+            const canvasHeight = 1370 // Account for book's y position!
             const canvasX      = uv.x * canvasWidth
             const canvasY      = (1 - uv.y) * canvasHeight // Flip Y coordinate
             
