@@ -49,52 +49,62 @@ const Page = ({
         loadPageData()
     }, [front, back, number])
 
-    // Function to check if point is within clickable areas
+    /* This function determines if a user's pointer event
+    intersects with any defined "clickable areas" on the 3D
+    book page mesh. It is used to enable interactive regions
+    (like images, links, etc.) on the book's pages. */
     const checkClickableArea = (event) => {
         if (!textPageData || !skinnedMeshRef.current) return null;
 
         // Use manual raycaster setup!
-        let   intersects
         const raycaster = new Raycaster()
         const mouse     = new Vector2()
+
+        // [IMPORTANT] - Convert to normalized device coordinates...
+        mouse.x = +(event.clientX / window.innerWidth ) * 2 - 1
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
         
-        // Use event.point for normalized coordinates
-        mouse.copy(event.point)
         raycaster.setFromCamera(mouse, event.camera)
-        intersects = raycaster.intersectObject(skinnedMeshRef.current, false)
+        const intersects = raycaster.intersectObject(skinnedMeshRef.current, false)
+        if (!intersects.length) return null;
         
-        if (intersects.length > 0) {
-            const intersection = intersects[0]
-            const uv           = intersection.uv
-            
-            if (!uv) return null;
-            
-            // Determine which side was clicked (front or back)
-            const faceIndex  = intersection.face.materialIndex
-            const isBackSide = faceIndex === 5 // Back material index
-            
-            const clickableAreas = isBackSide
-                ? textPageData.backClickableAreas
-                : textPageData.frontClickableAreas
-            
-            // Convert UV coordinates to canvas coordinates
-            // YOU HAVE TO ADJUST THESE VALUES BASED ON YOUR CANVAS SIZE!
-            const canvasWidth  = 800  // ~ Half of the page width...
-            const canvasHeight = 1370 // Account for book's y position!
+        const intersection = intersects[0]
+        const uv           = intersection.uv
+        if (!uv) return null;
+        
+        // Determine which side was clicked (front or back)
+        const faceIndex  = intersection.face.materialIndex
+        const isBackSide = faceIndex === 5 // Back material index
+        
+        const clickableAreas = isBackSide
+            ? textPageData.backClickableAreas
+            : textPageData.frontClickableAreas
+        
+        // Get texture dimensions from the correct side
+        const mat = skinnedMeshRef.current.material[
+            intersection.face.materialIndex
+        ]
+        const tex = mat?.map
+        if (!tex?.image) return null;
 
-            const canvasX = isBackSide ? (1 - uv.x) * canvasWidth : uv.x * canvasWidth
-            const canvasY = (1 - uv.y) * canvasHeight // Flip Y coordinate
+        const canvasWidth  = tex.image.width
+        const canvasHeight = tex.image.height
 
-            if (uv.y < 0.22 || uv.y > 0.78) return null; // Ignore Top/Bottom areas!
+        // Convert UV to pixel coordinates
+        const canvasX = isBackSide
+                            ? (1 - uv.x) * canvasWidth
+                            : uv.x * canvasWidth
+        const canvasY = (1 - uv.y) * canvasHeight
+        // Flip Y to match image origin!!!
 
-            // Check if point is within any clickable area
-            for (const area of clickableAreas) {
-                if (canvasX >= area.x && 
-                    canvasX <= area.x + area.width &&
-                    canvasY >= area.y && 
-                    canvasY <= area.y + area.height) return area;
-            }
-        }
+        // Check if point is within any clickable area
+        for (const area of clickableAreas)
+            if (
+                canvasX >= area.x &&
+                canvasX <= area.x + area.width &&
+                canvasY >= area.y &&
+                canvasY <= area.y + area.height
+            ) return area;
         
         return null;
     }
