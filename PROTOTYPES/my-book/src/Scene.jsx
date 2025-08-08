@@ -34,7 +34,7 @@ const Scene = () => {
 			<Suspense fallback = {null}>
 				
 				{ /* --- 3D Elements --- */ }
-				<Canvas camera = {{ position: [0, 1.8, 3], fov: 45 }} shadows>
+				<Canvas camera = {{ position: [0, 1.8, 2], fov: 45 }} shadows>
 					<group position-y = {0}>
 						{/* Lighting and shadows */}
 						<ambientLight intensity = {1} />
@@ -57,12 +57,11 @@ const Scene = () => {
 
 						<Float
 						rotation-x        = {-Math.PI / 4}
-						floatIntensity    = {1}
+						floatIntensity    = {0.8}
 						speed             = {2}
-						rotationIntensity = {1.5}
+						rotationIntensity = {0.8}
 						>
 							<Book
-							// rotation-x          = {-Math.PI / 30}
 							setModalImageSrc    = {setModalImageSrc}
 							setModalOpen        = {setModalOpen}
 							onCurrentPageChange = {handleCurrentPageChange}
