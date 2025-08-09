@@ -34,31 +34,34 @@ const UI = ({
 
 	return (
 		<>
-			{/* Navigation Controls */}
+			{/* Pages Navigation Controls */}
 			<Box
-			position   = 'fixed'
-			bottom     = {20}
-			right      = {20}
-			display    = 'flex'
-			gap        = {2}
-			alignItems = 'center'
-			bgcolor    = 'rgba(255, 255, 255, 0.9)'
-			borderRadius   = {4}
+			position     = 'fixed'
+			bottom       = {20}
+			right        = {mobileView ? '50%' : 20}
+			display      = 'flex'
+			gap          = {2}
+			alignItems   = 'center'
+			bgcolor      = 'rgba(255, 255, 255, 0.9)'
+			borderRadius = {4}
 			p = {2}
-			boxShadow = '0 8px 32px rgba(0, 0, 0, 0.12)'
+			boxShadow    = '0 8px 32px rgba(0, 0, 0, 0.12)'
+			sx           = {{ transform: mobileView ? 'translate(50%)' : 'none' }}
 			>
 				<Tooltip title = 'Previous Page' placement = 'top'>
-					<IconButton 
-					onClick  = {handlePrevious}
-					disabled = {page === 0}
-					sx       = {{
-						bgcolor:   page === 0 ? 'transparent' : 'primary.main',
-						color:     page === 0 ? 'text.disabled' : 'white',
-						'&:hover': { bgcolor: page === 0 ? 'transparent' : 'primary.dark' }
-					}}
-					>
-						<ChevronLeftIcon />
-					</IconButton>
+					<span>
+						<IconButton 
+						onClick  = {handlePrevious}
+						disabled = {page === 0}
+						sx       = {{
+							bgcolor:   page === 0 ? 'transparent' : 'primary.main',
+							color:     page === 0 ? 'text.disabled' : 'white',
+							'&:hover': { bgcolor: page === 0 ? 'transparent' : 'primary.dark' }
+						}}
+						>
+							<ChevronLeftIcon />
+						</IconButton>
+					</span>
 				</Tooltip>
 
 				<Box
