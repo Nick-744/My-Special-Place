@@ -15,7 +15,7 @@ import { atom, useAtom } from 'jotai'
 // Atom to manage the current page state:
 export const pageAtom = atom(0)
 
-const UI = ({ onShowTextOverlay, currentLeftContent, currentRightContent }) => {
+const UI = ({ mobileView, onShowTextOverlay, currentLeftContent, currentRightContent }) => {
 	const [page, setPage] = useAtom(pageAtom)
 
 	const handlePrevious  = () => setPage(Math.max(0, page - 1))
@@ -56,7 +56,7 @@ const UI = ({ onShowTextOverlay, currentLeftContent, currentRightContent }) => {
 				display       = 'flex'
 				flexDirection = 'column'
 				alignItems    = 'center'
-				sx            = {{ minWidth: 200 }}
+				sx            = {{ minWidth: 180 }}
 				>
 					<Typography variant = 'body2' color = 'text.secondary' mb = {1}>
 						Page {page} of {pages.length}
@@ -97,11 +97,12 @@ const UI = ({ onShowTextOverlay, currentLeftContent, currentRightContent }) => {
 					onClick = {onShowTextOverlay}
 					sx      = {{
 						position: 'fixed',
-						top:  30,
-						left: 30,
+						top:      mobileView ? 30 : 'auto',
+						bottom:   mobileView ? 'auto' : 30,
+						left:     30,
 						minWidth: 'auto',
-						width:  56,
-						height: 56,
+						width:    60,
+						height:   60,
 						borderRadius:    '50%',
 						backgroundColor: 'rgba(25, 118, 210, 0.9)',
 						backdropFilter:  'blur(10px)',
@@ -117,6 +118,8 @@ const UI = ({ onShowTextOverlay, currentLeftContent, currentRightContent }) => {
 					</Button>
 				</Tooltip>
 			)}
+
+			{}
 		</>
 	);
 }

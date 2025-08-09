@@ -1,4 +1,5 @@
 import { Loader, CameraControls, Float } from '@react-three/drei'
+import { useTheme, useMediaQuery } from '@mui/material'
 import TextOverlay from './Assets2D/TextOverlay.jsx'
 import ModalImage from './Assets2D/ModalImage.jsx'
 import { Canvas } from '@react-three/fiber'
@@ -7,6 +8,10 @@ import Book from './Assets3D/Book.jsx'
 import UI from './Assets2D/UI'
 
 const Scene = () => {
+	// Mobile view detection
+	const theme             = useTheme()
+	const mobileViewContext = useMediaQuery(theme.breakpoints.down('md'))
+
 	// State for modal image
 	const [modalImageSrc, setModalImageSrc] = useState(null)
 	const [modalOpen, setModalOpen]         = useState(false)
@@ -34,7 +39,13 @@ const Scene = () => {
 			<Suspense fallback = {null}>
 				
 				{ /* --- 3D Elements --- */ }
-				<Canvas camera = {{ position: [0, 1.8, 2], fov: 45 }} shadows>
+				<Canvas
+				camera = {{
+					position: [0, 1.8, 2],
+					fov:      mobileViewContext ? 85 : 45
+				}}
+				shadows
+				>
 					<group position-y = {0}>
 						{/* Lighting and shadows */}
 						<ambientLight intensity = {1} />
@@ -53,7 +64,7 @@ const Scene = () => {
 						castShadow = {false}
 						/>
 
-						<CameraControls />
+						{!mobileViewContext && <CameraControls />}
 
 						<Float
 						rotation-x        = {-Math.PI / 4}
@@ -81,7 +92,9 @@ const Scene = () => {
 				</Canvas>
 
 				{ /* --- 2D Elements / UI --- */ }
-				<UI 
+				<UI
+				mobileView = {mobileViewContext}
+
 				onShowTextOverlay   = {handleShowTextOverlay}
 				currentLeftContent  = {currentLeftContent}
 				currentRightContent = {currentRightContent}
