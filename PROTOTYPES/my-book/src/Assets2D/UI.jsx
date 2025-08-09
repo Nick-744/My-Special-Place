@@ -9,13 +9,22 @@ import {
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import TextFieldsIcon from '@mui/icons-material/TextFields'
+import CameraAltIcon from '@mui/icons-material/CameraAlt'
 import { pages } from '../InfoData/PagesContent'
 import { atom, useAtom } from 'jotai'
 
 // Atom to manage the current page state:
 export const pageAtom = atom(0)
 
-const UI = ({ mobileView, onShowTextOverlay, currentLeftContent, currentRightContent }) => {
+const UI = ({
+	mobileView,
+	
+	onShowTextOverlay,
+	currentLeftContent,
+	currentRightContent,
+	
+	handleCameraReset
+}) => {
 	const [page, setPage] = useAtom(pageAtom)
 
 	const handlePrevious  = () => setPage(Math.max(0, page - 1))
@@ -119,7 +128,34 @@ const UI = ({ mobileView, onShowTextOverlay, currentLeftContent, currentRightCon
 				</Tooltip>
 			)}
 
-			{}
+			{/* Camera Reset Button */}
+            {!mobileView && (
+                <Tooltip title = 'Reset Camera' placement = 'left'>
+                    <Button
+					variant = 'contained'
+					onClick = {handleCameraReset}
+					sx      = {{
+						position: 'fixed',
+						top:      30,
+						right:    30,
+						minWidth: 'auto',
+						width:    60,
+						height:   60,
+						borderRadius:    '50%',
+						backgroundColor: 'rgba(25, 118, 210, 0.9)',
+						backdropFilter:  'blur(10px)',
+						boxShadow:       '0 8px 32px rgba(0, 0, 0, 0.12)',
+						'&:hover': {
+							backgroundColor: 'rgba(25, 118, 210, 1)',
+							transform:       'scale(1.05)',
+						},
+						transition: 'all 0.3s ease-in-out'
+					}}
+                    >
+                        <CameraAltIcon sx = {{ color: 'white' }} />
+                    </Button>
+                </Tooltip>
+            )}
 		</>
 	);
 }

@@ -2,21 +2,21 @@ import { Loader, CameraControls, Float } from '@react-three/drei'
 import { useTheme, useMediaQuery } from '@mui/material'
 import TextOverlay from './Assets2D/TextOverlay.jsx'
 import ModalImage from './Assets2D/ModalImage.jsx'
+import { Suspense, useState, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Suspense, useState } from 'react'
 import Book from './Assets3D/Book.jsx'
 import UI from './Assets2D/UI'
 
 const Scene = () => {
-	// Mobile view detection
+	// ----- Mobile View Detection ----- //
 	const theme             = useTheme()
 	const mobileViewContext = useMediaQuery(theme.breakpoints.down('md'))
 
-	// State for modal image
+	// ----- Modal Image Handling ----- //
 	const [modalImageSrc, setModalImageSrc] = useState(null)
 	const [modalOpen, setModalOpen]         = useState(false)
 
-    // State for text overlay
+    // ----- Text Overlay Handling ----- //
 	const [textOverlayOpen, setTextOverlayOpen]         = useState(false)
 	const [currentLeftContent, setCurrentLeftContent]   = useState(null)
 	const [currentRightContent, setCurrentRightContent] = useState(null)
@@ -28,6 +28,12 @@ const Scene = () => {
 
     const handleShowTextOverlay  = () => { setTextOverlayOpen(true) }
     const handleCloseTextOverlay = () => { setTextOverlayOpen(false) }
+
+	// ----- Camera Reset Function ----- //
+	const cameraControlsRef = useRef()
+    const handleCameraReset = () => {
+        if (cameraControlsRef.current) cameraControlsRef.current.reset(true)
+    }
 	
 	return (
 		<div id = 'canvas-container' className = 'w3-animate-opacity'>
@@ -64,7 +70,9 @@ const Scene = () => {
 						castShadow = {false}
 						/>
 
-						{!mobileViewContext && <CameraControls />}
+						{!mobileViewContext &&
+							<CameraControls ref = {cameraControlsRef} />
+						}
 
 						<Float
 						rotation-x        = {-Math.PI / 4}
@@ -98,6 +106,8 @@ const Scene = () => {
 				onShowTextOverlay   = {handleShowTextOverlay}
 				currentLeftContent  = {currentLeftContent}
 				currentRightContent = {currentRightContent}
+
+				handleCameraReset = {handleCameraReset}
 				/>
 
 				<ModalImage
