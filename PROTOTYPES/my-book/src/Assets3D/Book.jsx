@@ -1,6 +1,6 @@
 import { degToRad } from 'three/src/math/MathUtils.js'
 import { useEffect, useRef, useState } from 'react'
-import { pages } from '../InfoData/PagesContent'
+import { usePages } from '../InfoData/PagesContent'
 import { createTextPageMesh } from './TextPage'
 import { useFrame } from '@react-three/fiber'
 import { Vector2, Raycaster } from 'three'
@@ -50,7 +50,7 @@ const Page = ({
     }, [front, back, number])
 
     /* This function determines if a user's pointer event
-    intersects with any defined "clickable areas" on the 3D
+    intersects with any defined 'clickable areas' on the 3D
     book page mesh. It is used to enable interactive regions
     (like images, links, etc.) on the book's pages. */
     const checkClickableArea = (event) => {
@@ -239,7 +239,9 @@ const Page = ({
 }
 
 const Book = ({ setModalImageSrc, setModalOpen, onCurrentPageChange, ...props }) => {
-    const [page] = useAtom(pageAtom)
+    // === ALL HOOKS MUST BE CALLED FIRST - BEFORE ANY CONDITIONAL RETURNS === //
+    const { pages, loading, error     } = usePages()
+    const [page                       ] = useAtom(pageAtom)
     const [delayedPage, setDelayedPage] = useState(page)
 
     // Notify parent about current page content changes!
@@ -268,7 +270,7 @@ const Book = ({ setModalImageSrc, setModalOpen, onCurrentPageChange, ...props })
 
             onCurrentPageChange(leftContent, rightContent)
         }
-    }, [delayedPage, onCurrentPageChange])
+    }, [delayedPage, onCurrentPageChange, pages])
 
     /* Progressive page-turning animation system that smoothly transitions
     between pages in a book interface. Rather than jumping directly from
@@ -294,6 +296,19 @@ const Book = ({ setModalImageSrc, setModalOpen, onCurrentPageChange, ...props })
 
         return () => { clearTimeout(timeout) };
     }, [page])
+
+    // === HANDLE CONDITIONAL RENDERING AFTER ALL HOOKS === //
+    if (loading)
+        return (
+            <group {...props}>
+                <mesh>
+                    <boxGeometry args = {[2, 3, 0.1]} />
+                    <meshBasicMaterial color = '#ccc' />
+                </mesh>
+            </group>
+        );
+
+    if (error) console.error('Error loading pages:', error);
 
     return (
         <group {...props} rotation-y = {-Math.PI / 2}>

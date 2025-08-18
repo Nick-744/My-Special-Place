@@ -1,89 +1,190 @@
+import { getAllData, getImageUrl } from '../services/cavafyService'
+import { useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 
-// Template for pages in your storybook
-export const pages = [
+// Default static pages (fallback)
+const defaultPages = [
   {
     front: (
       <img
-        src   = './textures/book-cover.jpg'
-        alt   = 'Εξώφυλλο Βιβλίου'
-        style = {{ width: '100%', maxHeight: 1150, borderRadius: '8px', marginTop: '12px' }}
+        src="./textures/book-cover.jpg"
+        alt="Εξώφυλλο Βιβλίου"
+        style={{ width: '100%', maxHeight: 1150, borderRadius: '8px', marginTop: '12px' }}
       />
     ),
     back: (
-      <Box p = {3} sx = {{ background: '#222', color: '#fff', height: '100%' }}>
-        <h3 style = {{ color: '#fff' }}>Σχετικα με αυτο το βιβλιο:</h3>
-
-        <p style = {{ color: '#fff' }}>
-          Αυτό το βιβλίο είναι μια συλλογή από κείμενα και εικόνες.
+      <Box p={3} sx={{ background: '#222', color: '#fff', height: '100%' }}>
+        <h3 style={{ color: '#fff' }}>Χρονολόγιο Καβάφη</h3>
+        <p style={{ color: '#fff' }}>
+          Ένα διαδραστικό χρονολόγιο της ζωής και του έργου του Κ.Π. Καβάφη.
         </p>
-
-        <p style = {{ color: '#fff', textAlign: 'center', marginTop: '20px', fontStyle: 'italic' }}>
+        <p style={{ color: '#fff', textAlign: 'center', marginTop: '20px', fontStyle: 'italic' }}>
           Καλή ανάγνωση!
-        </p>
-      </Box>
-    )
-  },
-  {
-    // --- PAGE 1 (Front) --- Only text
-    front: (
-      <Box p = {3}>
-        <h2>Καλως ηρθατε στον κοσμο μου...</h2>
-
-        <p>
-          Αυτό είναι ένα απλό demo! Η πρώτη σελίδα περιέχει μόνο κείμενο.
-        </p>
-
-        <p>
-          Γυρίστε σελίδα για να δείτε ένα παράδειγμα με εικόνα!
-        </p>
-
-        <p>
-          Κάντε μια αναζήτηση στη Google! (https://www.google.com/)
-        </p>
-      </Box>
-    ),
-    // --- PAGE 1 (Back) --- Black page
-    back: (
-      <Box p = {3}>
-        <h2>Μια εικονα - 1000 λεξεις!</h2>
-
-        <p>
-          Εδώ είναι ένα παράδειγμα:
-        </p>
-
-        <img
-          src   = './images/cat_image.jpg'
-          alt   = 'Μία μικρή γατούλα'
-          style = {{ width: '90%', maxHeight: 900, borderRadius: '8px', marginTop: '12px' }}
-        />
-
-        <p style = {{ marginTop: '8px' }}>
-          Αυτή η γάτα είναι έτοιμη για μία περιπέτεια!
-        </p>
-      </Box>
-    )
-  },
-  {
-    // --- PAGE 2 (Front) --- With image
-    front: (
-      <Box p = {3} sx = {{ background: '#111', color: '#fff', height: '100%' }}>
-        <h3 style = {{ color: '#fff' }}>Μεταβατικη Σελιδα</h3>
-
-        <p style = {{ color: '#fff' }}>
-          Αυτή η σελίδα είναι σκόπιμα κενή...
-        </p>
-      </Box>
-    ),
-    // --- PAGE 2 (Back) --- Back cover
-    back: (
-      <Box p = {3} sx = {{ background: '#222', color: '#fff', height: '100%' }}>
-        <h3 style = {{ color: '#fff' }}>Το Τελος</h3>
-
-        <p style = {{ color: '#fff', textAlign: 'center', marginTop: '20px', fontStyle: 'italic' }}>
-          Ευχαριστώ που διαβάσατε αυτό το βιβλίο!
         </p>
       </Box>
     )
   }
 ]
+
+// Convert API data to page format
+function createPageFromData(item) {
+  const attrs            = item.attributes
+  const imageUrl         = getImageUrl(attrs.image, 'large')
+  const year             = attrs.year
+  const category         = attrs.category
+  const description      = attrs.description?.gr || attrs.description?.en || ''
+  const imageDescription = attrs.imageDescription?.gr || attrs.imageDescription?.en || ''
+
+  return {
+    // LEFT PAGE - Text content
+    front: (
+      <Box p={3} sx={{ background: '#fff', height: '100%', overflow: 'auto' }}>
+        <h2 style={{ 
+          color: '#333', 
+          borderBottom: '2px solid #666', 
+          paddingBottom: '8px',
+          marginBottom: '20px',
+          fontSize: '18px'
+        }}>
+          {year} - {category}
+        </h2>
+        
+        <div 
+          style={{ 
+            fontSize: '14px', 
+            lineHeight: '1.6',
+            marginBottom: '20px',
+            color: '#333'
+          }}
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
+
+        {imageDescription && (
+          <div style={{ marginBottom: '20px' }}>
+            <h4 style={{ 
+              color: '#333', 
+              marginBottom: '12px',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}>
+              Περιγραφή Εικόνας:
+            </h4>
+            <p style={{ 
+              color: '#555', 
+              fontSize: '13px', 
+              lineHeight: '1.5',
+              fontStyle: 'italic',
+              background: '#f9f9f9',
+              padding: '12px',
+              borderRadius: '4px',
+              border: '1px solid #e0e0e0'
+            }}>
+              {imageDescription}
+            </p>
+          </div>
+        )}
+        
+        {attrs.source?.gr && (
+          <div style={{ marginTop: 'auto', paddingTop: '20px' }}>
+            <h4 style={{ 
+              color: '#333', 
+              marginBottom: '8px',
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>
+              Πηγή:
+            </h4>
+            <p style={{ 
+              color: '#777', 
+              fontSize: '11px',
+              lineHeight: '1.4',
+              fontStyle: 'italic'
+            }}>
+              {attrs.source.gr}
+            </p>
+          </div>
+        )}
+      </Box>
+    ),
+    
+    // RIGHT PAGE - Full page image
+    back: (
+      <Box 
+        sx={{ 
+          width: '100%', 
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#f8f8f8',
+          overflow: 'hidden'
+        }}
+      >
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={imageDescription}
+            style={{ 
+              width: '100%', 
+              height: '100%',
+              objectFit: 'cover',
+              borderRadius: '0px'
+            }}
+          />
+        ) : (
+          <Box 
+            sx={{ 
+              width: '100%', 
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: '#e0e0e0',
+              color: '#666'
+            }}
+          >
+            <p>Δεν υπάρχει εικόνα</p>
+          </Box>
+        )}
+      </Box>
+    )
+  }
+}
+
+// Hook to manage dynamic pages
+export function usePages() {
+  const [pages, setPages] = useState(defaultPages)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true)
+        const data = await getAllData()
+        
+        if (data && data.length > 0) {
+          // Create cover page + data pages
+          const dynamicPages = [
+            defaultPages[0], // Keep cover
+            ...data.map(createPageFromData)
+          ]
+          
+          setPages(dynamicPages)
+        }
+      } catch (err) {
+        console.error('Failed to load timeline data:', err)
+        setError(err)
+        // Keep default pages on error
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
+
+  return { pages, loading, error }
+}
+
+export const pages = defaultPages;
