@@ -155,7 +155,7 @@ const Page = ({
 
         let targetRotation = opened ? -Math.PI / 2 : Math.PI / 2
         
-        if (!bookClosed) targetRotation += degToRad(number * 1.5)
+        if (!bookClosed) targetRotation += degToRad(number * 0.1)
 
         const bones = skinnedMeshRef.current.skeleton.bones
         for (let i = 0; i < bones.length; i++) {

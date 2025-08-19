@@ -10,8 +10,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import TextFieldsIcon from '@mui/icons-material/TextFields'
 import CameraAltIcon from '@mui/icons-material/CameraAlt'
-import { pages } from '../InfoData/PagesContent'
+import { usePages } from '../InfoData/PagesContent'
 import { atom, useAtom } from 'jotai'
+import { useEffect } from 'react'
 
 // Atom to manage the current page state:
 export const pageAtom = atom(0)
@@ -25,10 +26,15 @@ const UI = ({
 	
 	handleCameraReset
 }) => {
+	const { pages, loading } = usePages() // Get pages & loading state!
+
 	const [page, setPage] = useAtom(pageAtom)
 
 	const handlePrevious  = () => setPage(Math.max(0, page - 1))
 	const handleNext      = () => setPage(Math.min(pages.length, page + 1))
+	
+	// Clamp current page when pages length changes (avoid out-of-range)!
+	useEffect(() => { if (page > pages.length) setPage(pages.length) }, [pages.length])
 
 	const hasTextContent  = (currentLeftContent || currentRightContent)
 
