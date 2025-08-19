@@ -198,88 +198,99 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
     const availableWidth = width - MARGIN_LEFT - MARGIN_RIGHT
     
     // Render text first and track links!
-    lines.forEach((line, _) => {
-        if (line.trim()) {
-            // Check if it's a header (all caps)
-            if (line === line.toUpperCase() && line.length > 3) {
-                ctx.font      = 'bold 55px "Arial", serif'
-                ctx.fillStyle = '#000000'
-            }
-            else if (line.startsWith('•')) {
-                ctx.font      = 'bold 45px "Arial", serif'
-                ctx.fillStyle = '#000000'
-            }
-            else {
-                ctx.font      = 'bold 45px "Arial", serif'
-                ctx.fillStyle = '#000000'
-            }
-            
-            // Check for links in the line
-            const linkMatch = line.match(/(.+?)\s*\((.+?)\)$/)
-            if (linkMatch && linkMatch[2].startsWith('http')) {
-                // This is a link - render with underline and track area
-                const linkText = linkMatch[1].trim()
-                const linkUrl  = linkMatch[2]
-                
-                ctx.fillStyle = '#0c155c' // Blue color for links
-                ctx.fillText(linkText, MARGIN_LEFT, y) // Use left margin
-                
-                // Add underline
-                const textWidth = ctx.measureText(linkText).width
-                ctx.strokeStyle = '#0c155c'
-                ctx.lineWidth   = 5
-                ctx.beginPath()
-                ctx.moveTo(MARGIN_LEFT, y + 50)
-                ctx.lineTo(MARGIN_LEFT + textWidth, y + 50)
-                ctx.stroke()
-                
-                // Track clickable area
-                clickableAreas.push({
-                    type: 'link',
-                    url:  linkUrl,
-                    x: MARGIN_LEFT,
-                    y: y,
-                    width:  textWidth,
-                    height: 60
-                })
-                
-                ctx.fillStyle = '#000000' // Reset color
-            }
-            else {
-                // --- Regular text - word wrap with proper margins --- //
+    lines.forEach((line, idx) => {
+        if (!line.trim()) { // Smaller gap for empty lines
+            y += lineHeight / 2
 
-                // If header, center it and add extra spacing after
-                if (line === line.toUpperCase() && line.length > 3) {
-                    const textWidth = ctx.measureText(line).width
-                    const centerX   = MARGIN_LEFT + (availableWidth - textWidth) / 2
-                    ctx.fillText(line, centerX, y)
-                    // Add extra space after headers (in addition to the normal lineHeight)
-                    y += lineHeight * 0.6
-                }
-                else {
-                    const words     = line.split(' ')
-                    let currentLine = ''
-                    
-                    words.forEach(word => {
-                        const testLine = currentLine + word + ' '
-                        const metrics  = ctx.measureText(testLine)
-                        
-                        if (metrics.width > availableWidth && currentLine !== '') {
-                            ctx.fillText(currentLine, MARGIN_LEFT, y)
-                            currentLine = word + ' '
-                            y          += lineHeight
-                        }
-                        else currentLine = testLine
-                    })
-                    
-                    if (currentLine) ctx.fillText(currentLine, MARGIN_LEFT, y)
-                }
-            }
-            
-            y += lineHeight
+            return;
         }
-        else y += lineHeight / 2 // Smaller gap for empty lines
-        
+
+        // Determine extra spacing to apply after this logical line
+
+        // Titles and paragraphs should get the same extra spacing
+        const isHeader = (line === line.toUpperCase() && line.length > 3)
+
+        // If the next original line is empty (extractContentWithImages adds blank lines around <p>),
+        // treat current line as paragraph and give it extra spacing as well.
+        const nextLine    = lines[idx + 1]
+        const isParagraph = !isHeader && (nextLine === '' || typeof nextLine === 'undefined')
+        const extraAfter  = (isHeader || isParagraph) ? lineHeight * 0.6 : 0
+
+        // Set font based on line type
+        if (isHeader) {
+            ctx.font      = 'bold 55px "Arial", serif'
+            ctx.fillStyle = '#000000'
+        }
+        else if (line.startsWith('•')) {
+            ctx.font      = 'bold 45px "Arial", serif'
+            ctx.fillStyle = '#000000'
+        }
+        else {
+            ctx.font      = 'bold 45px "Arial", serif'
+            ctx.fillStyle = '#000000'
+        }
+
+        // Check for links in the line
+        const linkMatch = line.match(/(.+?)\s*\((.+?)\)$/)
+        if (linkMatch && linkMatch[2].startsWith('http')) {
+            // Render link (left-aligned) and underline
+            const linkText = linkMatch[1].trim()
+            const linkUrl  = linkMatch[2]
+
+            ctx.fillStyle = '#0c155c'
+            ctx.fillText(linkText, MARGIN_LEFT, y)
+
+            const textWidth = ctx.measureText(linkText).width
+            ctx.strokeStyle = '#0c155c'
+            ctx.lineWidth   = 5
+            ctx.beginPath()
+            ctx.moveTo(MARGIN_LEFT, y + 50)
+            ctx.lineTo(MARGIN_LEFT + textWidth, y + 50)
+            ctx.stroke()
+
+            clickableAreas.push({
+                type: 'link',
+                url:  linkUrl,
+                x: MARGIN_LEFT,
+                y: y,
+                width:  textWidth,
+                height: 60
+            })
+
+            ctx.fillStyle = '#000000'
+        }
+        else {
+            // Regular text (including paragraph blocks)
+            if (isHeader) {
+                // Center header/title within available width
+                const textWidth = ctx.measureText(line).width
+                const centerX   = MARGIN_LEFT + (availableWidth - textWidth) / 2
+                ctx.fillText(line, centerX, y)
+            }
+            else {
+                // Word-wrap left-aligned text within availableWidth
+                const words     = line.split(' ')
+                let currentLine = ''
+
+                words.forEach(word => {
+                    const testLine = currentLine + word + ' '
+                    const metrics  = ctx.measureText(testLine)
+
+                    if (metrics.width > availableWidth && currentLine !== '') {
+                        ctx.fillText(currentLine, MARGIN_LEFT, y)
+                        currentLine = word + ' '
+                        y          += lineHeight
+                    }
+                    else currentLine = testLine
+                })
+
+                if (currentLine) ctx.fillText(currentLine, MARGIN_LEFT, y)
+            }
+        }
+
+        // Advance y by one line plus any extra spacing for headers/paragraphs
+        y += lineHeight + extraAfter
+
         // Prevent overflow using bottom margin
         if (y > height - MARGIN_BOTTOM) {
             ctx.fillText('...', MARGIN_LEFT, y)

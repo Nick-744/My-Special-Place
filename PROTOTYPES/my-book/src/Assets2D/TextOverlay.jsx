@@ -55,11 +55,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
         }
         else if (element.type === 'blockquote') text += '\n"' + extractChildren(children) + '"\n'
         else if (element.type === 'strong')     text += extractChildren(children).toUpperCase()
-        else if (element.type === 'img') {
-            // Extract alt text from images
-            const alt = element.props.alt || ''
-            if (alt) text += `\n[IMAGE: ${alt}]\n`
-        }
+        else if (element.type === 'img')        text += `\n[Εικόνα]\n`
         else text += extractChildren(children)
 
         return text;
@@ -207,7 +203,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                         textShadow:    '2px 2px 4px rgba(0,0,0,0.8)'
                                     }}
                                     >
-                                        Left Page
+                                        ΑΡΙΣΤΕΡΗ ΣΕΛΙΔΑ
                                     </Typography>
                                 </Box>
 
@@ -268,7 +264,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                             textShadow:    '2px 2px 4px rgba(0,0,0,0.8)'
                                         }}
                                     >
-                                        Right Page
+                                        ΔΕΞΙΑ ΣΕΛΙΔΑ
                                     </Typography>
                                 </Box>
 
