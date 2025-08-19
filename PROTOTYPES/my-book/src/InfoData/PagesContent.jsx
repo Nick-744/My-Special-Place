@@ -57,7 +57,7 @@ function buildFront(item) {
                 fontSize:      '18px'
             }}
             >
-                {attrs.year} - {attrs.category}
+                {attrs.year}
             </h2>
 
             <div

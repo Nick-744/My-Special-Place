@@ -22,4 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-PROTOTYPES/my-book/src/.env
+
+.env

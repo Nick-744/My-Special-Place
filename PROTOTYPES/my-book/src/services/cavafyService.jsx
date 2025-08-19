@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://inmuseeadmin.onassis.org/api'
+const API_BASE = import.meta.env.VITE_API_URL
 
 // Query to get all data from backend
 const GET_ALL_DATA =
@@ -29,7 +29,7 @@ export async function getAllData() {
 export function getImageUrl(imageData, size = 'large') {
 	if (!imageData?.data?.attributes) return null;
 
-	const baseUrl = import.meta.env.VITE_SERVER || 'https://inmuseeadmin.onassis.org'
+	const baseUrl = import.meta.env.VITE_SERVER
 	const attrs   = imageData.data.attributes
 
 	// Use specific size or fallback to original

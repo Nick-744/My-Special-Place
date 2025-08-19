@@ -246,23 +246,34 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
                 ctx.fillStyle = '#000000' // Reset color
             }
             else {
-                // Regular text - word wrap with proper margins
-                const words     = line.split(' ')
-                let currentLine = ''
-                
-                words.forEach(word => {
-                    const testLine = currentLine + word + ' '
-                    const metrics  = ctx.measureText(testLine)
+                // --- Regular text - word wrap with proper margins --- //
+
+                // If header, center it and add extra spacing after
+                if (line === line.toUpperCase() && line.length > 3) {
+                    const textWidth = ctx.measureText(line).width
+                    const centerX   = MARGIN_LEFT + (availableWidth - textWidth) / 2
+                    ctx.fillText(line, centerX, y)
+                    // Add extra space after headers (in addition to the normal lineHeight)
+                    y += lineHeight * 0.6
+                }
+                else {
+                    const words     = line.split(' ')
+                    let currentLine = ''
                     
-                    if (metrics.width > availableWidth && currentLine !== '') {
-                        ctx.fillText(currentLine, MARGIN_LEFT, y)
-                        currentLine = word + ' '
-                        y          += lineHeight
-                    }
-                    else currentLine = testLine
-                })
-                
-                if (currentLine) ctx.fillText(currentLine, MARGIN_LEFT, y)
+                    words.forEach(word => {
+                        const testLine = currentLine + word + ' '
+                        const metrics  = ctx.measureText(testLine)
+                        
+                        if (metrics.width > availableWidth && currentLine !== '') {
+                            ctx.fillText(currentLine, MARGIN_LEFT, y)
+                            currentLine = word + ' '
+                            y          += lineHeight
+                        }
+                        else currentLine = testLine
+                    })
+                    
+                    if (currentLine) ctx.fillText(currentLine, MARGIN_LEFT, y)
+                }
             }
             
             y += lineHeight
@@ -321,21 +332,22 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
             // Center image within available width
             const x = MARGIN_LEFT + (availableWidth - drawWidth) / 2
             
-            // Draw image at current y position
-            ctx.drawImage(img, x, y, drawWidth, drawHeight)
+            // Center image on the page canvas (horizontally & vertically)
+            const centerX = (width  - drawWidth) / 2
+            const centerY = (height - drawHeight) / 2
+
+            ctx.drawImage(img, centerX, centerY, drawWidth, drawHeight)
             
             // Track clickable area for image
             clickableAreas.push({
                 type: 'image',
                 src:  imageInfo.src,
                 alt:  imageInfo.alt,
-                x: x,
-                y: y,
+                x: centerX,
+                y: centerY,
                 width:  drawWidth,
                 height: drawHeight
             })
-            
-            y += drawHeight + 20 // Add some spacing after image
         }
         catch (error) {
             console.warn('Failed to load image:', imageInfo.src, error.message)
