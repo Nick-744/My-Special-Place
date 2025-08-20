@@ -28,7 +28,7 @@ const MARGIN_LEFT   = 130
 const MARGIN_RIGHT  = 130
 
 // --- Papyrus opacity --- //
-const PAPYRUS_OPACITY = 0.6
+const PAPYRUS_OPACITY = 0.8
 
 const createTextPageGeometry = () => {
     const g = new BoxGeometry(PAGE_WIDTH, PAGE_HEIGHT, PAGE_THICKNESS, PAGE_SEGMENTS, 2)
@@ -333,10 +333,33 @@ export const createTextPageMesh = async (frontContent, backContent) => {
             c.height  = h
             const ctx = c.getContext('2d')
 
+            // Save canvas state so the random flips/rotations applied to the papyrus
+            // texture remain local — we will restore afterwards so the page overlay
+            // and subsequent drawing are not affected!
+            ctx.save()
+
+            // Randomize orientation to reduce visible tiling/repetition:
+            // mode: 0 -> 3
+            const mode = Math.floor(Math.random() * 4)
+            if      (mode === 1) { // flip horizontal
+                ctx.translate(w, 0)
+                ctx.scale(-1, 1)
+            }
+            else if (mode === 2) { // flip vertical
+                ctx.translate(0, h)
+                ctx.scale(1, -1)
+            }
+            else if (mode === 3) { // rotate 180
+                ctx.translate(w, h)
+                ctx.rotate(Math.PI)
+            }
+
             // Draw papyrus to fill canvas with controllable opacity
             ctx.globalAlpha = PAPYRUS_OPACITY
             ctx.drawImage(papyrusImg, 0, 0, w, h)
-            ctx.globalAlpha = 1
+
+            ctx.restore()
+            ctx.globalAlpha = 1 // Safety guard...
 
             // Multiply the generated page canvas over the papyrus so whitespace shows papyrus,
             // while text remains dark (multiply: white preserves, black becomes black)

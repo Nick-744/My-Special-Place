@@ -71,7 +71,14 @@ const Scene = () => {
 						/>
 
 						{!mobileViewContext &&
-							<CameraControls ref = {cameraControlsRef} />
+							<CameraControls
+								ref = {cameraControlsRef}
+
+								minPolarAngle = {0}
+								maxPolarAngle = {Math.PI / 2}
+								minAzimuthAngle = {-Math.PI / 3}
+								maxAzimuthAngle = { Math.PI / 3}
+							/>
 						}
 
 						<Float
