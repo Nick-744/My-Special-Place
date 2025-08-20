@@ -27,6 +27,9 @@ const MARGIN_BOTTOM = 60
 const MARGIN_LEFT   = 130
 const MARGIN_RIGHT  = 130
 
+// --- Papyrus opacity --- //
+const PAPYRUS_OPACITY = 0.6
+
 const createTextPageGeometry = () => {
     const g = new BoxGeometry(PAGE_WIDTH, PAGE_HEIGHT, PAGE_THICKNESS, PAGE_SEGMENTS, 2)
     g.translate(PAGE_WIDTH / 2, 0, 0)
@@ -310,7 +313,54 @@ export const createTextPageMesh = async (frontContent, backContent) => {
     ])
 
     const white  = new Color('#ffffff')
-    const orange = new Color('orange')
+
+    // --- Compose the papyrus texture under the generated page canvases --- //
+    const loader = new TextureLoader(DefaultLoadingManager)
+
+    const composeWithPapyrus = async (pageTex) => {
+        try {
+            // Load papyrus image from public/textures
+            const papyrusTex = await new Promise((res, rej) =>
+                loader.load('/textures/papyrus_texture.png', res, undefined, rej)
+            )
+            const papyrusImg = papyrusTex.image
+            const srcCanvas  = pageTex.image // Canvas from createTextureFromContent
+
+            const w   = srcCanvas.width
+            const h   = srcCanvas.height
+            const c   = document.createElement('canvas')
+            c.width   = w
+            c.height  = h
+            const ctx = c.getContext('2d')
+
+            // Draw papyrus to fill canvas with controllable opacity
+            ctx.globalAlpha = PAPYRUS_OPACITY
+            ctx.drawImage(papyrusImg, 0, 0, w, h)
+            ctx.globalAlpha = 1
+
+            // Multiply the generated page canvas over the papyrus so whitespace shows papyrus,
+            // while text remains dark (multiply: white preserves, black becomes black)
+            ctx.globalCompositeOperation = 'multiply'
+            ctx.drawImage(srcCanvas, 0, 0, w, h)
+            ctx.globalCompositeOperation = 'source-over'
+
+            const combined           = new CanvasTexture(c)
+            combined.generateMipmaps = false
+            combined.minFilter       = combined.magFilter = 1006
+
+            return combined;
+        }
+        catch (e) {
+            console.warn('Papyrus texture load failed, using page canvas directly', e?.message)
+
+            return pageTex;
+        }
+    }
+
+    const [frontCombined, backCombined] = await Promise.all([
+        composeWithPapyrus(frontResult.texture),
+        composeWithPapyrus(backResult.texture)
+    ])
 
     const materials = [
         new MeshStandardMaterial({ color: white,    roughness: 0.9, metalness: 0 }),
@@ -318,11 +368,12 @@ export const createTextPageMesh = async (frontContent, backContent) => {
         new MeshStandardMaterial({ color: white,    roughness: 0.9, metalness: 0 }),
         new MeshStandardMaterial({ color: white,    roughness: 0.9, metalness: 0 }),
 
+        // Use the composed textures (papyrus + page canvas)
         new MeshStandardMaterial({
-            map: frontResult.texture, color: white, roughness: 0.8, metalness: 0
+            map: frontCombined, color: white, roughness: 0.8, metalness: 0
         }),
         new MeshStandardMaterial({
-            map: backResult.texture,  color: white, roughness: 0.8, metalness: 0
+            map: backCombined,  color: white, roughness: 0.8, metalness: 0
         })
     ]
 
