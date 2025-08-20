@@ -82,6 +82,7 @@ function buildFront(item) {
                     >
                         Περιγραφή Εικόνας:
                     </h4>
+
                     <p
                     style = {{
                         color:      '#555',
@@ -112,6 +113,7 @@ function buildFront(item) {
                     >
                         Πηγή:
                     </h4>
+                    
                     <p
                     style = {{
                         color:      '#777',
