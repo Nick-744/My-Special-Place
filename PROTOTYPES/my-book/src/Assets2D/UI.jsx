@@ -54,7 +54,7 @@ const UI = ({
 			boxShadow    = '0 8px 32px rgba(0, 0, 0, 0.12)'
 			sx           = {{ transform: mobileView ? 'translate(50%)' : 'none' }}
 			>
-				<Tooltip title = 'Previous Page' placement = 'top'>
+				<Tooltip title = 'Προηγούμενη σελίδα' placement = 'top'>
 					<span>
 						<IconButton 
 						onClick  = {handlePrevious}
@@ -77,7 +77,7 @@ const UI = ({
 				sx            = {{ minWidth: 180 }}
 				>
 					<Typography variant = 'body2' color = 'text.secondary' mb = {1}>
-						Page {page} of {pages.length}
+						Σελίδα {page} από {pages.length}
 					</Typography>
 
 					<Slider
@@ -90,7 +90,7 @@ const UI = ({
 					/>
 				</Box>
 
-				<Tooltip title = 'Next Page' placement = 'top'>
+				<Tooltip title = 'Επόμενη σελίδα' placement = 'top'>
 					<IconButton 
 					onClick  = {handleNext}
 					disabled = {page === pages.length}
@@ -109,7 +109,7 @@ const UI = ({
 
 			{/* Text Overlay Button */}
 			{hasTextContent && (
-				<Tooltip title = 'View Text Only' placement = 'left'>
+				<Tooltip title = 'Προβολή κειμένου' placement = 'left'>
 					<Button
 					variant = 'contained'
 					onClick = {onShowTextOverlay}
@@ -139,7 +139,7 @@ const UI = ({
 
 			{/* Camera Reset Button */}
             {!mobileView && (
-                <Tooltip title = 'Reset Camera' placement = 'left'>
+                <Tooltip title = 'Επαναφορά θέσης κάμερας' placement = 'left'>
                     <Button
 					variant = 'contained'
 					onClick = {handleCameraReset}

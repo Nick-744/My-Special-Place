@@ -169,7 +169,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                 <Box sx = {{ flex: 1, minWidth: 0 }}>
 
                                 <Box sx = {{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-                                    <Tooltip title = {speaking ? 'Stop Reading' : 'Read Aloud'}>
+                                    <Tooltip title = {speaking ? 'Διακοπή ανάγνωσης' : 'Ανάγνωση με φωνή'}>
                                         <IconButton
                                         onClick = {
                                             () => speaking
@@ -230,7 +230,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                 <Box sx = {{ flex: 1, minWidth: 0 }}>
 
                                 <Box sx = {{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-                                    <Tooltip title = {speaking ? 'Stop Reading' : 'Read Aloud'}>
+                                    <Tooltip title = {speaking ? 'Διακοπή ανάγνωσης' : 'Ανάγνωση με φωνή'}>
                                         <IconButton
                                         onClick = {
                                             () => speaking
