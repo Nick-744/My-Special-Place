@@ -190,7 +190,7 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
             ctx.fillText(line, MARGIN_LEFT + (availableWidth - w) / 2, y)
         }
         else {
-            ctx.font        = line.startsWith('•') ? 'bold 45px Arial' : 'bold 45px Arial'
+            ctx.font        = 'bold 45px Arial'
             ctx.fillStyle   = '#000'
             const linkMatch = line.match(/(.+?)\s*\((https?:\/\/[^\s)]+)\)$/)
             if (linkMatch) {

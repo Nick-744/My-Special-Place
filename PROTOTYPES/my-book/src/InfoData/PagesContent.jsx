@@ -13,7 +13,7 @@ const coverPage = {
             height:     '100%'
         }}
         >
-            <h3 style = {{ color: '#fff' }}>Χρονολόγιο Καβάφη</h3>
+            <h3 style = {{ color: '#fff' }}>ΧΡΟΝΟΛΟΓΙΟ ΚΑΒΑΦΗ</h3>
 
             <p style = {{ color: '#fff' }}>
                 Ένα διαδραστικό χρονολόγιο της ζωής και του έργου του Κ.Π. Καβάφη.
@@ -80,7 +80,7 @@ function buildFront(item) {
                         fontWeight:   'bold'
                     }}
                     >
-                        Περιγραφή Εικόνας:
+                        ΠΕΡΙΓΡΑΦΗ ΕΙΚΟΝΑΣ:
                     </h4>
 
                     <p
@@ -111,7 +111,7 @@ function buildFront(item) {
                         fontWeight:   'bold'
                     }}
                     >
-                        Πηγή:
+                        ΠΗΓΗ:
                     </h4>
                     
                     <p
