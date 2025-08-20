@@ -57,7 +57,7 @@ const Scene = () => {
 						<ambientLight intensity = {1} />
 						<directionalLight
 						position  = {[4, 5, 4]}
-						intensity = {1.2}
+						intensity = {0.8}
 						color     = '#ffffff'
 						castShadow
 						shadow-mapSize-width  = {2048}
@@ -74,10 +74,16 @@ const Scene = () => {
 							<CameraControls
 								ref = {cameraControlsRef}
 
+								/* Camera rotation limits */
 								minPolarAngle = {0}
 								maxPolarAngle = {Math.PI / 2}
 								minAzimuthAngle = {-Math.PI / 3}
 								maxAzimuthAngle = { Math.PI / 3}
+
+								/* Zoom / distance limits */
+								minDistance = {1.5}
+								maxDistance = {4.5}
+								zoomSpeed   = {0.8}
 							/>
 						}
 
