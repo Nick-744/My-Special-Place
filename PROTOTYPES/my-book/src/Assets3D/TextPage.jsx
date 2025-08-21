@@ -30,6 +30,8 @@ const MARGIN_RIGHT  = 130
 // --- Papyrus opacity --- //
 const PAPYRUS_OPACITY = 0.8
 
+const FONT_TYPE = 'serif'
+
 const createTextPageGeometry = () => {
     const g = new BoxGeometry(PAGE_WIDTH, PAGE_HEIGHT, PAGE_THICKNESS, PAGE_SEGMENTS, 2)
     g.translate(PAGE_WIDTH / 2, 0, 0)
@@ -170,7 +172,7 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
     const clickableAreas = []
 
     ctx.fillStyle = '#000'
-    ctx.font      = 'bold 38px "Times New Roman", serif'
+    ctx.font      = `bold 38px ${FONT_TYPE}`
 
     const lines = text.split('\n')
     for (let li = 0; li < lines.length; li++) {
@@ -187,13 +189,13 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
         const extra       = (isHeader || isParagraph) ? lineHeight * 0.6 : 0
 
         if (isHeader) {
-            ctx.font      = 'bold 55px Arial'
+            ctx.font      = `bold 55px ${FONT_TYPE}`
             ctx.fillStyle = '#000'
             const w       = ctx.measureText(line).width
             ctx.fillText(line, MARGIN_LEFT + (availableWidth - w) / 2, y)
         }
         else {
-            ctx.font        = 'bold 45px Arial'
+            ctx.font        = `bold 45px ${FONT_TYPE}`
             ctx.fillStyle   = '#000'
             const linkMatch = line.match(/(.+?)\s*\((https?:\/\/[^\s)]+)\)$/)
             if (linkMatch) {

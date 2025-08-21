@@ -159,7 +159,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                 textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)'
                             }}
                             >
-                                Nothing to display
+                                Δεν υπάρχει περιεχόμενο προς εμφάνιση
                             </Typography>
                         </Box>
                     ) : (
@@ -197,7 +197,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                     sx      = {{
                                         color:         '#fff',
                                         fontWeight:    'bold',
-                                        fontFamily:    '"Times New Roman", serif',
+                                        fontFamily:    'Arial',
                                         textTransform: 'uppercase',
                                         letterSpacing: 1,
                                         textShadow:    '2px 2px 4px rgba(0,0,0,0.8)'
@@ -210,7 +210,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                 <Typography
                                 component = 'pre'
                                 sx        = {{
-                                    fontFamily: '"Times New Roman", serif',
+                                    fontFamily: 'Arial',
                                     fontSize:   '18px',
                                     lineHeight: 1.6,
                                     color:      '#fff',
@@ -258,7 +258,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                         sx      = {{
                                             color:         '#fff',
                                             fontWeight:    'bold',
-                                            fontFamily:    '"Times New Roman", serif',
+                                            fontFamily:    'Arial',
                                             textTransform: 'uppercase',
                                             letterSpacing: 1,
                                             textShadow:    '2px 2px 4px rgba(0,0,0,0.8)'
@@ -271,7 +271,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                                 <Typography
                                 component = 'pre'
                                 sx        = {{
-                                    fontFamily: '"Times New Roman", serif',
+                                    fontFamily: 'Arial',
                                     fontSize:   '18px',
                                     lineHeight: 1.6,
                                     color:      '#fff',
