@@ -30,7 +30,7 @@ const MARGIN_RIGHT  = 130
 // --- Papyrus opacity --- //
 const PAPYRUS_OPACITY = 0.8
 
-const FONT_TYPE = 'serif'
+const FONT_TYPE = '"GFS Didot", serif'
 
 const createTextPageGeometry = () => {
     const g = new BoxGeometry(PAGE_WIDTH, PAGE_HEIGHT, PAGE_THICKNESS, PAGE_SEGMENTS, 2)
@@ -142,6 +142,14 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
     canvas.width  = width
     canvas.height = height
 
+    try { // Wait for GFS Didot!
+        await document.fonts.load(`700 55px "GFS Didot"`)
+        await document.fonts.load(`700 45px "GFS Didot"`)
+        await document.fonts.load(`700 38px "GFS Didot"`)
+        await document.fonts.ready
+    }
+    catch (e) { console.warn('Font load warning', e?.message) }
+
     const ctx = canvas.getContext('2d')
     
     ctx.textAlign             = 'left'
@@ -165,14 +173,14 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
     else text = 'Page Content'
 
     const availableWidth = width - MARGIN_LEFT - MARGIN_RIGHT
-    const lineHeight     = 48
+    const lineHeight     = 55
     let   y              = MARGIN_TOP + 150
 
     const loader         = new TextureLoader(DefaultLoadingManager)
     const clickableAreas = []
 
     ctx.fillStyle = '#000'
-    ctx.font      = `bold 38px ${FONT_TYPE}`
+    ctx.font      = `bold 45px ${FONT_TYPE}`
 
     const lines = text.split('\n')
     for (let li = 0; li < lines.length; li++) {
@@ -251,7 +259,7 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
             const img   = tex.image
             const style = imgInfo.style || {}
             const maxW  = style.maxWidth ?? availableWidth
-            const maxH  = style.maxHeight ?? 900
+            const maxH  = style.maxHeight ?? 1000
             let   drawW
             let   drawH
             if (typeof style.width === 'number') {
