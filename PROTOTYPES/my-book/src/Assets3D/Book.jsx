@@ -9,11 +9,16 @@ import { useAtom } from 'jotai'
 import { easing } from 'maath'
 
 // ==================== Animation Configuration ==================== //
-const easingFactor         = 0.5  // Controls the speed of the easing
-const easingFactorFold     = 0.3  // Controls the speed of the easing
-const insideCurveStrength  = 0.18 // Controls the strength of the curve
-const outsideCurveStrength = 0.05 // Controls the strength of the curve
-const turningCurveStrength = 0.1  // Controls the strength of the curve
+let   easingFactor         = 0.02 // General smoothing factor for main motion
+const easingFactorFold     = 0.3  // Smoothing specifically for fold animation
+const insideCurveStrength  = 0.18 // Strength of curvature on the page interior
+const outsideCurveStrength = 0.05 // Strength of curvature on the page exterior
+const turningCurveStrength = 0.1  // Strength of the turning crease / hinge curvature
+
+// - easingFactor:
+//   Start with a very small easingFactor to avoid an initialization
+// artifact where 1 page can briefly intersect another while the skinned
+// meshes and bones are first created...
 
 // ==================== Pages Configuration ==================== //
 const PAGE_THICKNESS = 0.003
@@ -243,6 +248,10 @@ const Book = ({ setModalImageSrc, setModalOpen, onCurrentPageChange, ...props })
     const { pages, loading, error     } = usePages()
     const [page                       ] = useAtom(pageAtom)
     const [delayedPage, setDelayedPage] = useState(page)
+
+    // ...Set the easingFactor to its final value
+    // after the Book has been fully initialized!
+    useEffect(() => { if (!loading) { easingFactor = 0.5 } }, [page])
 
     // Notify parent about current page content changes!
     useEffect(() => {

@@ -1,0 +1,9 @@
+@font-face {
+  font-family:  'GFS Didot';
+  src:          url('/fonts/GFSDidot-Regular.ttf') format('truetype');
+  font-weight:  normal;
+  font-style:   normal;
+  font-display: swap;
+}
+
+body { font-family: 'GFS Didot'; }
