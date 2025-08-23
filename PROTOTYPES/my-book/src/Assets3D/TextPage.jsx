@@ -30,8 +30,7 @@ const MARGIN_RIGHT  = 130
 // --- Papyrus opacity --- //
 const PAPYRUS_OPACITY = 0.8
 
-// const FONT_TYPE = '"GFS Didot", serif'
-const FONT_TYPE = 'cursive'
+const FONT_TYPE = '"GFS Didot", cursive'
 
 const createTextPageGeometry = () => {
     const g = new BoxGeometry(PAGE_WIDTH, PAGE_HEIGHT, PAGE_THICKNESS, PAGE_SEGMENTS, 2)
