@@ -49,7 +49,8 @@ const UI = ({
 			alignItems   = 'center'
 			bgcolor      = 'rgba(255, 255, 255, 0.9)'
 			borderRadius = {4}
-			p = {2}
+			p   = {2}
+			gap = {1}
 			boxShadow    = '0 8px 32px rgba(0, 0, 0, 0.12)'
 			sx           = {{ transform: mobileView ? 'translate(50%)' : 'none' }}
 			>
@@ -81,14 +82,16 @@ const UI = ({
 					onChange = {(_, value) => setPage(value - 1)}
 					color    = 'primary'
 
-					siblingCount  = {0}
-					boundaryCount = {1}
+					size          = {mobileView ? 'small' : 'medium'}
+					boundaryCount = {mobileView ? 1       : 2       }
+					siblingCount  = {1}
 					renderItem    = {(item) => {
 						// Hide built-in previous/next buttons so we can use custom ones!
 						if (item.type === 'previous' || item.type === 'next') return null;
 
 						return <PaginationItem {...item} />;
 					}}
+					
 					sx = {{ width: '100%', display: 'flex', justifyContent: 'center' }}
 					/>
 				</Box>
