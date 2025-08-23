@@ -1,9 +1,9 @@
 import {
+	PaginationItem,
+	Pagination,
 	IconButton,
-	Typography,
 	Tooltip,
 	Button,
-	Slider, 
 	Box
 } from '@mui/material'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
@@ -46,7 +46,6 @@ const UI = ({
 			bottom       = {20}
 			right        = {mobileView ? '50%' : 20}
 			display      = 'flex'
-			gap          = {2}
 			alignItems   = 'center'
 			bgcolor      = 'rgba(255, 255, 255, 0.9)'
 			borderRadius = {4}
@@ -74,19 +73,23 @@ const UI = ({
 				display       = 'flex'
 				flexDirection = 'column'
 				alignItems    = 'center'
-				sx            = {{ minWidth: 180 }}
+				sx            = {{ minWidth: 200 }}
 				>
-					<Typography variant = 'body2' color = 'text.secondary' mb = {1}>
-						Σελίδα {page} από {pages.length}
-					</Typography>
+					<Pagination
+					count    = {pages.length + 1}
+					page     = {page + 1}
+					onChange = {(_, value) => setPage(value - 1)}
+					color    = 'primary'
 
-					<Slider
-					value    = {page}
-					onChange = {(_, newValue) => setPage(newValue)}
-					min      = {0}
-					max      = {pages.length}
-					step     = {1}
-					sx       = {{ width: '100%' }}
+					siblingCount  = {0}
+					boundaryCount = {1}
+					renderItem    = {(item) => {
+						// Hide built-in previous/next buttons so we can use custom ones!
+						if (item.type === 'previous' || item.type === 'next') return null;
+
+						return <PaginationItem {...item} />;
+					}}
+					sx = {{ width: '100%', display: 'flex', justifyContent: 'center' }}
 					/>
 				</Box>
 
