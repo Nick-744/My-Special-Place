@@ -29,7 +29,7 @@ const ModalImage = ({ imageSrc, open, onClose }) => {
                 backgroundColor: showContent
                                     ? 'rgba(0, 0, 0, 0.6)'
                                     : 'rgba(0, 0, 0, 0)',
-                backdropFilter:  showContent ? 'blur(4px)' : 'blur(0px)',
+                backdropFilter:  showContent ? 'blur(3px)' : 'blur(0px)',
                 transition:      'backdrop-filter 800ms, background-color 800ms',
                 display:         'flex',
                 alignItems:      'center',
