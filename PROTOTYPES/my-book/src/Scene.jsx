@@ -1,8 +1,9 @@
 import { Loader, CameraControls, Float } from '@react-three/drei'
+import { Suspense, useState, useRef, useEffect } from 'react'
 import { useTheme, useMediaQuery } from '@mui/material'
 import TextOverlay from './Assets2D/TextOverlay.jsx'
 import ModalImage from './Assets2D/ModalImage.jsx'
-import { Suspense, useState, useRef } from 'react'
+import BookTouch from './Assets3D/BookTouch.jsx'
 import { Canvas } from '@react-three/fiber'
 import Book from './Assets3D/Book.jsx'
 import UI from './Assets2D/UI'
@@ -15,6 +16,20 @@ const Scene = () => {
 	// ----- Modal Image Handling ----- //
 	const [modalImageSrc, setModalImageSrc] = useState(null)
 	const [modalOpen, setModalOpen]         = useState(false)
+
+    // ----- Touch Capability Detection (desktop touch screens) ----- //
+    const [isTouchCapable, setIsTouchCapable] = useState(false)
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const touch =
+                'ontouchstart' in window       ||
+                navigator.maxTouchPoints   > 0 ||
+                navigator.msMaxTouchPoints > 0
+            setIsTouchCapable(touch)
+        }
+    }, [])
+    const desktopTouch  = !mobileViewContext && isTouchCapable
+    const BookComponent = desktopTouch ? BookTouch : Book
 
     // ----- Text Overlay Handling ----- //
 	const [textOverlayOpen, setTextOverlayOpen]         = useState(false)
@@ -70,7 +85,7 @@ const Scene = () => {
 						castShadow = {false}
 						/>
 
-						{!mobileViewContext &&
+						{!mobileViewContext && !desktopTouch &&
 							<CameraControls
 								ref = {cameraControlsRef}
 
@@ -93,7 +108,7 @@ const Scene = () => {
 						speed             = {2}
 						rotationIntensity = {0.8}
 						>
-							<Book
+							<BookComponent
 							setModalImageSrc    = {setModalImageSrc}
 							setModalOpen        = {setModalOpen}
 							onCurrentPageChange = {handleCurrentPageChange}
