@@ -4,6 +4,7 @@ import { useTheme, useMediaQuery } from '@mui/material'
 import TextOverlay from './Assets2D/TextOverlay.jsx'
 import ModalImage from './Assets2D/ModalImage.jsx'
 import BookTouch from './Assets3D/BookTouch.jsx'
+import CameraControlsLib from 'camera-controls'
 import { Canvas } from '@react-three/fiber'
 import Book from './Assets3D/Book.jsx'
 import UI from './Assets2D/UI'
@@ -85,22 +86,33 @@ const Scene = () => {
 						castShadow = {false}
 						/>
 
-						{!mobileViewContext && !desktopTouch &&
-							<CameraControls
-								ref = {cameraControlsRef}
+						{/* Camera controls:
+                            - Desktop (mouse): normal controls
+                            - Desktop touch:   only 2-finger (pinch / two-finger drag)
+                        */}
+                        {!mobileViewContext &&
+                            <CameraControls
+                            ref = {cameraControlsRef}
 
-								/* Camera rotation limits */
-								minPolarAngle = {0}
-								maxPolarAngle = {Math.PI / 2}
-								minAzimuthAngle = {-Math.PI / 3}
-								maxAzimuthAngle = { Math.PI / 3}
+                            /* Camera rotation limits */
+                            minPolarAngle  = {0}
+                            maxPolarAngle  = {Math.PI / 2}
+                            minAzimuthAngle = {-Math.PI / 3}
+                            maxAzimuthAngle = { Math.PI / 3}
 
-								/* Zoom / distance limits */
-								minDistance = {1.5}
-								maxDistance = {4.5}
-								zoomSpeed   = {0.8}
-							/>
-						}
+                            /* Zoom / distance limits */
+                            minDistance = {1.5}
+                            maxDistance = {4.5}
+                            zoomSpeed   = {0.8}
+
+                            /* Touch behavior (only enable 2-finger on desktop touch) */
+                            touches = {desktopTouch ? {
+                                one:   CameraControlsLib.ACTION.NONE,
+                                two:   CameraControlsLib.ACTION.TOUCH_ROTATE,
+                                three: CameraControlsLib.ACTION.TOUCH_DOLLY_TRUCK
+                            } : undefined}
+                            />
+                        }
 
 						<Float
 						rotation-x        = {-Math.PI / 4}
