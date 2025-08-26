@@ -21,14 +21,20 @@ const turningCurveStrength = 0.1  // Strength of the turning crease / hinge curv
 // meshes and bones are first created...
 
 // ==================== Pages Configuration ==================== //
-const PAGE_THICKNESS = 0.001
+const PAGE_THICKNESS     = 0.001
 const DRAG_DISTANCE_BASE = 300 // fallback base
+
+// Prevent user from manually dragging all the way to 0 or 1 while pointer is down.
+// Page will still snap to 0 / 1 after release!
+const MANUAL_MIN_PROGRESS = 0.08
+const MANUAL_MAX_PROGRESS = 0.92
+const MID_PROGRESS        = (MANUAL_MIN_PROGRESS + MANUAL_MAX_PROGRESS) / 2
 
 const Page = ({
     number, front, back, page, opened, bookClosed,
     setModalImageSrc, setModalOpen,
     canDragForward, canDragBackward,
-    hasEverOpened, // NEW
+    hasEverOpened,
     ...props
 }) => {
     const group          = useRef()
@@ -39,23 +45,23 @@ const Page = ({
     // Drag + snap state
     const isDraggingRef           = useRef(false)
     const isSnappingRef           = useRef(false)
-    const dragProgressRef         = useRef(opened ? 1 : 0) // 0 closed, 1 open
+    const dragProgressRef         = useRef(opened ? MANUAL_MAX_PROGRESS : MANUAL_MIN_PROGRESS) // 0 closed, 1 open (clipped)
     const targetProgressRef       = useRef(null)
     const dragStartXRef           = useRef(0)
     const dragOriginalProgressRef = useRef(0)
     const dragMovedRef            = useRef(false)
-    const directionRef            = useRef(0)  // +1 = forward(open), -1 = backward(close)
+    const directionRef            = useRef(0) // +1 = forward(open), -1 = backward(close)
     const velocityRef             = useRef(0)
     const lastSampleXRef          = useRef(0)
     const lastSampleTRef          = useRef(0)
     const dynamicDistanceRef      = useRef(DRAG_DISTANCE_BASE)
     const preventScrollRef        = useRef(false)
 
-    const clamp = (v,a=0,b=1)=>Math.min(b,Math.max(a,v))
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v))
 
     useEffect(() => {
         if (!isDraggingRef.current && !isSnappingRef.current)
-            dragProgressRef.current = opened ? 1 : 0
+            dragProgressRef.current = opened ? MANUAL_MAX_PROGRESS : MANUAL_MIN_PROGRESS
     }, [opened])
 
     // Prevent page scroll while dragging touch
@@ -64,10 +70,11 @@ const Page = ({
             if (preventScrollRef.current) e.preventDefault()
         }
         window.addEventListener('touchmove', onTouchMove, { passive:false })
-        return ()=>window.removeEventListener('touchmove', onTouchMove)
+
+        return () => window.removeEventListener('touchmove', onTouchMove);
     }, [])
 
-    const [_, setPage] = useAtom(pageAtom)
+    const [_, setPage]                    = useAtom(pageAtom)
     const [textPageData, setTextPageData] = useState(null)
     
     // Load page data effect - always called
@@ -181,22 +188,22 @@ const Page = ({
 
     // ----- Update the bones in the skinned mesh every frame ----- //
     useFrame((_, dt) => {
-        if (!skinnedMeshRef.current) return
+        if (!skinnedMeshRef.current) return;
+
         // Handle snapping animation
         if (isSnappingRef.current) {
-            const cur = dragProgressRef.current
-            const tgt = targetProgressRef.current
-            const next = cur + (tgt - cur) * Math.min(1, 10 * dt)
+            const cur               = dragProgressRef.current
+            const tgt               = targetProgressRef.current
+            const next              = cur + (tgt - cur) * Math.min(1, 10 * dt)
             dragProgressRef.current = next
             if (Math.abs(tgt - next) < 0.001) {
                 dragProgressRef.current = tgt
-                isSnappingRef.current = false
+                isSnappingRef.current   = false
             }
         }
 
-        const progressing   = isDraggingRef.current || isSnappingRef.current
-        const draggingLive  = isDraggingRef.current
-        const dragProgress  = dragProgressRef.current
+        const progressing  = isDraggingRef.current || isSnappingRef.current
+        const dragProgress = dragProgressRef.current
 
         if (lastOpened.current !== opened && !progressing) {
             turnedAt.current   = Date.now()
@@ -216,7 +223,8 @@ const Page = ({
         if (progressing) {
             baseRotation = (1 - 2 * dragProgress) * Math.PI / 2
             if (!bookClosed) baseRotation += degToRad(number * 0.12) * (1 - turningTime)
-        } else {
+        }
+        else {
             let targetRotation = opened ? -Math.PI / 2 : Math.PI / 2
             if (!bookClosed) targetRotation += degToRad(number * 0.18)
             baseRotation = targetRotation
@@ -236,27 +244,29 @@ const Page = ({
                 turningCurveStrength * turningCurveIntensity * baseRotation
 
             if (progressing) {
-                // Reduced boost (was 0.15)
                 const centerBoost = (1 - Math.abs(0.5 - dragProgress) * 2) * 0.05
-                rotationAngle += rotationAngle * centerBoost
+                rotationAngle    += rotationAngle * centerBoost
             }
 
-            // Reduced fold amplitude (was 2.2)
-            let foldRotationAngle = degToRad(Math.sign(baseRotation) * 0.2)
+            let foldRotationAngle = degToRad(Math.sign(baseRotation) * 0.15)
 
             if (bookClosed && !progressing) {
                 if (i === 0) {
                     rotationAngle     = baseRotation
                     foldRotationAngle = 0
-                } else {
+                }
+                else {
                     rotationAngle     = 0
                     foldRotationAngle = 0
                 }
             }
 
             easing.dampAngle(
-                boneTarget.rotation, 'y', rotationAngle,
-                progressing ? 0.16 : easingFactor, dt
+                boneTarget.rotation,
+                'y',
+                rotationAngle,
+                progressing ? 0.16 : easingFactor,
+                dt
             )
 
             const foldIntensity = i > 12
@@ -264,153 +274,164 @@ const Page = ({
                 : 0
 
             easing.dampAngle(
-                boneTarget.rotation, 'x',
+                boneTarget.rotation,
+                'x',
                 foldRotationAngle * foldIntensity,
-                progressing ? 0.35 : easingFactorFold, dt
+                progressing ? 0.35 : easingFactorFold,
+                dt
             )
         }
     })
 
-    if (!textPageData) return <group {...props} />
+    if (!textPageData) return <group {...props} />;
 
     // Decide target snap based on progress & velocity
     const decideTarget = (p, v) => {
+        // Normalize to 0..1 inside manual band
+        const min  = MANUAL_MIN_PROGRESS
+        const max  = MANUAL_MAX_PROGRESS
+        const span = max - min
+        const norm = (p - min) / span
         const fast = Math.abs(v) > 1.2
-        const dir = directionRef.current
-        if (dir === 1) { // opening forward
-            if (p > 0.55 || (fast && v > 0)) return 1
-            if (p < 0.35 || (fast && v < 0)) return 0
-            return p >= 0.5 ? 1 : 0
-        } else { // closing backward
-            if (p < 0.45 || (fast && v < 0)) return 0
-            if (p > 0.65 || (fast && v > 0)) return 1
-            return p >= 0.5 ? 1 : 0
+        const dir  = directionRef.current
+        let targetNorm
+        if (dir === 1) { // opening
+            if      (norm > 0.55 || (fast && v > 0)) targetNorm = 1
+            else if (norm < 0.35 || (fast && v < 0)) targetNorm = 0
+            else                                     targetNorm = norm >= 0.5 ? 1 : 0
         }
+        else { // closing
+            if      (norm < 0.45 || (fast && v < 0)) targetNorm = 0
+            else if (norm > 0.65 || (fast && v > 0)) targetNorm = 1
+            else                                     targetNorm = norm >= 0.5 ? 1 : 0
+        }
+
+        return targetNorm === 1 ? max : min;
     }
 
     const beginDrag = (e) => {
-        if (!(canDragForward || canDragBackward)) return
-        // Block drag if the book is still fully closed and has never been opened yet
-        if (bookClosed && !hasEverOpened) return
-        dynamicDistanceRef.current = Math.min(420, Math.max(180, window.innerWidth * 0.4))
-        isDraggingRef.current = true
-        isSnappingRef.current = false
-        targetProgressRef.current = null
-        directionRef.current = canDragForward ? 1 : -1
-        dragStartXRef.current = e.clientX
+        if (!(canDragForward || canDragBackward)) return;
+        if (bookClosed && !hasEverOpened)         return;
+
+        dynamicDistanceRef.current      = Math.min(420, Math.max(180, window.innerWidth * 0.4))
+        isDraggingRef.current           = true
+        isSnappingRef.current           = false
+        targetProgressRef.current       = null
+        directionRef.current            = canDragForward ? 1 : -1
+        dragStartXRef.current           = e.clientX
         dragOriginalProgressRef.current = dragProgressRef.current
-        dragMovedRef.current = false
-        velocityRef.current = 0
-        lastSampleXRef.current = e.clientX
-        lastSampleTRef.current = performance.now()
-        preventScrollRef.current = true
-        document.body.style.cursor = 'grabbing'
+        dragMovedRef.current            = false
+        velocityRef.current             = 0
+        lastSampleXRef.current          = e.clientX
+        lastSampleTRef.current          = performance.now()
+        preventScrollRef.current        = true
+        document.body.style.cursor      = 'grabbing'
         if (e.target.setPointerCapture) {
-            try { e.target.setPointerCapture(e.pointerId) } catch {}
+            try   { e.target.setPointerCapture(e.pointerId) }
+            catch {}
         }
     }
 
     const updateDrag = (e) => {
-        if (!isDraggingRef.current) return
-        const deltaX = e.clientX - dragStartXRef.current
-        const dist   = dynamicDistanceRef.current
-        // Unified formula:
-        //  - Drag left  (deltaX negative) -> increases progress (opening)
-        //  - Drag right (deltaX positive) -> decreases progress (closing)
-        const progressDelta = (-deltaX) / dist
-        const progress = clamp(dragOriginalProgressRef.current + progressDelta)
+        if (!isDraggingRef.current) return;
+
+        const deltaX            = e.clientX - dragStartXRef.current
+        const dist              = dynamicDistanceRef.current
+        const progressDelta     = (-deltaX) / dist
+        const progressUnclamped = dragOriginalProgressRef.current + progressDelta
+        const progress          = clamp(progressUnclamped, MANUAL_MIN_PROGRESS, MANUAL_MAX_PROGRESS)
         dragProgressRef.current = progress
         if (Math.abs(deltaX) > 4) dragMovedRef.current = true
 
         const now = performance.now()
         const dt  = now - lastSampleTRef.current
         if (dt > 16) {
-            const dx = e.clientX - lastSampleXRef.current
-            const progDx = (-dx) / dist
-            const v = progDx / (dt / 1000)
-            velocityRef.current = velocityRef.current * 0.7 + v * 0.3
+            const dx               = e.clientX - lastSampleXRef.current
+            const progDx           = (-dx) / dist
+            const v                = progDx / (dt / 1000)
+            velocityRef.current    = velocityRef.current * 0.7 + v * 0.3
             lastSampleXRef.current = e.clientX
             lastSampleTRef.current = now
         }
     }
 
     const startSnap = (target) => {
-        isDraggingRef.current = false
-        isSnappingRef.current = false   // don't animate
-        targetProgressRef.current = target
-        dragProgressRef.current = target // instantly set
-        preventScrollRef.current = false
+        isDraggingRef.current      = false
+        isSnappingRef.current      = false
+        targetProgressRef.current  = target
+        dragProgressRef.current    = target
+        preventScrollRef.current   = false
         document.body.style.cursor = 'auto'
 
-        if (target === 1 && directionRef.current === 1) {
-            setPage(number + 1)
-        } else if (target === 0 && directionRef.current === 1) {
-            setPage(number)
-        } else if (target === 0 && directionRef.current === -1) {
-            setPage(number)
-        } else if (target === 1 && directionRef.current === -1) {
-            setPage(number + 1)
-        }
+        // Determine final logical open state via midpoint
+        const isOpen = target > MID_PROGRESS
+        setPage(isOpen ? number + 1 : number)
     }
 
     const endDrag = () => {
-        if (!isDraggingRef.current) return
+        if (!isDraggingRef.current) return;
+
         const target = decideTarget(dragProgressRef.current, velocityRef.current)
         startSnap(target)
     }
 
     const cancelDrag = () => {
-        if (!isDraggingRef.current) return
-        startSnap(dragProgressRef.current >= 0.5 ? 1 : 0)
+        if (!isDraggingRef.current) return;
+
+        startSnap(dragProgressRef.current >= MID_PROGRESS ? MANUAL_MAX_PROGRESS : MANUAL_MIN_PROGRESS)
     }
 
     return (
         <group
             {...props}
-            ref={group}
-            onPointerEnter={(e)=>{ e.stopPropagation() }}
-            onPointerLeave={(e)=>{
+            ref            = {group}
+            onPointerEnter = {(e) => { e.stopPropagation() }}
+            onPointerLeave = {(e) => {
                 e.stopPropagation()
                 handlePointerLeave()
                 if (isDraggingRef.current) endDrag()
             }}
-            onPointerDown={(e)=>{
+            onPointerDown = {(e) => {
                 e.stopPropagation()
-                if (isSnappingRef.current) return
+                if (isSnappingRef.current) return;
+
                 const area = checkClickableArea(e)
-                if (area) return
+                if (area) return;
+
                 beginDrag(e)
             }}
-            onPointerMove={(e)=>{
+            onPointerMove = {(e) => {
                 e.stopPropagation()
                 if (isDraggingRef.current) updateDrag(e)
-                else handlePointerMove(e)
+                else                       handlePointerMove(e)
             }}
-            onPointerUp={(e)=>{
+            onPointerUp = {(e) => {
                 e.stopPropagation()
                 if (isDraggingRef.current) endDrag()
             }}
-            onPointerCancel={(e)=>{
+            onPointerCancel = {(e) => {
                 e.stopPropagation()
                 cancelDrag()
             }}
-            onLostPointerCapture={()=>{
+            onLostPointerCapture = {() => {
                 if (isDraggingRef.current) endDrag()
             }}
             onClick={(e)=>{
                 e.stopPropagation()
                 if (dragMovedRef.current || isSnappingRef.current){
                     dragMovedRef.current = false
-                    return
+
+                    return;
                 }
-                if (handleClickableAreaClick(e)) return
+                if (handleClickableAreaClick(e)) return;
+
                 setPage(opened ? number : number + 1)
             }}
         >
             <primitive
-                object={textPageData.mesh}
-                ref={skinnedMeshRef}
-                position-z={-number * PAGE_THICKNESS + page * PAGE_THICKNESS}
+                object     = {textPageData.mesh}
+                ref        = {skinnedMeshRef}
+                position-z = {-number * PAGE_THICKNESS + page * PAGE_THICKNESS}
             />
         </group>
     )
@@ -421,7 +442,7 @@ const BookTouch = ({ setModalImageSrc, setModalOpen, onCurrentPageChange, ...pro
     const { pages, loading, error     } = usePages()
     const [page                       ] = useAtom(pageAtom)
     const [delayedPage, setDelayedPage] = useState(page)
-    const hasEverOpenedRef = useRef(false)          // NEW: tracks if user has opened at least once
+    const hasEverOpenedRef              = useRef(false) // Tracks if user has opened at least once
     useEffect(() => { if (delayedPage > 0) hasEverOpenedRef.current = true }, [delayedPage])
 
     // ...Set the easingFactor to its final value
