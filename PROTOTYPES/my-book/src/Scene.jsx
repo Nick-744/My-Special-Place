@@ -86,17 +86,13 @@ const Scene = () => {
 						castShadow = {false}
 						/>
 
-						{/* Camera controls:
-                            - Desktop (mouse): normal controls
-                            - Desktop touch:   only 2-finger (pinch / two-finger drag)
-                        */}
                         {!mobileViewContext &&
                             <CameraControls
                             ref = {cameraControlsRef}
 
                             /* Camera rotation limits */
-                            minPolarAngle  = {0}
-                            maxPolarAngle  = {Math.PI / 2}
+                            minPolarAngle   = {0}
+                            maxPolarAngle   = {Math.PI / 2}
                             minAzimuthAngle = {-Math.PI / 3}
                             maxAzimuthAngle = { Math.PI / 3}
 
