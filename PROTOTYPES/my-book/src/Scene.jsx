@@ -101,7 +101,7 @@ const Scene = () => {
                             maxDistance = {4.5}
                             zoomSpeed   = {0.8}
 
-                            /* Touch behavior (only enable 2-finger on desktop touch) */
+                            /* Touch behavior (only enable 2/3-fingers on desktop touch) */
                             touches = {desktopTouch ? {
                                 one:   CameraControlsLib.ACTION.NONE,
                                 two:   CameraControlsLib.ACTION.TOUCH_ROTATE,
