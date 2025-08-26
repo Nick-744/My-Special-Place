@@ -21,7 +21,7 @@ const turningCurveStrength = 0.1  // Strength of the turning crease / hinge curv
 // meshes and bones are first created...
 
 // ==================== Pages Configuration ==================== //
-const PAGE_THICKNESS = 0.003
+const PAGE_THICKNESS = 0.001
 
 const Page = ({
     number, front, back, page, opened, bookClosed,
@@ -194,7 +194,7 @@ const Page = ({
                 target.rotation, 'y', rotationAngle, easingFactor, dt
             )
 
-            const foldIntensity = i > 8 ?
+            const foldIntensity = i > 12 ?
                 Math.sin(i * Math.PI * (1 / bones.length) - 0.5) * turningTime : 0
 
             easing.dampAngle(
