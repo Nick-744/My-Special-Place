@@ -1,3 +1,10 @@
+/*
+    ==== Warning ====
+    
+    The code below is a tangled mess of hooks and chaos. 
+    It barely holds together, but somehow... it works.
+*/
+
 import { degToRad } from 'three/src/math/MathUtils.js'
 import { useEffect, useRef, useState } from 'react'
 import { usePages } from '../InfoData/PagesContent'
@@ -45,7 +52,9 @@ const Page = ({
     // Drag + snap state
     const isDraggingRef           = useRef(false)
     const isSnappingRef           = useRef(false)
-    const dragProgressRef         = useRef(opened ? MANUAL_MAX_PROGRESS : MANUAL_MIN_PROGRESS) // 0 closed, 1 open (clipped)
+    const dragProgressRef         = useRef(
+        opened ? MANUAL_MAX_PROGRESS : MANUAL_MIN_PROGRESS
+    ) // 0 closed, 1 open (clipped)
     const targetProgressRef       = useRef(null)
     const dragStartXRef           = useRef(0)
     const dragOriginalProgressRef = useRef(0)
@@ -180,11 +189,15 @@ const Page = ({
 
     // Function to handle pointer enter/leave for cursor changes
     const handlePointerMove = (event) => {
-        if (isDraggingRef.current) return
-        const area = checkClickableArea(event)
+        if (isDraggingRef.current) return;
+
+        const area                 = checkClickableArea(event)
         document.body.style.cursor = area ? 'pointer' : 'auto'
     }
-    const handlePointerLeave = () => { if(!isDraggingRef.current) document.body.style.cursor = 'auto' }
+    const handlePointerLeave = () => { 
+        if(!isDraggingRef.current)
+            document.body.style.cursor = 'auto'
+    }
 
     // ----- Update the bones in the skinned mesh every frame ----- //
     useFrame((_, dt) => {
@@ -222,21 +235,25 @@ const Page = ({
         let baseRotation
         if (progressing) {
             baseRotation = (1 - 2 * dragProgress) * Math.PI / 2
-            if (!bookClosed) baseRotation += degToRad(number * 0.12) * (1 - turningTime)
+            if (!bookClosed)
+                baseRotation += degToRad(number * 0.12) * (1 - turningTime)
         }
         else {
             let targetRotation = opened ? -Math.PI / 2 : Math.PI / 2
-            if (!bookClosed) targetRotation += degToRad(number * 0.18)
-            baseRotation = targetRotation
+            if (!bookClosed) targetRotation += degToRad(number * 0.2)
+            baseRotation       = targetRotation
         }
 
         const bones = skinnedMeshRef.current.skeleton.bones
         for (let i = 0; i < bones.length; i++) {
             const boneTarget = i === 0 ? group.current : bones[i]
 
-            const insideCurveIntensity  = i < 12 ? Math.sin(i * 0.3) * 0.08 + 0.35 : 0
-            const outsideCurveIntensity = i >=12 ? Math.sin(i * 0.12 - 0.2) * 0.08 : 0
-            const turningCurveIntensity = Math.sin(i * Math.PI + (1 / bones.length)) * turningTime
+            const insideCurveIntensity  = i < 12 ?
+                                            Math.sin(i * 0.3) * 0.1 + 0.4 : 0
+            const outsideCurveIntensity = i >= 12 ?
+                                            Math.sin(i * 0.12 - 0.2) * 0.1 : 0
+            const turningCurveIntensity =
+                Math.sin(i * Math.PI + (1 / bones.length)) * turningTime
 
             let rotationAngle =
                 insideCurveStrength  * insideCurveIntensity  * baseRotation -
@@ -269,9 +286,8 @@ const Page = ({
                 dt
             )
 
-            const foldIntensity = i > 12
-                ? Math.sin(i * Math.PI * (1 / bones.length) - 0.5) * turningTime
-                : 0
+            const foldIntensity = i > 12 ?
+                Math.sin(i * Math.PI * (1 / bones.length) - 0.5) * turningTime : 0
 
             easing.dampAngle(
                 boneTarget.rotation,
@@ -339,7 +355,9 @@ const Page = ({
         const dist              = dynamicDistanceRef.current
         const progressDelta     = (-deltaX) / dist
         const progressUnclamped = dragOriginalProgressRef.current + progressDelta
-        const progress          = clamp(progressUnclamped, MANUAL_MIN_PROGRESS, MANUAL_MAX_PROGRESS)
+        const progress          = clamp(
+            progressUnclamped, MANUAL_MIN_PROGRESS, MANUAL_MAX_PROGRESS
+        )
         dragProgressRef.current = progress
         if (Math.abs(deltaX) > 4) dragMovedRef.current = true
 
@@ -378,7 +396,8 @@ const Page = ({
     const cancelDrag = () => {
         if (!isDraggingRef.current) return;
 
-        startSnap(dragProgressRef.current >= MID_PROGRESS ? MANUAL_MAX_PROGRESS : MANUAL_MIN_PROGRESS)
+        startSnap(dragProgressRef.current >=
+            MID_PROGRESS ? MANUAL_MAX_PROGRESS : MANUAL_MIN_PROGRESS)
     }
 
     return (
@@ -529,7 +548,7 @@ const BookTouch = ({ setModalImageSrc, setModalOpen, onCurrentPageChange, ...pro
                         bookClosed       = {delayedPage === 0 || delayedPage === pages.length}
                         canDragForward   = {canDragForward}
                         canDragBackward  = {canDragBackward}
-                        hasEverOpened    = {hasEverOpenedRef.current}  // now defined
+                        hasEverOpened    = {hasEverOpenedRef.current}
                         setModalImageSrc = {setModalImageSrc}
                         setModalOpen     = {setModalOpen}
                         {...pageData}

@@ -178,7 +178,7 @@ const Page = ({
                 outsideCurveStrength * outsideCurveIntensity * targetRotation +
                 turningCurveStrength * turningCurveIntensity * targetRotation
 
-            let foldRotationAngle = degToRad(Math.sign(targetRotation) * 2)
+            let foldRotationAngle = degToRad(Math.sign(targetRotation) * 1.6)
             
             if (bookClosed)
                 if (i === 0) {
