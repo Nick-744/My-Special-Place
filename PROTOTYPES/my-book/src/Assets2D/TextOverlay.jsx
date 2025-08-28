@@ -39,7 +39,7 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
 
         // Handle different element types
         if (
-            element.type === 'h1' || element.type === 'h2' ||
+            element.type === 'h1' ||
             element.type === 'h3' || element.type === 'h4'
         )
             text += '\n' + extractChildren(children).toUpperCase() + '\n'

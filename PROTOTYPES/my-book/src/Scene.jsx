@@ -8,6 +8,7 @@ import CameraControlsLib from 'camera-controls'
 import { Canvas } from '@react-three/fiber'
 import Book from './Assets3D/Book.jsx'
 import UI from './Assets2D/UI'
+import * as THREE from 'three'
 
 const Scene = () => {
 	// ----- Mobile View Detection ----- //
@@ -68,7 +69,6 @@ const Scene = () => {
 				}}
 				shadows
 				>
-					<color attach = 'background' args = {['#111111']} />
 					<group position-y = {0}>
 						{/* Lighting and shadows */}
 						<ambientLight intensity = {0.3} />
@@ -130,13 +130,22 @@ const Scene = () => {
 						rotation-x = {-Math.PI / 2}
 						receiveShadow
 						>
-							<planeGeometry args = {[50, 50]} />
+							<planeGeometry args = {[30, 30]} />
 							<meshStandardMaterial
 							color     = '#222222'
 							roughness = {1}
 							metalness = {0}
 							/>
                         </mesh>
+
+						{ /* Environment Dome */ }
+						<mesh position-y = {-2.5}>
+							<sphereGeometry args = {[15, 64, 64]} />
+							<meshStandardMaterial
+							color = '#222222'
+							side  = {THREE.BackSide}
+							/>
+						</mesh>
 					</group>
 				</Canvas>
 

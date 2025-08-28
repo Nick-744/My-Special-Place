@@ -28,7 +28,7 @@ const MARGIN_LEFT   = 130
 const MARGIN_RIGHT  = 130
 
 // --- Papyrus opacity --- //
-const PAPYRUS_OPACITY = 0.8
+const PAPYRUS_OPACITY = 1.0
 
 const FONT_TYPE = '"GFS Didot", cursive'
 
@@ -99,20 +99,6 @@ const extractContentWithImages = (el) => {
             addText('\n')
             travChildren(node.props.children)
             addText('\n')
-
-            return;
-        }
-        if (type === 'ul' || type === 'ol') {
-            addText('\n')
-            travChildren(node.props.children)
-            addText('\n')
-
-            return;
-        }
-        if (type === 'blockquote') {
-            addText('\n"')
-            travChildren(node.props.children)
-            addText('"\n')
 
             return;
         }
@@ -433,10 +419,10 @@ export const createTextPageMesh = async (frontContent, backContent) => {
     ])
 
     const materials = [
-        new MeshStandardMaterial({ color: white,    roughness: 0.9, metalness: 0 }),
-        new MeshStandardMaterial({ color: '#111', roughness: 0.9, metalness: 0 }),
-        new MeshStandardMaterial({ color: white,    roughness: 0.9, metalness: 0 }),
-        new MeshStandardMaterial({ color: white,    roughness: 0.9, metalness: 0 }),
+        new MeshStandardMaterial({ color: white,       roughness: 0.9, metalness: 0 }),
+        new MeshStandardMaterial({ color: '#ffa500', roughness: 0.9, metalness: 0 }),
+        new MeshStandardMaterial({ color: white,       roughness: 0.9, metalness: 0 }),
+        new MeshStandardMaterial({ color: white,       roughness: 0.9, metalness: 0 }),
 
         // Use the composed textures (papyrus + page canvas)
         new MeshStandardMaterial({
