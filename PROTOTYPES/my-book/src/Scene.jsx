@@ -68,12 +68,13 @@ const Scene = () => {
 				}}
 				shadows
 				>
+					<color attach = 'background' args = {['#111111']} />
 					<group position-y = {0}>
 						{/* Lighting and shadows */}
-						<ambientLight intensity = {1} />
+						<ambientLight intensity = {0.3} />
 						<directionalLight
 						position  = {[4, 5, 4]}
-						intensity = {0.8}
+						intensity = {1.2}
 						color     = '#ffffff'
 						castShadow
 						shadow-mapSize-width  = {2048}
@@ -129,9 +130,13 @@ const Scene = () => {
 						rotation-x = {-Math.PI / 2}
 						receiveShadow
 						>
-							<planeGeometry args = {[100, 100]} />
-							<shadowMaterial transparent opacity = {0.2} />
-						</mesh>
+							<planeGeometry args = {[50, 50]} />
+							<meshStandardMaterial
+							color     = '#222222'
+							roughness = {1}
+							metalness = {0}
+							/>
+                        </mesh>
 					</group>
 				</Canvas>
 
