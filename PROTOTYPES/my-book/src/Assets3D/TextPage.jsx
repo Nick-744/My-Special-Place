@@ -60,7 +60,7 @@ const createTextPageGeometry = () => {
 
 // Unified traversal that extracts text + images!
 const extractContentWithImages = (el) => {
-    const res     = { text: '', images: [] }
+    const res     = { text: '', images: [], bottomH2: [] }
     const addText = (t) => { res.text += (t == null ? '' : String(t)) }
 
     const trav = (node) => {
@@ -76,14 +76,21 @@ const extractContentWithImages = (el) => {
         if (type === 'img') {
             res.images.push({
                 src:   node.props.src,
-                alt:   node.props.alt || '',
+                alt:   node.props.alt   || '',
                 style: node.props.style || {}
             })
 
             return;
         }
 
-        if (['h1','h2','h3','h4'].includes(type)) {
+        if (type === 'h2') { // Capture h2 separately for bottom placement
+            const txt = extractChildrenText(node.props.children).trim()
+            if (txt) res.bottomH2.push(txt)
+
+            return; // Do NOT add to flowing text!
+        }
+
+        if (['h1','h3','h4'].includes(type)) {
             addText('\n' + extractChildrenText(node.props.children).toUpperCase() + '\n')
             
             return;
@@ -92,21 +99,21 @@ const extractContentWithImages = (el) => {
             addText('\n')
             travChildren(node.props.children)
             addText('\n')
-            
+
             return;
         }
         if (type === 'ul' || type === 'ol') {
             addText('\n')
             travChildren(node.props.children)
             addText('\n')
-            
+
             return;
         }
         if (type === 'blockquote') {
             addText('\n"')
             travChildren(node.props.children)
             addText('"\n')
-            
+
             return;
         }
         travChildren(node.props.children)
@@ -162,13 +169,15 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
     for (let i = 0; i < 120; i++)
         ctx.fillRect(Math.random() * width, Math.random() * height, 1, 1)
 
-    let text   = ''
-    let images = []
+    let text     = ''
+    let images   = []
+    let bottomH2 = []
     if (typeof content === 'string') text = content
     else if (React.isValidElement(content)) {
-        const r = extractContentWithImages(content)
-        text    = r.text
-        images  = r.images
+        const r  = extractContentWithImages(content)
+        text     = r.text
+        images   = r.images
+        bottomH2 = r.bottomH2 || []
     }
     else text = 'Page Content'
 
@@ -227,7 +236,7 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
                 ctx.fillStyle = '#000'
             }
             else {
-                // simple word wrap
+                // Simple word wrap
                 const words = line.split(' ')
                 let cur     = ''
                 for (const w of words) {
@@ -251,6 +260,7 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
         }
     }
 
+    let lastImageBottomY = null
     for (const imgInfo of images) {
         try {
             const tex   = await new Promise(
@@ -282,6 +292,9 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
             const cx = (width - drawW) / 2
             const cy = (height - drawH) / 2
             ctx.drawImage(img, cx, cy, drawW, drawH)
+
+            lastImageBottomY = cy + drawH
+
             clickableAreas.push({
                 type: 'image',
                 src:  imgInfo.src,
@@ -293,6 +306,30 @@ const createTextureFromContent = async (content, width = 1200, height = 1500) =>
             })
         }
         catch (e) { console.warn('Failed to load image', imgInfo.src, e?.message) }
+    }
+
+    // --- IMAGE SOURCE = Draw h2 headings just below the (last) image --- //
+    if (bottomH2.length) {
+        const headingFontSize = 35
+        const lineH           = 35
+        ctx.font              = `bold ${headingFontSize}px ${FONT_TYPE}`
+        ctx.fillStyle         = '#000'
+
+        // Determine starting Y: below last image if any, else after main text 'y'!
+        let startY = (lastImageBottomY != null ? lastImageBottomY + 30 : y + 30)
+
+        // Prevent overflow at bottom: if not enough space, shift upward!
+        const needed = bottomH2.length * lineH
+        if (startY + needed > height - MARGIN_BOTTOM)
+            startY = Math.max(MARGIN_TOP + 150, height - MARGIN_BOTTOM - needed)
+
+        let curY = startY
+        bottomH2.forEach(h => {
+            const w = ctx.measureText(h).width
+            const x = MARGIN_LEFT + ((width - MARGIN_LEFT - MARGIN_RIGHT) - w) / 2
+            ctx.fillText(h, x, curY)
+            curY   += lineH
+        })
     }
 
     const texture           = new CanvasTexture(canvas)

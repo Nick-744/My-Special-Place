@@ -5,36 +5,20 @@ import { Box } from '@mui/material'
 // Cover page
 const coverPage = {
     front: (
-        <Box
-        p  = {3}
-        sx = {{
-            background: '#222',
-            color:      '#fff',
-            height:     '100%'
-        }}
-        >
-            <h3 style = {{ color: '#fff' }}>~ ΧΡΟΝΟΛΟΓΙΟ ΚΑΒΑΦΗ ~</h3>
+        <Box>
+            <h1>~ ΧΡΟΝΟΛΟΓΙΟ ΚΑΒΑΦΗ ~</h1>
 
-            <p style = {{ color: '#fff' }}>
+            <p>
                 Ένα διαδραστικό χρονολόγιο της ζωής του Κ.Π. Καβάφη (1863 – 1933),
                 του κορυφαίου νεοελληνικού ποιητή με ριζικές επιρροές στην ευρωπαϊκή μοντέρνα ποίηση.
             </p>
 
-            <p style = {{ color: '#fff' }}>
+            <p>
                 Το υλικό αναδεικνύει βασικά στοιχεία του έργου του Καβάφη και συνοδεύεται
                 από πηγές και εικόνες που διευκολύνουν την περαιτέρω μελέτη.
             </p>
 
-            <p
-            style = {{
-                color:     '#fff',
-                textAlign: 'center',
-                marginTop: '20px',
-                fontStyle: 'italic'
-            }}
-            >
-                Καλή ανάγνωση!
-            </p>
+            <p>Καλή ανάγνωση!</p>
         </Box>
     )
 }
@@ -46,90 +30,14 @@ function buildFront(item) {
     const imageDescription = attrs.imageDescription?.gr || attrs.imageDescription?.en || ''
 
     return (
-        <Box
-        p  = {3}
-        sx = {{
-            background: '#fff',
-            height:     '100%',
-            overflow:   'auto'
-        }}
-        >
-            <h2
-            style = {{
-                color:         '#333',
-                borderBottom:  '2px solid #666',
-                paddingBottom: '8px',
-                marginBottom:  '20px',
-                fontSize:      '18px'
-            }}
-            >
-                ~ {attrs.year} ~
-            </h2>
-
-            <div
-            style = {{
-                fontSize:     '14px',
-                lineHeight:   '1.6',
-                marginBottom: '20px',
-                color:        '#333'
-            }}
-            dangerouslySetInnerHTML = {{ __html: description }}
-            />
+        <Box>
+            <h1>~ {attrs.year} ~</h1>
 
             {imageDescription && (
-                <div style = {{ marginBottom: '20px' }}>
-                    <h4
-                    style = {{
-                        color:        '#333',
-                        marginBottom: '12px',
-                        fontSize:     '14px',
-                        fontWeight:   'bold'
-                    }}
-                    >
-                        ── ΠΕΡΙΓΡΑΦΗ ΕΙΚΟΝΑΣ ──
-                    </h4>
+                <div>
+                    <h1>── ΠΕΡΙΓΡΑΦΗ ΕΙΚΟΝΑΣ ──</h1>
 
-                    <p
-                    style = {{
-                        color:      '#555',
-                        fontSize:   '13px',
-                        lineHeight: '1.5',
-                        fontStyle:  'italic',
-                        background: '#f9f9f9',
-                        padding:    '12px',
-
-                        borderRadius: '4px',
-                        border:       '1px solid #e0e0e0'
-                    }}
-                    >
-                        {imageDescription}
-                    </p>
-                </div>
-            )}
-
-            {attrs.source?.gr && (
-                <div style = {{ marginTop: 'auto', paddingTop: '20px' }}>
-                    <h4
-                    style = {{
-                        color:        '#333',
-                        marginBottom: '8px',
-                        fontSize:     '12px',
-                        fontWeight:   'bold'
-                    }}
-                    >
-                        ΠΗΓΗ
-                    </h4>
-                    
-                    <p
-                    style = {{
-                        color:      '#777',
-                        fontSize:   '11px',
-                        lineHeight: '1.4',
-                        fontStyle:  'italic'
-                    }}
-                    >
-                        {attrs.source.gr}
-                    </p>
+                    <p>{imageDescription}</p>
                 </div>
             )}
         </Box>
@@ -141,45 +49,26 @@ function buildBack(item) {
     const attrs            = item.attributes
     const imageUrl         = getImageUrl(attrs.image, 'large')
     const imageDescription = attrs.imageDescription?.gr || attrs.imageDescription?.en || ''
+    const sourceText       = attrs.source?.gr
 
     return (
-        <Box
-        sx = {{
-            width:          '100%',
-            height:         '100%',
-            display:        'flex',
-            alignItems:     'center',
-            justifyContent: 'center',
-            background:     '#f8f8f8',
-            overflow:       'hidden'
-        }}
-        >
+        <Box>
             {imageUrl ? (
                 <img
-                src   = {imageUrl}
-                alt   = {imageDescription}
-                style = {{
-                    width:        '100%',
-                    height:       '100%',
-                    objectFit:    'cover',
-                    borderRadius: '0px'
-                }}
+                src         = {imageUrl}
+                alt         = {imageDescription}
+                // Pass source to canvas pipeline
+                data-source = {sourceText || undefined}
                 />
             ) : (
-                <Box
-                sx = {{
-                    width:          '100%',
-                    height:         '100%',
-                    display:        'flex',
-                    alignItems:     'center',
-                    justifyContent: 'center',
-                    background:     '#e0e0e0',
-                    color:          '#666'
-                }}
-                >
-                    <p>Δεν υπάρχει εικόνα</p>
+                <Box>
+                    <h1>Δεν υπάρχει εικόνα</h1>
                 </Box>
             )}
+
+            {attrs.source.gr ? (
+                <h2>Πηγή: {attrs.source.gr}</h2>
+            ) : null}
         </Box>
     );
 }
