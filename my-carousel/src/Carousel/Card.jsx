@@ -11,16 +11,16 @@ import * as THREE from 'three'
 import { easing } from 'maath'
 import '../util'
 
+// Single global flag for which card is active
+let activeCardUUID = null
+
 const Card = ({ infoDict, ...props }) => {
   // ----- Global ----- //
   const globalVar = useContext(globalVarContext)
-  
+
   // ----- Cards ----- //
   const cardRef = useRef()
   const [hovered, setHovered] = useState(false)
-
-  const pointerOver = (e) => { e.stopPropagation(); setHovered(true) }
-  const pointerOut  = ( ) => setHovered(false)
 
   const originalPositionRef = useRef(null)
   useEffect(() => { originalPositionRef.current = cardRef.current.position.clone() }, [])
@@ -32,12 +32,35 @@ const Card = ({ infoDict, ...props }) => {
   const model   = useGLTF(infoDict.modelPath)
   const texture = useTexture(infoDict.texturePath)
 
-  const onDoubleClick = (e) => {
-    e.stopPropagation()
-    setActive(!active)
-    globalVar.setActiveCardView(!active)
+  useEffect(() => {
+    return () => {
+      if (activeCardUUID === cardRef.current?.uuid) activeCardUUID = null
+    };
+  }, [])
 
-    active ? globalVar.setRigCameraActive(false) : globalVar.setRigCameraActive(true)
+  const disabled = activeCardUUID && activeCardUUID !== cardRef.current?.uuid
+
+  const onDoubleClick = (e) => {
+    if (disabled) return;
+
+    e.stopPropagation()
+    const next = !active
+    setActive(next)
+    globalVar.setActiveCardView(next)
+    globalVar.setRigCameraActive(next)
+    activeCardUUID = next ? cardRef.current.uuid : null
+  }
+
+  const pointerOver = (e) => {
+    if (disabled) return;
+
+    e.stopPropagation()
+    setHovered(true)
+  }
+  const pointerOut = () => {
+    if (disabled) return;
+
+    setHovered(false)
   }
 
   // ================== Frame ================== //
@@ -60,13 +83,26 @@ const Card = ({ infoDict, ...props }) => {
       dt
     )
 
-    // Για να μην μεταβάλλεται το object μέγεθος όταν είσαι στον θόλο
-    if (globalVar.activeCardView) { return; }
-    
     // ----- Cards ----- //
-    easing.damp3(cardRef.current.scale, hovered ? 1.15 : 1, 0.1, dt)
-    easing.damp(cardRef.current.material, 'radius', hovered ? 0.25 : 0.1, 0.2, dt)
-    easing.damp(cardRef.current.material, 'zoom',   hovered ? 1 : 1.5,    0.2, dt)
+    const targetScale = hovered && !disabled ? 1.15 : 1
+    easing.damp3(cardRef.current.scale, targetScale, 0.15, dt)
+
+    if (cardRef.current.material) {
+      easing.damp(
+        cardRef.current.material,
+        'radius',
+        hovered && !disabled ? 0.25 : 0.1,
+        0.2,
+        dt
+      )
+      easing.damp(
+        cardRef.current.material,
+        'zoom',
+        hovered && !disabled ? 1 : 1.5,
+        0.2,
+        dt
+      )
+    }
   })
 
   return (
