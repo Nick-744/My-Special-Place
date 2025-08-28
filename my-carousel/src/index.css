@@ -16,5 +16,5 @@ body {
 }
 
 .w3-animate-opacity{
-  animation:opac 1s
+  animation:opac 3s
 }@keyframes opac{from{opacity:0} to{opacity:1}}

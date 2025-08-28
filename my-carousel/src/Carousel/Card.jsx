@@ -14,6 +14,11 @@ import '../util'
 // Single global flag for which card is active
 let activeCardUUID = null
 
+// Constants for card positioning and rotation
+const CENTER     = new THREE.Vector3(0, 0, 0)
+const ROT_ACTIVE = new THREE.Euler(0, 0, 0  )
+const ROT_IDLE   = new THREE.Euler(0, 0, 0.1)
+
 const Card = ({ infoDict, ...props }) => {
   // ----- Global ----- //
   const globalVar = useContext(globalVarContext)
@@ -64,21 +69,21 @@ const Card = ({ infoDict, ...props }) => {
   }
 
   // ================== Frame ================== //
-  useFrame((state, dt) => {
+  useFrame((_, dt) => {
     // ----- Portal ----- //
     easing.damp(meshPortalRef.current, 'blend', active ? 1 : 0, 0.2, dt)
 
     if (originalPositionRef.current)
       easing.damp3(
         cardRef.current.position,
-        active ? new THREE.Vector3(0, 0, 0) : originalPositionRef.current,
+        active ? CENTER : originalPositionRef.current,
         0.2,
         dt
       )
     
     easing.dampE(
       globalVar.globalGroupRef.current.rotation,
-      globalVar.activeCardView ? new THREE.Euler(0, 0, 0) : new THREE.Euler(0, 0, 0.1),
+      globalVar.activeCardView ? ROT_ACTIVE : ROT_IDLE,
       0.8,
       dt
     )
