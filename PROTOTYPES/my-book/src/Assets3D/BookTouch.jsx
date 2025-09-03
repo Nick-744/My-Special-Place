@@ -522,15 +522,7 @@ const BookTouch = ({ setModalImageSrc, setModalOpen, onCurrentPageChange, ...pro
     }, [page])
 
     // === HANDLE CONDITIONAL RENDERING AFTER ALL HOOKS === //
-    if (loading)
-        return (
-            <group {...props}>
-                <mesh>
-                    <boxGeometry args = {[2, 3, 0.1]} />
-                    <meshBasicMaterial color = '#ccc' />
-                </mesh>
-            </group>
-        );
+    if (loading) return;
 
     if (error) console.error('Error loading pages:', error);
 

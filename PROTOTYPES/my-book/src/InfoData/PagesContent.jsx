@@ -1,11 +1,10 @@
 import { getAllData, getImageUrl } from '../services/cavafyService'
 import { useState, useEffect } from 'react'
-import { Box } from '@mui/material'
 
-// Cover page
+// --- Cover page --- //
 const coverPage = {
     front: (
-        <Box>
+        <>
             <h1>~ ΧΡΟΝΟΛΟΓΙΟ ΚΑΒΑΦΗ ~</h1>
 
             <p>
@@ -19,18 +18,17 @@ const coverPage = {
             </p>
 
             <p>Καλή ανάγνωση!</p>
-        </Box>
+        </>
     )
 }
 
-// --- Build front from one item (text) --- //
+// --- Build front page (TEXT) --- //
 function buildFront(item) {
     const attrs            = item.attributes
-    const description      = attrs.description?.gr || attrs.description?.en || ''
     const imageDescription = attrs.imageDescription?.gr || attrs.imageDescription?.en || ''
 
     return (
-        <Box>
+        <>
             <h1>~ {attrs.year} ~</h1>
 
             {imageDescription && (
@@ -40,11 +38,11 @@ function buildFront(item) {
                     <p>{imageDescription}</p>
                 </div>
             )}
-        </Box>
+        </>
     );
 }
 
-// --- Build back from one item (image) --- //
+// --- Build back page (IMAGE & CAPTION) --- //
 function buildBack(item) {
     const attrs            = item.attributes
     const imageUrl         = getImageUrl(attrs.image, 'large')
@@ -52,28 +50,24 @@ function buildBack(item) {
     const sourceText       = attrs.source?.gr
 
     return (
-        <Box>
+        <>
             {imageUrl ? (
                 <img
                 src         = {imageUrl}
                 alt         = {imageDescription}
-                // Pass source to canvas pipeline
                 data-source = {sourceText || undefined}
                 />
             ) : (
-                <Box>
-                    <h1>Δεν υπάρχει εικόνα</h1>
-                </Box>
+                <h1>Δεν υπάρχει εικόνα</h1>
             )}
 
             {attrs.source.gr ? (
                 <h2>Πηγή: {attrs.source.gr}</h2>
             ) : null}
-        </Box>
+        </>
     );
 }
 
-// create a page where front comes from prevItem and back from currItem
 function createPairedPage(prevItem, currItem) {
     return {
         front: buildFront(prevItem),
@@ -94,20 +88,22 @@ export function usePages() {
                 const data = await getAllData()
 
                 if (data && data.length > 0) {
-                const dynamicPages = []
+                    const dynamicPages = []
 
-                // First page: keep cover front, set its back to first item's image!
-                dynamicPages.push({
-                    front: coverPage.front,
-                    back:  buildBack(data[0])
-                })
+                    // First page - Keep cover as front and set the back from data!
+                    dynamicPages.push({
+                        front: coverPage.front,
+                        back:  buildBack(data[0])
+                    })
 
-                // For each subsequent index create paired pages:
-                // front = previous item text - back = current item image
-                for (let i = 1; i < data.length; i += 1)
-                    dynamicPages.push(createPairedPage(data[i - 1], data[i]))
+                    // Χρειάζεται να δημιουργηθεί μία σελίδα που μπροστά θα έχει τις
+                    // πληροφορίες της εικόνας του data[0] (cover page) και πίσω
+                    // τα δεδομένα του data[1] (εικόνα στην προκειμένη περίπτωση).
+                    // Αντίστοιχη λογική χρησιμοποιείται και για τα επόμενα ζεύγη σελίδων!
+                    for (let i = 1; i < data.length; i += 1)
+                        dynamicPages.push(createPairedPage(data[i - 1], data[i]))
 
-                setPages(dynamicPages)
+                    setPages(dynamicPages)
                 }
             }
             catch (err) {

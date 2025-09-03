@@ -26,7 +26,7 @@ const UI = ({
 	
 	handleCameraReset
 }) => {
-	const { pages, loading } = usePages() // Get pages & loading state!
+	const { pages, _ } = usePages()
 
 	const [page, setPage] = useAtom(pageAtom)
 
