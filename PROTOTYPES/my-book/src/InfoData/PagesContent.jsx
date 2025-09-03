@@ -108,7 +108,7 @@ export function usePages() {
             }
             catch (err) {
                 console.error('Failed to load timeline data:', err)
-                setError(err);
+                setError(err)
             }
             finally { setLoading(false) }
         }
