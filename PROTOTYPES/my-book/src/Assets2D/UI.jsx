@@ -1,11 +1,4 @@
-import {
-	PaginationItem,
-	Pagination,
-	IconButton,
-	Tooltip,
-	Button,
-	Box
-} from '@mui/material'
+import { PaginationItem, Pagination, IconButton, Tooltip, Button, Box } from '@mui/material'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import TextFieldsIcon from '@mui/icons-material/TextFields'
@@ -26,28 +19,67 @@ const UI = ({
 	
 	handleCameraReset
 }) => {
-	const { pages, _ } = usePages()
-
+	const { pages, _ }    = usePages()
 	const [page, setPage] = useAtom(pageAtom)
 
-	const handlePrevious  = () => setPage(Math.max(0, page - 1))
-	const handleNext      = () => setPage(Math.min(pages.length, page + 1))
+	const handlePrevious = () => setPage(Math.max(0, page - 1))
+	const handleNext     = () => setPage(Math.min(pages.length, page + 1))
 	
 	// Clamp current page when pages length changes (avoid out-of-range)!
 	useEffect(() => { if (page > pages.length) setPage(pages.length) }, [pages.length])
 
-	const hasTextContent  = (currentLeftContent || currentRightContent)
+	const hasTextContent = (currentLeftContent || currentRightContent)
+	
+	const CircularButton = ({
+        onClick,
+        icon,
+        tooltip,
+        position     = {},
+        show         = true,
+        hoverOpacity = 0.8
+    }) => {
+        if (!show) return null;
+
+        return (
+            <Tooltip title = {tooltip} placement = 'left'>
+                <Button
+                    variant = 'contained'
+                    onClick = {onClick}
+                    sx      = {{
+                        position:        'fixed',
+                        minWidth:        'auto',
+                        width:           60,
+                        height:          60,
+                        borderRadius:    '50%',
+                        backgroundColor: 'rgba(25, 118, 210, 1)',
+                        backdropFilter:  'blur(10px)',
+                        boxShadow:       '0 8px 32px rgba(0, 0, 0, 0.12)',
+                        transition:      'all 0.3s ease-in-out',
+
+						'&:hover': {
+							backgroundColor: `rgba(25, 118, 210, ${hoverOpacity})`,
+							transform:       'scale(1.05)',
+                        },
+
+                        ...position
+                    }}
+                >
+                    {icon}
+                </Button>
+            </Tooltip>
+        );
+    }
 
 	return (
 		<>
-			{/* Pages Navigation Controls */}
+			{/* --- Pages Navigation Controls --- */}
 			<Box
 			position     = 'fixed'
 			bottom       = {20}
 			right        = {mobileView ? '50%' : 20}
 			display      = 'flex'
 			alignItems   = 'center'
-			bgcolor      = 'rgba(255, 255, 255, 0.9)'
+			bgcolor      = 'rgba(255, 255, 255, 0.8)'
 			borderRadius = {4}
 			p   = {2}
 			gap = {1}
@@ -60,13 +92,13 @@ const UI = ({
 						onClick  = {handlePrevious}
 						disabled = {page === 0}
 						sx       = {{
-							bgcolor:   page === 0 ? 'transparent' : 'primary.main',
-							color:     page === 0 ? 'text.disabled' : 'white',
-							'&:hover': { bgcolor: page === 0 ? 'transparent' : 'primary.dark' }
+							bgcolor:   page === 0            ? 'transparent'   : 'primary.main',
+							color:     page === 0            ? 'text.disabled' : 'white',
+							'&:hover': { bgcolor: page === 0 ? 'transparent'   : 'primary.dark' }
 						}}
 						>
-							<ChevronLeftIcon />
-						</IconButton>
+						<ChevronLeftIcon />
+					</IconButton>
 					</span>
 				</Tooltip>
 
@@ -101,11 +133,9 @@ const UI = ({
 					onClick  = {handleNext}
 					disabled = {page === pages.length}
 					sx       = {{
-						bgcolor:   page === pages.length ? 'transparent' : 'primary.main',
-						color:     page === pages.length ? 'text.disabled' : 'white',
-						'&:hover': {
-							bgcolor: page === pages.length ? 'transparent' : 'primary.dark',
-						}
+						bgcolor:   page === pages.length            ? 'transparent'   : 'primary.main',
+						color:     page === pages.length            ? 'text.disabled' : 'white',
+						'&:hover': { bgcolor: page === pages.length ? 'transparent'   : 'primary.dark' }
 					}}
 					>
 						<ChevronRightIcon />
@@ -113,64 +143,35 @@ const UI = ({
 				</Tooltip>
 			</Box>
 
-			{/* Text Overlay Button */}
+			{/* --- Text Overlay Button --- */}
 			{hasTextContent && (
 				<Tooltip title = 'Προβολή κειμένου' placement = 'left'>
-					<Button
-					variant = 'contained'
-					onClick = {onShowTextOverlay}
-					sx      = {{
-						position: 'fixed',
-						top:      mobileView ? 30 : 'auto',
-						bottom:   mobileView ? 'auto' : 30,
-						left:     30,
-						minWidth: 'auto',
-						width:    60,
-						height:   60,
-						borderRadius:    '50%',
-						backgroundColor: 'rgba(25, 118, 210, 0.9)',
-						backdropFilter:  'blur(10px)',
-						boxShadow:       '0 8px 32px rgba(0, 0, 0, 0.12)',
-						'&:hover': {
-							backgroundColor: 'rgba(25, 118, 210, 1)',
-							transform:       'scale(1.05)',
-						},
-						transition: 'all 0.3s ease-in-out'
+					<CircularButton
+					onClick  = {onShowTextOverlay}
+					icon     = {<TextFieldsIcon sx = {{ color: 'white' }} />}
+					tooltip  = 'Προβολή κειμένου'
+					position = {{
+						top:    mobileView ? 30 : 'auto',
+						bottom: mobileView ? 'auto' : 30,
+						left:   30
 					}}
-					>
-						<TextFieldsIcon sx = {{ color: 'white' }} />
-					</Button>
+					/>
 				</Tooltip>
 			)}
 
-			{/* Camera Reset Button */}
-            {!mobileView && (
-                <Tooltip title = 'Επαναφορά θέσης κάμερας' placement = 'left'>
-                    <Button
-					variant = 'contained'
-					onClick = {handleCameraReset}
-					sx      = {{
-						position: 'fixed',
-						top:      30,
-						right:    30,
-						minWidth: 'auto',
-						width:    60,
-						height:   60,
-						borderRadius:    '50%',
-						backgroundColor: 'rgba(25, 118, 210, 0.9)',
-						backdropFilter:  'blur(10px)',
-						boxShadow:       '0 8px 32px rgba(0, 0, 0, 0.12)',
-						'&:hover': {
-							backgroundColor: 'rgba(25, 118, 210, 1)',
-							transform:       'scale(1.05)',
-						},
-						transition: 'all 0.3s ease-in-out'
-					}}
-                    >
-                        <CameraAltIcon sx = {{ color: 'white' }} />
-                    </Button>
-                </Tooltip>
-            )}
+			{/* --- Camera Reset Button --- */}
+			<Tooltip title = 'Επαναφορά θέσης κάμερας' placement = 'left'>
+				<CircularButton
+				onClick  = {handleCameraReset}
+				icon     = {<CameraAltIcon sx = {{ color: 'white' }} />}
+				tooltip  = 'Επαναφορά θέσης κάμερας'
+				position = {{
+					top:   30,
+					right: 30
+				}}
+				show     = {!mobileView}
+				/>
+			</Tooltip>
 		</>
 	);
 }

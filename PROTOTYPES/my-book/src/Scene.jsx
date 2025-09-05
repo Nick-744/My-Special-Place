@@ -15,10 +15,6 @@ const Scene = () => {
 	const theme             = useTheme()
 	const mobileViewContext = useMediaQuery(theme.breakpoints.down('md'))
 
-	// ----- Modal Image Handling ----- //
-	const [modalImageSrc, setModalImageSrc] = useState(null)
-	const [modalOpen, setModalOpen]         = useState(false)
-
     // ----- Touch Capability Detection (desktop touch screens) ----- //
     const [isTouchCapable, setIsTouchCapable] = useState(false)
     useEffect(() => {
@@ -33,9 +29,13 @@ const Scene = () => {
     const desktopTouch  = !mobileViewContext && isTouchCapable
     const BookComponent = desktopTouch ? BookTouch : Book
 
+	// ----- Modal Image Handling ----- //
+	const [modalImageSrc, setModalImageSrc] = useState(null)
+	const [modalOpen,     setModalOpen    ] = useState(false)
+
     // ----- Text Overlay Handling ----- //
-	const [textOverlayOpen, setTextOverlayOpen]         = useState(false)
-	const [currentLeftContent, setCurrentLeftContent]   = useState(null)
+	const [textOverlayOpen,     setTextOverlayOpen    ] = useState(false)
+	const [currentLeftContent,  setCurrentLeftContent ] = useState(null)
 	const [currentRightContent, setCurrentRightContent] = useState(null)
 	
 	const handleCurrentPageChange = (leftContent, rightContent) => {
@@ -46,7 +46,7 @@ const Scene = () => {
     const handleShowTextOverlay  = () => { setTextOverlayOpen(true) }
     const handleCloseTextOverlay = () => { setTextOverlayOpen(false) }
 
-	// ----- Camera Reset Function ----- //
+	// ----- Camera Reset Position Function ----- //
 	const cameraControlsRef = useRef()
     const handleCameraReset = () => {
         if (cameraControlsRef.current) cameraControlsRef.current.reset(true)
@@ -151,13 +151,13 @@ const Scene = () => {
 
 				{ /* --- 2D Elements / UI --- */ }
 				<UI
-				mobileView = {mobileViewContext}
+				mobileView          = {mobileViewContext}
 
 				onShowTextOverlay   = {handleShowTextOverlay}
 				currentLeftContent  = {currentLeftContent}
 				currentRightContent = {currentRightContent}
 
-				handleCameraReset = {handleCameraReset}
+				handleCameraReset   = {handleCameraReset}
 				/>
 
 				<ModalImage

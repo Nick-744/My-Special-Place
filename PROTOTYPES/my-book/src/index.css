@@ -16,5 +16,5 @@
 }
 
 .w3-animate-opacity {
-  animation: opac 6s;
+  animation: opac 1s;
 } @keyframes opac{from{opacity:0} to{opacity:1}}

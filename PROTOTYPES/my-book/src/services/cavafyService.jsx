@@ -26,7 +26,7 @@ export async function getAllData() {
 }
 
 // Helper - Get image URL
-export function getImageUrl(imageData, size = 'large') {
+export function getImageUrl(imageData, size = 'small') {
 	if (!imageData?.data?.attributes) return null;
 
 	const baseUrl = import.meta.env.VITE_SERVER

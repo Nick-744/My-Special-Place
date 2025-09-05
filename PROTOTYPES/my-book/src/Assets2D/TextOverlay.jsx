@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close'
 
 const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
     const [showContent, setShowContent] = useState(false)
-    const [speaking, setSpeaking]       = useState(false)
+    const [speaking,    setSpeaking   ] = useState(false)
     const synthRef                      = useRef(window.speechSynthesis)
 
     /* When open is true, the code sets a short timer (10 milliseconds)
@@ -28,7 +28,8 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
         handleStopSpeech()
     }
 
-    // Extract text from React elements - Basically the same as in TextPage.jsx! [Can be combined later...]
+    // Extract text from React elements - Basically the same as in TextPage.jsx!
+    // [Can be combined later...]
     const extractText = (element) => {
         if (typeof element === 'string') return element;
         if (typeof element === 'number') return element.toString();
@@ -38,25 +39,10 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
         const children = element.props.children
 
         // Handle different element types
-        if (
-            element.type === 'h1' ||
-            element.type === 'h3' || element.type === 'h4'
-        )
-            text += '\n' + extractChildren(children).toUpperCase() + '\n'
-        else if (element.type === 'p')
-            text += '\n' + extractChildren(children) + '\n'
-        else if (element.type === 'ul' || element.type === 'ol') {
-            text       += '\n'
-            const items = Array.isArray(children) ? children : [children]
-            items.forEach(item => {
-                if (item?.type === 'li') text += `• ${extractChildren(item.props.children)}\n`
-            })
-            text += '\n'
-        }
-        else if (element.type === 'blockquote') text += '\n"' + extractChildren(children) + '"\n'
-        else if (element.type === 'strong')     text += extractChildren(children).toUpperCase()
-        else if (element.type === 'img')        text += `\n[Εικόνα]\n`
-        else text += extractChildren(children)
+        if      (element.type === 'h1' ) text += extractChildren(children) + '\n\n'
+        else if (element.type === 'p'  ) text += extractChildren(children) + '\n\n'
+        else if (element.type === 'img') text += '[Εικόνα]\n\n'
+        else                             text += extractChildren(children)
 
         return text;
     }
@@ -102,14 +88,61 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
     // Show a message when there's nothing to display!
     const nothingToDisplay = !leftText && !rightText
 
+    const PageSection = ({ text, title }) => (
+        <Box sx = {{ flex: 1, minWidth: 0 }}>
+            <Box sx = {{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
+                <Tooltip title = {speaking ? 'Διακοπή ανάγνωσης' : 'Ανάγνωση με φωνή'}>
+                    <IconButton
+                    onClick = {() => speaking ? handleStopSpeech() : handleSpeak(text)}
+                    sx      = {{
+                        bgcolor:   speaking            ? '#f44336' : '#2196f3',
+                        color:     'white',
+                        '&:hover': { bgcolor: speaking ? '#d32f2f' : '#1976d2' }
+                    }}
+                    >
+                        <VolumeUpIcon />
+                    </IconButton>
+                </Tooltip>
+
+                <Typography
+                variant = 'h5'
+                sx      = {{
+                    color:         '#fff',
+                    fontWeight:    'bold',
+                    fontFamily:    'Arial',
+                    textTransform: 'uppercase',
+                    letterSpacing: 1,
+                    textShadow:    '2px 2px 4px rgba(0, 0, 0, 0.8)'
+                }}
+                >
+                    {title}
+                </Typography>
+            </Box>
+
+            <Typography
+            component = 'pre'
+            sx        = {{
+                fontFamily: 'Arial',
+                fontSize:   '18px',
+                lineHeight: 1.6,
+                color:      '#fff',
+                whiteSpace: 'pre-wrap',
+                wordBreak:  'break-word',
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)'
+            }}
+            >
+                {text}
+            </Typography>
+        </Box>
+    )
+
     return (
         <Fade in = {open && showContent} timeout = {1000}>
             <Box
             sx = {{
-                position: 'fixed',
+                position:       'fixed',
                 top: 0, left: 0, right: 0, bottom: 0,
-                zIndex: 100,
-
+                zIndex:         100,
                 background:     'rgba(0, 0, 0, 0.6)',
                 backdropFilter: 'blur(3px)',
                 display:        'flex',
@@ -121,28 +154,27 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                 <Box
                 sx = {{
                     position:      'relative',
-                    width:         { xs: '95vw', sm: 600, md: 900 },
+                    width:         { xs: '95vw',   md: 900, sm: 600 },
                     maxHeight:     '90vh',
                     borderRadius:  2,
-                    p:             { xs: 3, md: 6 },
+                    p:             { xs: 3,        md: 6            },
                     overflow:      'auto',
                     display:       'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
+                    flexDirection: { xs: 'column', md: 'row'        },
                     gap:           { xs: 3, md: 6 },
                     opacity:       showContent ? 1 : 0,
                     transition:    'opacity 1200ms ease-out'
                 }}
                 >
-                    {/* Close Button */}
+                    {/* --- Close Button --- */}
                     <IconButton
                     onClick = {handleClose}
                     sx      = {{
                         position:  'absolute',
                         top:       16,
                         right:     16,
-                        bgcolor:   'rgba(0,0,0,0.8)',
                         color:     'white',
-                        '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.9)' },
+                        '&:hover': { bgcolor: 'rgba(255, 0, 0, 1)' },
                         zIndex:    10
                     }}
                     >
@@ -164,127 +196,11 @@ const TextOverlay = ({ leftContent, rightContent, open, onClose }) => {
                         </Box>
                     ) : (
                         <>
-                            {/* Left Page */}
-                            {leftText && (
-                                <Box sx = {{ flex: 1, minWidth: 0 }}>
+                            {/* --- Left Page --- */}
+                            {leftText  && <PageSection text = {leftText}  title = 'ΑΡΙΣΤΕΡΗ ΣΕΛΙΔΑ' />}
 
-                                <Box sx = {{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-                                    <Tooltip title = {speaking ? 'Διακοπή ανάγνωσης' : 'Ανάγνωση με φωνή'}>
-                                        <IconButton
-                                        onClick = {
-                                            () => speaking
-                                                    ? handleStopSpeech()
-                                                    : handleSpeak(leftText)
-                                        }
-                                        sx      = {{
-                                            bgcolor:   speaking
-                                                            ? '#f44336'
-                                                            : '#2196f3',
-                                            color:     'white',
-                                            '&:hover': {
-                                                bgcolor: speaking
-                                                    ? '#d32f2f'
-                                                    : '#1976d2'
-                                            }
-                                        }}
-                                        >
-                                            <VolumeUpIcon />
-                                        </IconButton>
-                                    </Tooltip>
-
-                                    <Typography
-                                    variant = 'h5'
-                                    sx      = {{
-                                        color:         '#fff',
-                                        fontWeight:    'bold',
-                                        fontFamily:    'Arial',
-                                        textTransform: 'uppercase',
-                                        letterSpacing: 1,
-                                        textShadow:    '2px 2px 4px rgba(0,0,0,0.8)'
-                                    }}
-                                    >
-                                        ΑΡΙΣΤΕΡΗ ΣΕΛΙΔΑ
-                                    </Typography>
-                                </Box>
-
-                                <Typography
-                                component = 'pre'
-                                sx        = {{
-                                    fontFamily: 'Arial',
-                                    fontSize:   '18px',
-                                    lineHeight: 1.6,
-                                    color:      '#fff',
-                                    whiteSpace: 'pre-wrap',
-                                    wordBreak:  'break-word',
-                                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
-                                }}
-                                >
-                                    {leftText}
-                                </Typography>
-
-                                </Box>
-                            )}
-
-                            {/* Right Page */}
-                            {rightText && (
-                                <Box sx = {{ flex: 1, minWidth: 0 }}>
-
-                                <Box sx = {{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-                                    <Tooltip title = {speaking ? 'Διακοπή ανάγνωσης' : 'Ανάγνωση με φωνή'}>
-                                        <IconButton
-                                        onClick = {
-                                            () => speaking
-                                                    ? handleStopSpeech()
-                                                    : handleSpeak(rightText)
-                                        }
-                                        sx      = {{
-                                            bgcolor:   speaking
-                                                            ? '#f44336'
-                                                            : '#2196f3',
-                                            color:     'white',
-                                            '&:hover': {
-                                                bgcolor: speaking
-                                                    ? '#d32f2f'
-                                                    : '#1976d2'
-                                            }
-                                        }}
-                                        >
-                                            <VolumeUpIcon />
-                                        </IconButton>
-                                    </Tooltip>
-
-                                    <Typography
-                                        variant = 'h5'
-                                        sx      = {{
-                                            color:         '#fff',
-                                            fontWeight:    'bold',
-                                            fontFamily:    'Arial',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: 1,
-                                            textShadow:    '2px 2px 4px rgba(0,0,0,0.8)'
-                                        }}
-                                    >
-                                        ΔΕΞΙΑ ΣΕΛΙΔΑ
-                                    </Typography>
-                                </Box>
-
-                                <Typography
-                                component = 'pre'
-                                sx        = {{
-                                    fontFamily: 'Arial',
-                                    fontSize:   '18px',
-                                    lineHeight: 1.6,
-                                    color:      '#fff',
-                                    whiteSpace: 'pre-wrap',
-                                    wordBreak:  'break-word',
-                                    textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
-                                }}
-                                >
-                                    {rightText}
-                                </Typography>
-
-                                </Box>
-                            )}
+                            {/* --- Right Page --- */}
+                            {rightText && <PageSection text = {rightText} title = 'ΔΕΞΙΑ ΣΕΛΙΔΑ' />}
                         </>
                     )}
                 </Box>

@@ -90,8 +90,8 @@ const extractContentWithImages = (el) => {
             return; // Do NOT add to flowing text!
         }
 
-        if (['h1','h3','h4'].includes(type)) {
-            addText('\n' + extractChildrenText(node.props.children).toUpperCase() + '\n')
+        if (type === 'h1') {
+            addText('\n' + extractChildrenText(node.props.children) + '\n')
             
             return;
         }
