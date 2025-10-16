@@ -7,6 +7,7 @@ Both projects focus on interactive 3D experiences for cultural and historical co
 
 ## 3D Book
 **Live Demo:** [ebook.ontovisual.dev](https://ebook.ontovisual.dev/)  
+**Source Code:** [`PROTOTYPES/my-book`](./PROTOTYPES/my-book)
 
 A 3D digital book that allows users to flip through pages in an immersive environment.  
 It showcases historical photographs and descriptions in a realistic virtual format.
@@ -15,8 +16,9 @@ It showcases historical photographs and descriptions in a realistic virtual form
 
 ---
 
-## Alexander the Great – Interactive Timeline
+## Alexander the Great - Interactive Timeline
 **Live Demo:** [alexander-timeline.ontovisual.dev](https://alexander-timeline.ontovisual.dev/)  
+**Source Code:** [`PROTOTYPES/alex-remake`](./PROTOTYPES/alex-remake)
 
 A 3D interactive timeline that visualizes the life and campaigns of Alexander the Great.  
 Users can explore battles, city foundations, and cultural landmarks across time.
